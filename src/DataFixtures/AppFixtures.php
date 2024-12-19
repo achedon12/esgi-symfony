@@ -55,7 +55,7 @@ class AppFixtures extends Fixture
         // create admin user
         $adminUser = new User();
         $adminUser
-            ->setEmail($faker->email())
+            ->setEmail('admin@gmail.com')
             ->setPassword($this->hasher->hashPassword($adminUser, 'admin'))
             ->setCreationDate(new \DateTimeImmutable($faker->dateTimeBetween('-2 years')->format('Y-m-d H:i:s')))
             ->setFirstname($faker->firstName())
@@ -70,5 +70,24 @@ class AppFixtures extends Fixture
             ->setGender($faker->randomElement(Gender::cases()))
             ->setBirthdate(new \DateTimeImmutable($faker->dateTimeBetween('-100 years', '-18 years')->format('Y-m-d')));
         $manager->persist($adminUser);
+
+        // create a regular user with a specific email
+        $specificUser = new User();
+        $specificUser
+            ->setEmail('regular@gmail.com')
+            ->setPassword($this->hasher->hashPassword($specificUser, 'regular'))
+            ->setCreationDate(new \DateTimeImmutable($faker->dateTimeBetween('-2 years')->format('Y-m-d H:i:s')))
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
+            ->setLongitude($faker->longitude())
+            ->setLatitude($faker->latitude())
+            ->setImage("https://thispersondoesnotexist.com/")
+            ->setRoles(['ROLE_USER'])
+            ->setBio($faker->sentence(10))
+            ->setScore($faker->numberBetween(0, 100))
+            ->setInterests($faker->words($faker->numberBetween(1, 5)))
+            ->setGender($faker->randomElement(Gender::cases()))
+            ->setBirthdate(new \DateTimeImmutable($faker->dateTimeBetween('-100 years', '-18 years')->format('Y-m-d')));
+        $manager->persist($specificUser);
     }
 }
