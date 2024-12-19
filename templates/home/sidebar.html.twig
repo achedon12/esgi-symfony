@@ -43,7 +43,7 @@
             </a>
         </header>
         <div class="discussions">
-            <h5 class="text-white px-2 pt-2">Discussions</h5>
+            <h5 class="text-white px-2 pt-2">{{ 'discussion.title'|trans }}</h5>
             {% for discussion in discussions %}
                 <a href="{{ path('app_discussion_index', {id: discussion.id}) }}" class="d-flex align-items-center flex-row p-4 d-flex flex-column text-decoration-none">
                     <div class="d-flex flex-row w-100 align-items-center">
