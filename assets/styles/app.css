@@ -1,7 +1,31 @@
+:root {
+    --primary-color: #ff6b6b;
+    --secondary-color: #ffcc70;
+    --tertiary-color: #334257;
+    --quaternary-color: #1e5372;
+    --quinary-color: #0f3057;
+
+    --white-color: #f7f7f7;
+    --black-color: #333;
+}
+
 body {
     background: linear-gradient(to right, #ff6b6b, #ffcc70);
 }
 
-form.login-form {
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 90vh;
     margin: auto;
+}
+
+.login-form {
+    width: 30vw;
+    padding: 2rem;
+    border-radius: 2rem;
+    background-color: var(--white-color);
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
