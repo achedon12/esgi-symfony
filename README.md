@@ -78,6 +78,10 @@ Tindoo est une réinterprétation de l'application Tinder, adaptée pour une uti
     ```
    
 3. Configurer et créer la base de données :
+    - Créez la base de données :
+       ```bash
+          php bin/console doctrine:database:create
+       ```
     - Copiez le fichier `.env` en `.env.local` et configurez les variables d'environnement pour la base de données.
     - Créez la base de données :
         ```bash
