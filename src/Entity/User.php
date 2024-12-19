@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Trait\TimeStampTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,6 +39,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    /**
+     * @var Collection<int, Like>
+     */
+    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'user_liker')]
+    private Collection $likes;
+
+    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'user_liked')]
+    private Collection $liked_by;
+
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
@@ -66,6 +77,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'gender')]
     private $gender = null;
+
+    public function __construct()
+    {
+        $this->likes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -258,6 +274,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGender($gender): static
     {
         $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setUserLiker($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getUserLiker() === $this) {
+                $like->setUserLiker(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getLikedBy(): Collection {
+        return $this->liked_by;
+    }
+
+    public function addLikedBy(Like $like): static {
+        if (!$this->liked_by->contains($like)) {
+            $this->liked_by->add($like);
+            $like->setUserLiked($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLikedBy(Like $like): static {
+        if ($this->liked_by->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getUserLiked() === $this) {
+                $like->setUserLiked(null);
+            }
+        }
 
         return $this;
     }
