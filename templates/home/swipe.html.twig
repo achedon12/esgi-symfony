@@ -1,6 +1,6 @@
 <div class="slider">
     {% for user in users %}
-    <div class="slide"><p>{{ user.email }}</p></div>
+    <div class="slide"><img src="{{ user.image }}"><p>{{ user.firstname }} {{ user.lastname }} ({{ user.age }} ans)</p></div>
     {% endfor %}
 </div>
 

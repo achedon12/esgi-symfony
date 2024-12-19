@@ -230,6 +230,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getAge(): int
+    {
+        $now = new \DateTime();
+        $interval = $this->birthdate->diff($now);
+
+        return $interval->y;
+    }
+
     public function getScore(): ?string
     {
         return $this->score;
