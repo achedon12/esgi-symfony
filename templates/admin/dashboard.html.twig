@@ -1,0 +1,66 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+    <div class="admin-home container mt-5">
+        <h1 class="text-center mb-4">Bienvenue sur le tableau de bord</h1>
+        <p class="welcome-message text-center text-muted">
+            Utilisez ce tableau de bord pour gérer les différentes fonctionnalités de votre application.
+            Vous trouverez ci-dessous des accès rapides vers les principales sections.
+        </p>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">👤 Gestion des utilisateurs</h5>
+                        <p class="card-text text-muted">
+                            Consultez, ajoutez ou modifiez les utilisateurs de votre application.
+                        </p>
+                        <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\UserCrudController&entityFqcn=App\Entity\User" class="btn btn-primary">
+                            Accéder
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {#<div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">🚫 Types de blacklist</h5>
+                        <p class="card-text text-muted">
+                            Gérez les différents types de blacklist disponibles.
+                        </p>
+                        <a href="{{ path('blacklist_index') }}" class="btn btn-primary">
+                            Accéder
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">💼 Offres</h5>
+                        <p class="card-text text-muted">
+                            Consultez et gérez les offres disponibles dans l'application.
+                        </p>
+                        <a href="{{ path('offer_index') }}" class="btn btn-primary">
+                            Accéder
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">📜 Logs</h5>
+                        <p class="card-text text-muted">
+                            Visualisez les logs pour suivre les activités et diagnostics.
+                        </p>
+                        <a href="{{ path('log_index') }}" class="btn btn-primary">
+                            Accéder
+                        </a>
+                    </div>
+                </div>
+            </div>#}
+        </div>
+    </div>
+{% endblock %}
