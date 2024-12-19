@@ -1,1 +1,61 @@
-<h1>hey</h1>
+{% block sidebarheader %}
+
+    <style>
+        header {
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem;
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        header a, .discussions > a
+        {
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        header a:hover, .discussions > a:hover
+        {
+            transform: scale(1.1);
+        }
+
+        header img::before
+        {
+            content: "";
+            display: block;
+            border: 1px solid #e9ecef;
+        }
+
+    </style>
+    <aside class="h-100">
+        <header class="d-flex align-items-center flex-row">
+            <a href="{{ path('app_profile_index') }}">
+                <img src="{{ user.image }}" alt="{{ user.firstname }}"/>
+            </a>
+            <h5 class="text-white m-0">{{ user.firstname }} {{ user.lastname }}</h5>
+            <a href="#">
+                <i class="fas fa-cog text-white ml-auto"></i>
+            </a>
+        </header>
+        <div class="discussions">
+            <h5 class="text-white px-2 pt-2">Discussions</h5>
+            {% for discussion in discussions %}
+                <a href="{{ path('app_discussion_index', {id: discussion.id}) }}" class="d-flex align-items-center flex-row p-4 d-flex flex-column text-decoration-none">
+                    <div class="d-flex flex-row w-100 align-items-center">
+                        <img src="{{ discussion.userTwo.image }}" alt="{{ discussion.userTwo.firstname }}"/>
+                        <div>
+                            <h6 class="text-white">{{ discussion.userTwo.firstname }} {{ discussion.userTwo.lastname }}</h6>
+                        </div>
+                    </div>
+                    <hr class="text-white bg-white w-100"/>
+                </a>
+            {% endfor %}
+        </div>
+    </aside>
+
+{% endblock %}

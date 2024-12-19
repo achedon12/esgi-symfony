@@ -20,7 +20,7 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: app_home
+                default_target_path: app_home_index
                 always_use_default_target_path: true
             logout:
                 path: app_logout
@@ -38,6 +38,8 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/home, roles: ROLE_USER }
+        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/discussion, roles: ROLE_USER }
 
 when@test:
     security:

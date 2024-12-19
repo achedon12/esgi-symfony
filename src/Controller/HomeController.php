@@ -2,20 +2,36 @@
 
 namespace App\Controller;
 
+use App\Repository\DiscussionRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/home', name: 'app_home_')]
+
 class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
-    public function index(UserRepository $userRepository): Response
+
+    #[Route('/', name: 'index')]
+    public function index(UserRepository $userRepository, DiscussionRepository $discussionRepository): Response
     {
         $users = $userRepository->findAll();
+        $user = $this->getUser();
+        $discussions = $discussionRepository->findByUser($user);
+
+        array_map(function($discussion) use ($user) {
+            if($discussion->getUserOne() === $user) {
+                $discussion->setUserTwo($discussion->getUserTwo());
+            } else {
+                $discussion->setUserTwo($discussion->getUserOne());
+            }
+        }, $discussions);
+
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
-            'users' => $users
+            'users' => $users,
+            'user' => $user,
+            'discussions' => $discussions
         ]);
     }
 }

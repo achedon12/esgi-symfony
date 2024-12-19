@@ -19,6 +19,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimeStampTrait;
 
+    public const GENDER_MALE = 'male';
+    public const GENDER_FEMALE = 'female';
+    public const GENDER_OTHER = 'other';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -75,8 +79,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT)]
     private ?string $bio = null;
 
-    #[ORM\Column(type: 'gender')]
-    private $gender = null;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private ?string $gender = null;
 
     public function __construct()
     {
@@ -274,7 +278,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getGender()
+    public function getGender(): ?string
     {
         return $this->gender;
     }
