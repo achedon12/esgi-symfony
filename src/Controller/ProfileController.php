@@ -17,4 +17,12 @@ class ProfileController extends AbstractController
             'user' => $this->getUser()
         ]);
     }
+
+    #[Route('/filters', name: 'filters')]
+    public function filters(): Response
+    {
+        return $this->render('profile/filters.html.twig', [
+            'user' => $this->getUser()
+        ]);
+    }
 }

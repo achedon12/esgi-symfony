@@ -6,7 +6,11 @@
             padding: 1rem;
         }
 
-        img {
+        aside {
+            overflow: hidden;
+        }
+
+        aside img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -19,7 +23,39 @@
             transition: all 0.3s;
         }
 
-        header a:hover, .discussions > a:hover
+        .discussions {
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .discussions a:not(.active) h6 {
+            color: white;
+        }
+
+        .discussions a:not(.active) hr {
+            color: white;
+        }
+
+        .discussions a.active {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            color: #007bff;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            padding-left: calc(1rem - 4px);
+        }
+
+        .discussions a.active hr {
+            display: none;
+        }
+
+        .discussions a.active:hover {
+            background-color: #e2e6ea;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        header a:first-child:hover, .discussions > a:not(.active):hover
         {
             transform: scale(1.1);
         }
@@ -31,28 +67,48 @@
             border: 1px solid #e9ecef;
         }
 
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+
+        .settings-icon {
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .settings-icon i {
+            font-size: 1.5rem;
+        }
+
     </style>
     <aside class="h-100">
-        <header class="d-flex align-items-center flex-row">
+        <header class="d-flex align-items-center flex-row position-relative">
             <a href="{{ path('app_profile_index') }}">
-                <img src="{{ user.image }}" alt="{{ user.firstname }}"/>
+                <img src="{{ user.image }}" alt="{{ user.firstname }}" class="profile-img"/>
             </a>
             <h5 class="text-white m-0">{{ user.firstname }} {{ user.lastname }}</h5>
-            <a href="#">
-                <i class="fas fa-cog text-white ml-auto"></i>
+            <a href="{{ path('app_profile_filters') }}" class="settings-icon position-absolute">
+                <i class="fas fa-filter text-white"></i>
             </a>
         </header>
         <div class="discussions">
             <h5 class="text-white px-2 pt-2">{{ 'discussion.title'|trans }}</h5>
-            {% for discussion in discussions %}
-                <a href="{{ path('app_discussion_index', {id: discussion.id}) }}" class="d-flex align-items-center flex-row p-4 d-flex flex-column text-decoration-none">
+            {% if discussion is defined %}
+            {% endif %}
+            {% for d in discussions %}
+                <a href="{{ path('app_discussion_index', {id: d.id}) }}" class="d-flex align-items-center flex-row p-4 d-flex flex-column text-decoration-none {% if discussion is defined and discussion == d %}active{% endif %}">
                     <div class="d-flex flex-row w-100 align-items-center">
-                        <img src="{{ discussion.userTwo.image }}" alt="{{ discussion.userTwo.firstname }}"/>
+                        <img src="{{ d.userTwo.image }}" alt="{{ d.userTwo.firstname }}"/>
                         <div>
-                            <h6 class="text-white">{{ discussion.userTwo.firstname }} {{ discussion.userTwo.lastname }}</h6>
+                            <h6>{{ d.userTwo.firstname }} {{ d.userTwo.lastname }}</h6>
                         </div>
                     </div>
-                    <hr class="text-white bg-white w-100"/>
+                    <hr class="w-100"/>
                 </a>
             {% endfor %}
         </div>
