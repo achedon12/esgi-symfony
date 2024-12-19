@@ -1,6 +1,18 @@
 <div class="slider">
     {% for user in users %}
-    <div class="slide"><img src="{{ user.image }}"><p>{{ user.firstname }} {{ user.lastname }} ({{ user.age }} ans)</p></div>
+        <div class="slide"><img src="{{ user.image }}">
+            <h1>{{ user.firstname }}, {{ user.age }}</h1>
+            <hr>
+            <p>{{ user.bio }}</p>
+            <div class="action-control d-flex justify-content-between">
+                <div class="action-button dislike">
+                    <i class="fa-solid fa-xmark "></i>
+                </div>
+                <div class="action-button like">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 </div>
 
@@ -9,67 +21,60 @@
 
     function onWndLoad() {
 
-        var slider = document.querySelector('.slider');
-        var sliders = slider.children;
+        let slider = document.querySelector('.slider');
+        let sliders = slider.children;
+        let initX = null;
+        let transX = 0;
+        let rotZ = 0;
+        let transY = 0;
+        let curSlide = null;
+        let Z_DIS = 50;
+        let Y_DIS = 10;
+        let TRANS_DUR = 0.4;
 
-
-        var initX = null;
-        var transX = 0;
-        var rotZ = 0;
-        var transY = 0;
-
-        var curSlide = null;
-
-        var Z_DIS = 50;
-        var Y_DIS = 10;
-        var TRANS_DUR = 0.4;
-
-        var images = document.querySelectorAll('img');
-        for (var i = 0; i < images.length; i++) {
+        let images = document.querySelectorAll('img');
+        for (let i = 0; i < images.length; i++) {
             images[i].onmousemove = function (e) {
                 e.preventDefault()
-
             }
             images[i].ondragstart = function (e) {
                 return false;
-
             }
         }
 
         function init() {
-
-            var z = 0, y = 0;
-
-            for (var i = sliders.length - 1; i >= 0; i--) {
+            let z = 0, y = 0;
+            for (let i = sliders.length - 1; i >= 0; i--) {
                 sliders[i].style.transform = 'translateZ(' + z + 'px) translateY(' + y + 'px)';
-
                 z -= Z_DIS;
                 y += Y_DIS;
             }
-
-
             attachEvents(sliders[sliders.length - 1]);
-
-
         }
 
         function attachEvents(elem) {
             curSlide = elem;
-
             curSlide.addEventListener('mousedown', slideMouseDown, false);
             curSlide.addEventListener('touchstart', slideMouseDown, false);
+
+            let likeButton = curSlide.querySelector('.like');
+            likeButton.addEventListener('click', function() {
+                simulateSwipeRight();
+            });
+            let dislikeButton = curSlide.querySelector('.dislike');
+            dislikeButton.addEventListener('click', function() {
+                simulateSwipeLeft();
+            });
         }
 
         init();
 
         function slideMouseDown(e) {
-
             if (e.touches) {
                 initX = e.touches[0].clientX;
             } else {
                 initX = e.pageX;
             }
-
 
             document.addEventListener('mousemove', slideMouseMove, false);
             document.addEventListener('touchmove', slideMouseMove, false);
@@ -78,10 +83,10 @@
             document.addEventListener('touchend', slideMouseUp, false);
         }
 
-        var prevSlide = null;
+        let prevSlide = null;
 
         function slideMouseMove(e) {
-            var mouseX;
+            let mouseX;
 
             if (e.touches) {
                 mouseX = e.touches[0].clientX;
@@ -91,28 +96,35 @@
 
             transX += mouseX - initX;
             rotZ = transX / 20;
-
             transY = -Math.abs(transX / 15);
-
 
             curSlide.style.transition = 'none';
             curSlide.style.webkitTransform = 'translateX(' + transX + 'px)' + ' rotateZ(' + rotZ + 'deg)' + ' translateY(' + transY + 'px)';
             curSlide.style.transform = 'translateX(' + transX + 'px)' + ' rotateZ(' + rotZ + 'deg)' + ' translateY(' + transY + 'px)';
-            var j = 1;
-            //remains elements
-            for (var i = sliders.length - 2; i >= 0; i--) {
 
+            let percentage = Math.min(Math.abs(transX) / (curSlide.offsetWidth / 2), 1);
+            let color;
+
+            document.getElementsByClassName('swipe-wrapper')[0].style.backgroundColor = 'var(--white-color)';
+            if (transX > 50) {
+                color = `rgba(106, 241, 148, ${percentage})`;
+            } else if (transX < -50) {
+                color = `rgba(255, 107, 107, ${percentage})`;
+            }
+
+            document.getElementsByClassName('swipe-wrapper')[0].style.backgroundColor = color;
+
+            let j = 1;
+            for (let i = sliders.length - 2; i >= 0; i--) {
                 sliders[i].style.webkitTransform = 'translateX(' + transX / (2 * j) + 'px)' + ' rotateZ(' + rotZ / (2 * j) + 'deg)' + ' translateY(' + (Y_DIS * j) + 'px)' + ' translateZ(' + (-Z_DIS * j) + 'px)';
                 sliders[i].style.transform = 'translateX(' + transX / (2 * j) + 'px)' + ' rotateZ(' + rotZ / (2 * j) + 'deg)' + ' translateY(' + (Y_DIS * j) + 'px)' + ' translateZ(' + (-Z_DIS * j) + 'px)';
                 sliders[i].style.transition = 'none';
                 j++;
             }
 
-
             initX = mouseX;
             e.preventDefault();
             if (Math.abs(transX) >= curSlide.offsetWidth - 30) {
-
                 document.removeEventListener('mousemove', slideMouseMove, false);
                 document.removeEventListener('touchmove', slideMouseMove, false);
                 curSlide.style.transition = 'ease 0.2s';
@@ -121,16 +133,11 @@
                 attachEvents(sliders[sliders.length - 2]);
                 slideMouseUp();
                 setTimeout(function () {
-
-
                     slider.insertBefore(prevSlide, slider.firstChild);
-
                     prevSlide.style.transition = 'none';
                     prevSlide.style.opacity = '1';
                     slideMouseUp();
-
                 }, 201);
-
             }
         }
 
@@ -140,22 +147,32 @@
             transY = 0;
 
             curSlide.style.transition = 'cubic-bezier(0,1.95,.49,.73) ' + TRANS_DUR + 's';
-
             curSlide.style.webkitTransform = 'translateX(' + transX + 'px)' + 'rotateZ(' + rotZ + 'deg)' + ' translateY(' + transY + 'px)';
             curSlide.style.transform = 'translateX(' + transX + 'px)' + 'rotateZ(' + rotZ + 'deg)' + ' translateY(' + transY + 'px)';
             //remains elements
-            var j = 1;
-            for (var i = sliders.length - 2; i >= 0; i--) {
+            document.getElementsByClassName('swipe-wrapper')[0].style.backgroundColor = 'var(--white-color)';
+            let j = 1;
+            for (let i = sliders.length - 2; i >= 0; i--) {
                 sliders[i].style.transition = 'cubic-bezier(0,1.95,.49,.73) ' + TRANS_DUR / (j + 0.9) + 's';
                 sliders[i].style.webkitTransform = 'translateX(' + transX + 'px)' + 'rotateZ(' + rotZ + 'deg)' + ' translateY(' + (Y_DIS * j) + 'px)' + ' translateZ(' + (-Z_DIS * j) + 'px)';
                 sliders[i].style.transform = 'translateX(' + transX + 'px)' + 'rotateZ(' + rotZ + 'deg)' + ' translateY(' + (Y_DIS * j) + 'px)' + ' translateZ(' + (-Z_DIS * j) + 'px)';
-
                 j++;
             }
 
             document.removeEventListener('mousemove', slideMouseMove, false);
             document.removeEventListener('touchmove', slideMouseMove, false);
+        }
 
+        function simulateSwipeRight() {
+            transX = curSlide.offsetWidth;
+            slideMouseMove({ pageX: initX + transX });
+            slideMouseUp();
+        }
+
+        function simulateSwipeLeft(){
+            transX = -curSlide.offsetWidth;
+            slideMouseMove({ pageX: initX + transX });
+            slideMouseUp();
         }
     }
 </script>

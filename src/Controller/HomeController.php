@@ -12,11 +12,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-
     #[Route('/', name: 'index')]
     public function index(UserRepository $userRepository, DiscussionRepository $discussionRepository): Response
     {
-        $users = $userRepository->findAll();
+        $users = $userRepository->findBy([], null, 5);
         $user = $this->getUser();
         $discussions = $discussionRepository->findByUser($user);
 
