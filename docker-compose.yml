@@ -35,6 +35,8 @@ services:
     user: '1000'
     depends_on:
       - composer
+    networks:
+      - nginx-proxy
 
   composer:
     image: composer:latest
