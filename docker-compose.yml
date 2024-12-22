@@ -15,7 +15,7 @@ services:
     links:
       - php
 
-  php:
+  tindoo_php:
     restart: unless-stopped
     build: .
     volumes:
@@ -27,6 +27,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       APP_ENV: prod
       DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "9000:9000"
     user: '1000'
     depends_on:
       - composer
