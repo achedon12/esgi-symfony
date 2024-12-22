@@ -17,6 +17,7 @@ services:
 
   tindoo_php:
     restart: unless-stopped
+    container_name: tindoo_php
     build: .
     volumes:
       - ./:/var/www/html
