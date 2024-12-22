@@ -2,20 +2,6 @@ version: '3.8'
 
 services:
 
-  database:
-    restart: always
-    image: mariadb:10.5.8
-    volumes:
-      - ./mysql:/var/lib/mysql
-    environment:
-      MYSQL_HOST: ${MYSQL_HOST}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    ports:
-      - "3306:3306"
-
   nginx:
     image: nginx:alpine
     restart: unless-stopped
