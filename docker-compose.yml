@@ -14,6 +14,8 @@ services:
       - ../vps-config/certbot/conf:/etc/letsencrypt
     links:
       - tindoo_php
+    networks:
+      - nginx-proxy
 
   tindoo_php:
     restart: unless-stopped
@@ -45,3 +47,9 @@ services:
     volumes:
       - .:/app
     working_dir: /app
+
+
+networks:
+  nginx-proxy:
+    external:
+      name: nginx-proxy
