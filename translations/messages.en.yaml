@@ -1,4 +1,12 @@
+goBack: Go back
+logout: Logout
+home: Home
 discussion:
   title: Discussions
   goBack: Home
   online: Online
+profile:
+  title: Profile
+  online: Online
+  updateAccount: Update account
+  changePassword: Update password

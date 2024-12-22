@@ -89,7 +89,16 @@
     <aside class="h-100">
         <header class="d-flex align-items-center flex-row position-relative">
             <a href="{{ path('app_profile_index') }}">
-                <img src="{{ user.image }}" alt="{{ user.firstname }}" class="profile-img"/>
+                {% if user.image %}
+                    {# http image #}
+                    {% if user.image starts with 'https' %}
+                        <img src="{{ user.image }}" alt="{{ user.firstname }}"/>
+                    {% else %}
+                        <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture">
+                    {% endif %}
+                {% else %}
+                    <img src="{{ asset('images/default.png') }}" alt="{{ user.firstname }}"/>
+                {% endif %}
             </a>
             <h5 class="text-white m-0">{{ user.firstname }} {{ user.lastname }}</h5>
             <a href="{{ path('app_profile_filters') }}" class="settings-icon position-absolute">

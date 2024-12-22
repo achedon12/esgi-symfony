@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Update Profile</h1>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success mt-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger mt-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="card shadow-sm p-4">
+            {{ form_start(updateForm, { 'attr': {'class': 'row g-3'} }) }}
+
+            <div class="col-md-6">
+                {{ form_row(updateForm.firstname, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+
+            <div class="col-md-6">
+                {{ form_row(updateForm.lastname, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+
+            <div class="col-md-6">
+                {{ form_row(updateForm.image, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+
+            <div class="col-md-6">
+                {{ form_row(updateForm.birthdate, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+
+            <div class="col-md-6">
+                {{ form_row(updateForm.longitude, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+
+            <div class="col-md-6">
+                {{ form_row(updateForm.latitude, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+
+            <div class="col-md-12">
+                {{ form_row(updateForm.bio, {
+                    'attr': {'class': 'form-control', 'rows': 3}
+                }) }}
+            </div>
+
+            <div class="col-md-6">
+                {{ form_row(updateForm.gender, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+
+            <div class="col-md-12">
+                {% if user.interests is iterable %}
+                    <p><strong>Interests:</strong> {{ user.interests|join(', ') }}</p>
+                {% else %}
+                    <p><strong>Interests:</strong> {{ user.interests }}</p>
+                {% endif %}
+            </div>
+
+            <div class="col-md-12 text-center">
+                <button class="btn btn-primary px-4">Update</button>
+                <a href="{{ path('app_profile_index') }}" class="btn btn-secondary px-4">{{ 'goBack'|trans }}</a>
+            </div>
+
+            {{ form_end(updateForm) }}
+        </div>
+    </div>
+{% endblock %}

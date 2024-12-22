@@ -1,19 +1,87 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfileController!{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <section class="d-flex w-100 h-100">
+        <div class="w-25 h-100 sidebar-wrapper">
+            {% include 'home/sidebar.html.twig' %}
+        </div>
+        <div class="w-75 h-100 swipe-wrapper">
+            <div class="profile-container">
+                <div class="profile-details">
+                    <div class="profile-image">
+                        {% if user.image %}
+                            {% if user.image starts with 'https' %}
+                                <img src="{{ user.image }}" alt="Profile Picture">
+                            {% else %}
+                                <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture">
+                            {% endif %}
+                        {% else %}
+                            <img src="{{ asset('images/default_profile.png') }}" alt="Default Profile Picture">
+                        {% endif %}
+                    </div>
 
-<div class="example-wrapper">
+                    <div class="profile-info">
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                        <p><strong>Gender:</strong> {{ user.gender }}</p>
+                        <p><strong>Birthdate:</strong> {{ user.birthdate|date('Y-m-d') }}</p>
+                        {% if user.interests is iterable %}
+                            <p><strong>Interests:</strong> {{ user.interests|join(', ') }}</p>
+                        {% else %}
+                            <p><strong>Interests:</strong> {{ user.interests }}</p>
+                        {% endif %}
+                        <p><strong>Bio:</strong> {{ user.bio }}</p>
+                        <p><strong>Location:</strong> {{ user.latitude }}, {{ user.longitude }}</p>
+                    </div>
+                </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/confluent/Documents/ecole/m1/symfony/esgi-symfony/src/Controller/ProfileController.php</code></li>
-        <li>Your template at <code>/home/confluent/Documents/ecole/m1/symfony/esgi-symfony/templates/profile/index.html.twig</code></li>
-    </ul>
-</div>
+                <div class="profile-actions">
+                    <a href="{{ path('app_home_index') }}" class="btn btn-primary">{{ 'home'|trans }}</a>
+                    <a href="{{ path('app_profile_update') }}" class="btn btn-primary">{{ 'profile.updateAccount'|trans }}</a>
+                    <a href="{{ path('app_profile_update_password') }}" class="btn btn-secondary">{{ 'profile.changePassword'|trans }}</a>
+                    <a href="{{ path('app_logout') }}" class="btn btn-danger">{{ 'logout'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .profile-details {
+            display: flex;
+            align-items: center;
+        }
+        .profile-image img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .profile-info p {
+            margin: 5px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 {% endblock %}
