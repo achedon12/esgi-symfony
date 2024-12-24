@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Discussion;
 use App\Entity\Message;
 use App\Entity\User;
-use App\Enum\Gender;
+use App\Enum\GenderEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;

@@ -82,6 +82,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $gender = null;
 
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private ?string $language = null;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
@@ -320,6 +323,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(string $language): static
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Like>
      */
@@ -345,5 +360,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getFirstname() . ' ' . $this->getLastname();
     }
 }

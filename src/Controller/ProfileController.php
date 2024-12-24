@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Enum\LanguageEnum;
 use App\Form\ChangePasswordFormType;
 use App\Form\UpdateUserFormType;
 use App\Repository\DiscussionRepository;
@@ -22,7 +23,6 @@ class ProfileController extends AbstractController
     public function index(DiscussionRepository $discussionRepository): Response
     {
         $user = $this->getUser();
-        $discussions = $discussionRepository->findByUser($user);
 
         $discussions = $discussionRepository->findByUser($user);
 
@@ -44,7 +44,8 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/index.html.twig', [
             'user' => $user,
-            'discussions' => $discussions
+            'discussions' => $discussions,
+            'availableLanguages' => LanguageEnum::getAvailableLanguages()
         ]);
     }
 
@@ -132,5 +133,15 @@ class ProfileController extends AbstractController
             'updatePasswordForm' => $form->createView(),
             'user' => $user
         ]);
+    }
+
+    #[Route('/updateLanguage', name: 'update_language',methods: ['POST'])]
+    public function updateLanguage(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        $user->setLanguage($request->request->get('language'));
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_profile_index');
     }
 }
