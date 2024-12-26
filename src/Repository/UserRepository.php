@@ -33,6 +33,30 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function findAppropriatedUsers(User $user): array
+    {
+        $minScore = $user->getScore() - 20;
+        $maxScore = $user->getScore() + 20;
+
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.score BETWEEN :minScore AND :maxScore')
+            ->setParameter('minScore', $minScore)
+            ->setParameter('maxScore', $maxScore)
+            ->andWhere('u.id != :id')
+            ->setParameter('id', $user->getId())
+            ->andWhere('u.gender = :sexualOrientation')
+            ->setParameter('sexualOrientation', $user->getSexualOrientation())
+            ->andWhere('u.id NOT IN (
+            SELECT IDENTITY(l.user_liked) 
+            FROM App\Entity\Like l 
+            WHERE l.user_liker = :user
+        )')
+            ->setParameter('user', $user)
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

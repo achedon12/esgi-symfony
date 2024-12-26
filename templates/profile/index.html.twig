@@ -11,15 +11,7 @@
             <div class="profile-container">
                 <div class="profile-details">
                     <div class="profile-image">
-                        {% if user.image %}
-                            {% if user.image starts with 'https' %}
-                                <img src="{{ user.image }}" alt="Profile Picture">
-                            {% else %}
-                                <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture">
-                            {% endif %}
-                        {% else %}
-                            <img src="{{ asset('images/default_profile.png') }}" alt="Default Profile Picture">
-                        {% endif %}
+                        <img src="{{ asset(user.image) }}" alt="user_image_{{ user.id }}">
                     </div>
 
                     <div class="profile-info">

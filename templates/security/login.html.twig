@@ -42,14 +42,16 @@
             </div>
             #}
 
-            <button class="btn btn-lg btn-primary" type="submit">
-                Sign in
-            </button>
-            <a href="{{ path('app_register') }}">
-                <button class="btn btn-lg btn-secondary">
-                    Register
+            <div class="mt-4 d-flex justify-content-center">
+                <button class="btn btn-lg btn-primary mx-2" type="submit">
+                    Sign in
                 </button>
-            </a>
+                <a href="{{ path('app_register') }}" class="mx-2">
+                    <button class="btn btn-lg btn-secondary">
+                        Register
+                    </button>
+                </a>
+            </div>
         </form>
     </div>
 {% endblock %}

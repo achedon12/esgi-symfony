@@ -85,6 +85,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $language = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $sexualOrientation = null;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
@@ -365,5 +368,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString(): string
     {
         return $this->getFirstname() . ' ' . $this->getLastname();
+    }
+
+    public function getSexualOrientation(): ?string
+    {
+        return $this->sexualOrientation;
+    }
+
+    public function setSexualOrientation(?string $sexualOrientation): static
+    {
+        $this->sexualOrientation = $sexualOrientation;
+
+        return $this;
     }
 }

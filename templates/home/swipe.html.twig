@@ -1,178 +1,181 @@
-<div class="slider">
-    {% for user in users %}
-        <div class="slide"><img src="{{ user.image }}">
-            <h1>{{ user.firstname }}, {{ user.age }}</h1>
-            <hr>
-            <p>{{ user.bio }}</p>
-            <div class="action-control d-flex justify-content-between">
-                <div class="action-button dislike">
-                    <i class="fa-solid fa-xmark "></i>
-                </div>
-                <div class="action-button like">
-                    <i class="fa-solid fa-heart"></i>
-                </div>
+
+<div class="tinder">
+    <div class="tinder--status">
+        <i class="fa fa-remove"></i>
+        <i class="fa fa-heart"></i>
+    </div>
+
+    <div class="tinder--cards">
+        {% for user in users %}
+            <div class="tinder--card">
+                <img src="{{ asset(user.image) }}" alt="user_image_{{ user.id }}">
+                <h3>{{ user.firstname }}, {{ user.age }}</h3>
+                <p>{{ user.bio }}</p>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
+
+    <div class="tinder--buttons">
+        <button id="nope"><i class="fa fa-remove"></i></button>
+        <button id="love"><i class="fa fa-heart"></i></button>
+    </div>
 </div>
 
 <script>
-    window.addEventListener('load', onWndLoad, false);
+    document.addEventListener('DOMContentLoaded', function () {
+        "use strict";
 
-    function onWndLoad() {
+        let tinderContainer = document.querySelector(".tinder");
+        let allCards = document.querySelectorAll(".tinder--card");
+        let nope = document.getElementById("nope");
+        let love = document.getElementById("love");
 
-        let slider = document.querySelector('.slider');
-        let sliders = slider.children;
-        let initX = null;
-        let transX = 0;
-        let rotZ = 0;
-        let transY = 0;
-        let curSlide = null;
-        let Z_DIS = 50;
-        let Y_DIS = 10;
-        let TRANS_DUR = 0.4;
+        function initCards() {
+            let newCards = document.querySelectorAll(".tinder--card:not(.removed)");
 
-        let images = document.querySelectorAll('img');
-        for (let i = 0; i < images.length; i++) {
-            images[i].onmousemove = function (e) {
-                e.preventDefault()
-            }
-            images[i].ondragstart = function (e) {
-                return false;
-            }
-        }
-
-        function init() {
-            let z = 0, y = 0;
-            for (let i = sliders.length - 1; i >= 0; i--) {
-                sliders[i].style.transform = 'translateZ(' + z + 'px) translateY(' + y + 'px)';
-                z -= Z_DIS;
-                y += Y_DIS;
-            }
-            attachEvents(sliders[sliders.length - 1]);
-        }
-
-        function attachEvents(elem) {
-            curSlide = elem;
-            curSlide.addEventListener('mousedown', slideMouseDown, false);
-            curSlide.addEventListener('touchstart', slideMouseDown, false);
-
-            let likeButton = curSlide.querySelector('.like');
-            likeButton.addEventListener('click', function() {
-                simulateSwipeRight();
+            newCards.forEach(function (card, index) {
+                card.style.zIndex = allCards.length - index;
+                card.style.transform =
+                    "scale(" + (20 - index) / 20 + ") translateY(-" + 30 * index + "px)";
+                card.style.opacity = (10 - index) / 10;
             });
-            let dislikeButton = curSlide.querySelector('.dislike');
-            dislikeButton.addEventListener('click', function() {
-                simulateSwipeLeft();
+
+            tinderContainer.classList.add("loaded");
+
+            if (newCards.length === 5) {
+                fetchMoreUsers();
+            }
+        }
+
+        function fetchMoreUsers() {
+            fetch('/home/refresh')
+                .then(response => response.text())
+                .then(html => {
+                    let tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    let newUsers = tempDiv.querySelectorAll('.tinder--card');
+                    newUsers.forEach(user => {
+                        tinderContainer.querySelector('.tinder--cards').appendChild(user);
+                    });
+                    allCards = document.querySelectorAll(".tinder--card");
+                    initCards();
+                })
+                .catch(error => console.error('Error fetching more users:', error));
+        }
+
+        initCards();
+
+        allCards.forEach(function (el) {
+            let hammerTime = new Hammer(el);
+
+            hammerTime.on("pan", function () {
+                el.classList.add("moving");
             });
+
+            hammerTime.on("pan", function (event) {
+                if (event.deltaX === 0) return;
+                if (event.center.x === 0 && event.center.y === 0) return;
+
+                tinderContainer.classList.toggle("tinder_love", event.deltaX > 0);
+                tinderContainer.classList.toggle("tinder_nope", event.deltaX < 0);
+
+                let xMulti = event.deltaX * 0.03;
+                let yMulti = event.deltaY / 80;
+                let rotate = xMulti * yMulti;
+
+                event.target.style.transform =
+                    "translate(" +
+                    event.deltaX +
+                    "px, " +
+                    event.deltaY +
+                    "px) rotate(" +
+                    rotate +
+                    "deg)";
+            });
+
+            hammerTime.on("panend", function (event) {
+                el.classList.remove("moving");
+                tinderContainer.classList.remove("tinder_love");
+                tinderContainer.classList.remove("tinder_nope");
+
+                let moveOutWidth = document.body.clientWidth;
+                let keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
+
+                if (keep) {
+                    event.target.style.transform = "";
+                } else {
+                    let endX = Math.max(
+                        Math.abs(event.velocityX) * moveOutWidth,
+                        moveOutWidth
+                    );
+                    let toX = event.deltaX > 0 ? endX : -endX;
+                    let endY = Math.abs(event.velocityY) * moveOutWidth;
+                    let toY = event.deltaY > 0 ? endY : -endY;
+                    let xMulti = event.deltaX * 0.03;
+                    let yMulti = event.deltaY / 80;
+                    let rotate = xMulti * yMulti;
+
+                    event.target.style.transform =
+                        "translate(" +
+                        toX +
+                        "px, " +
+                        (toY + event.deltaY) +
+                        "px) rotate(" +
+                        rotate +
+                        "deg)";
+                    sendSwipeRequest(event.deltaX > 0 ? 'like' : 'dislike');
+                    event.target.remove();
+                    initCards();
+                }
+            });
+        });
+
+        function createButtonListener(love) {
+            return function (event) {
+                let cards = document.querySelectorAll(".tinder--card:not(.removed)");
+                let moveOutWidth = document.body.clientWidth * 1.5;
+
+                if (!cards.length) return false;
+
+                let card = cards[0];
+
+                card.classList.add("removed");
+
+                if (love) {
+                    card.style.transform = "translate(" + moveOutWidth + "px, -100px) rotate(-30deg)";
+                    sendSwipeRequest('like');
+                } else {
+                    card.style.transform = "translate(-" + moveOutWidth + "px, -100px) rotate(30deg)";
+                    sendSwipeRequest('dislike');
+                }
+
+                card.remove();
+                initCards();
+
+                event.preventDefault();
+            };
         }
 
-        init();
+        let nopeListener = createButtonListener(false);
+        let loveListener = createButtonListener(true);
 
-        function slideMouseDown(e) {
-            if (e.touches) {
-                initX = e.touches[0].clientX;
-            } else {
-                initX = e.pageX;
-            }
+        nope.addEventListener("click", nopeListener);
+        love.addEventListener("click", loveListener);
 
-            document.addEventListener('mousemove', slideMouseMove, false);
-            document.addEventListener('touchmove', slideMouseMove, false);
-
-            document.addEventListener('mouseup', slideMouseUp, false);
-            document.addEventListener('touchend', slideMouseUp, false);
+        function sendSwipeRequest(direction) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            const slidedUserId = document.querySelector('.tinder--card img').alt.split('_').pop();
+            fetch('/home/slide', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                },
+                body: JSON.stringify({ direction: direction, slidedUserId: slidedUserId })
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error sending swipe request:', error));
         }
-
-        let prevSlide = null;
-
-        function slideMouseMove(e) {
-            let mouseX;
-
-            if (e.touches) {
-                mouseX = e.touches[0].clientX;
-            } else {
-                mouseX = e.pageX;
-            }
-
-            transX += mouseX - initX;
-            rotZ = transX / 20;
-            transY = -Math.abs(transX / 15);
-
-            curSlide.style.transition = 'none';
-            curSlide.style.webkitTransform = 'translateX(' + transX + 'px)' + ' rotateZ(' + rotZ + 'deg)' + ' translateY(' + transY + 'px)';
-            curSlide.style.transform = 'translateX(' + transX + 'px)' + ' rotateZ(' + rotZ + 'deg)' + ' translateY(' + transY + 'px)';
-
-            let percentage = Math.min(Math.abs(transX) / (curSlide.offsetWidth / 2), 1);
-            let color;
-
-            document.getElementsByClassName('swipe-wrapper')[0].style.backgroundColor = 'var(--white-color)';
-            if (transX > 50) {
-                color = `rgba(106, 241, 148, ${percentage})`;
-            } else if (transX < -50) {
-                color = `rgba(255, 107, 107, ${percentage})`;
-            }
-
-            document.getElementsByClassName('swipe-wrapper')[0].style.backgroundColor = color;
-
-            let j = 1;
-            for (let i = sliders.length - 2; i >= 0; i--) {
-                sliders[i].style.webkitTransform = 'translateX(' + transX / (2 * j) + 'px)' + ' rotateZ(' + rotZ / (2 * j) + 'deg)' + ' translateY(' + (Y_DIS * j) + 'px)' + ' translateZ(' + (-Z_DIS * j) + 'px)';
-                sliders[i].style.transform = 'translateX(' + transX / (2 * j) + 'px)' + ' rotateZ(' + rotZ / (2 * j) + 'deg)' + ' translateY(' + (Y_DIS * j) + 'px)' + ' translateZ(' + (-Z_DIS * j) + 'px)';
-                sliders[i].style.transition = 'none';
-                j++;
-            }
-
-            initX = mouseX;
-            e.preventDefault();
-            if (Math.abs(transX) >= curSlide.offsetWidth - 30) {
-                document.removeEventListener('mousemove', slideMouseMove, false);
-                document.removeEventListener('touchmove', slideMouseMove, false);
-                curSlide.style.transition = 'ease 0.2s';
-                curSlide.style.opacity = 0;
-                prevSlide = curSlide;
-                attachEvents(sliders[sliders.length - 2]);
-                slideMouseUp();
-                setTimeout(function () {
-                    slider.insertBefore(prevSlide, slider.firstChild);
-                    prevSlide.style.transition = 'none';
-                    prevSlide.style.opacity = '1';
-                    slideMouseUp();
-                }, 201);
-            }
-        }
-
-        function slideMouseUp() {
-            transX = 0;
-            rotZ = 0;
-            transY = 0;
-
-            curSlide.style.transition = 'cubic-bezier(0,1.95,.49,.73) ' + TRANS_DUR + 's';
-            curSlide.style.webkitTransform = 'translateX(' + transX + 'px)' + 'rotateZ(' + rotZ + 'deg)' + ' translateY(' + transY + 'px)';
-            curSlide.style.transform = 'translateX(' + transX + 'px)' + 'rotateZ(' + rotZ + 'deg)' + ' translateY(' + transY + 'px)';
-            //remains elements
-            document.getElementsByClassName('swipe-wrapper')[0].style.backgroundColor = 'var(--white-color)';
-            let j = 1;
-            for (let i = sliders.length - 2; i >= 0; i--) {
-                sliders[i].style.transition = 'cubic-bezier(0,1.95,.49,.73) ' + TRANS_DUR / (j + 0.9) + 's';
-                sliders[i].style.webkitTransform = 'translateX(' + transX + 'px)' + 'rotateZ(' + rotZ + 'deg)' + ' translateY(' + (Y_DIS * j) + 'px)' + ' translateZ(' + (-Z_DIS * j) + 'px)';
-                sliders[i].style.transform = 'translateX(' + transX + 'px)' + 'rotateZ(' + rotZ + 'deg)' + ' translateY(' + (Y_DIS * j) + 'px)' + ' translateZ(' + (-Z_DIS * j) + 'px)';
-                j++;
-            }
-
-            document.removeEventListener('mousemove', slideMouseMove, false);
-            document.removeEventListener('touchmove', slideMouseMove, false);
-        }
-
-        function simulateSwipeRight() {
-            transX = curSlide.offsetWidth;
-            slideMouseMove({ pageX: initX + transX });
-            slideMouseUp();
-        }
-
-        function simulateSwipeLeft(){
-            transX = -curSlide.offsetWidth;
-            slideMouseMove({ pageX: initX + transX });
-            slideMouseUp();
-        }
-    }
+    });
 </script>
