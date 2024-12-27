@@ -11,7 +11,13 @@
             <div class="profile-container">
                 <div class="profile-details">
                     <div class="profile-image">
-                        <img src="{{ asset(user.image) }}" alt="user_image_{{ user.id }}">
+                        {% if user.image %}
+                            {% if user.image starts with 'people_images/' %}
+                                <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}"/>
+                            {% else %}
+                                <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture">
+                            {% endif %}
+                        {% endif %}
                     </div>
 
                     <div class="profile-info">

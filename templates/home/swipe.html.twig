@@ -8,7 +8,13 @@
     <div class="tinder--cards">
         {% for user in users %}
             <div class="tinder--card">
-                <img src="{{ asset(user.image) }}" alt="user_image_{{ user.id }}">
+                {% if user.image %}
+                    {% if user.image starts with 'people_images/' %}
+                        <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}"/>
+                    {% else %}
+                        <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture">
+                    {% endif %}
+                {% endif %}
                 <h3>{{ user.firstname }}, {{ user.age }}</h3>
                 <p>{{ user.bio }}</p>
             </div>

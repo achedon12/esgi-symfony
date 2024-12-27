@@ -356,18 +356,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeLikedBy(Like $like): static {
         if ($this->liked_by->removeElement($like)) {
-            // set the owning side to null (unless already changed)
             if ($like->getUserLiked() === $this) {
                 $like->setUserLiked(null);
             }
         }
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getFirstname() . ' ' . $this->getLastname();
     }
 
     public function getSexualOrientation(): ?string

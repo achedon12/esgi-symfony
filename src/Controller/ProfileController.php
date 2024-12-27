@@ -89,9 +89,11 @@ class ProfileController extends AbstractController
                         $newFilename
                     );
 
-                    // Delete the old image
-                    if ($user->getImage() && !str_starts_with('http', $user->getImage())) {
-                        unlink($this->getParameter('profile_images_directory').'/'.$user->getImage());
+                    if ($user->getImage()) {
+                        $existingImagePath = $this->getParameter('profile_images_directory') . '/' . $user->getImage();
+                        if (file_exists($existingImagePath)) {
+                            unlink($existingImagePath);
+                        }
                     }
                 } catch (FileException $e) {
                     $this->addFlash('error', 'An error occurred while uploading the image.');

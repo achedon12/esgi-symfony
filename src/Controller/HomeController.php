@@ -76,6 +76,7 @@ class HomeController extends AbstractController
             $like = new Like();
             $like->setUserLiker($user);
             $like->setUserLiked($slidedUser);
+            $like->setCreationDate(new \DateTimeImmutable());
             $entityManager->persist($like);
             $entityManager->flush();
             $slidedUser->setScore($slidedUser->getScore() + 1);

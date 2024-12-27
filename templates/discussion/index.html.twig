@@ -126,7 +126,13 @@
                     </a>
 
                     <div class="profile-info">
-                        <img src="{{ asset(discussion.userTwo.image) }}" alt="Profile picture" class="rounded-circle">
+                        {% if discussion.userTwo.image %}
+                            {% if discussion.userTwo.image starts with 'people_images/' %}
+                                <img src="{{ asset(discussion.userTwo.image) }}" alt="{{ discussion.userTwo.firstname }}"/>
+                            {% else %}
+                                <img src="{{ asset('uploads/profile_images/' ~ discussion.userTwo.image) }}" alt="Profile Picture">
+                            {% endif %}
+                        {% endif %}
                         <div>
                             <div class="user-name">{{ discussion.userTwo.firstname }} {{ discussion.userTwo.lastname }}</div>
                             <div class="status">

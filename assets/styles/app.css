@@ -39,6 +39,11 @@ body::-webkit-scrollbar {
     background-color: var(--white-color);
 }
 
+header img {
+    width: 3rem !important;
+    height: 3rem !important;
+}
+
 .tinder {
     width: 80vw;
     height: 95vh;
