@@ -12,7 +12,7 @@
                     {% if user.image starts with 'people_images/' %}
                         <img src="{{ asset(user.image) }}" alt="user_image_{{ user.id }}"/>
                     {% else %}
-                        <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="user_image_{{ user.id }}>
+                        <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="user_image_{{ user.id }}">
                     {% endif %}
                 {% endif %}
                 <h3>{{ user.firstname }}, {{ user.age }}</h3>
@@ -180,8 +180,42 @@
                 body: JSON.stringify({ direction: direction, slidedUserId: slidedUserId })
             })
                 .then(response => response.json())
-                .then(data => console.log(data))
+                .then(data => {
+                    if (data.status === 'match') {
+                        showMatchPopup(data.discussionId);
+                    }
+                })
                 .catch(error => console.error('Error sending swipe request:', error));
         }
     });
+
+    function showMatchPopup(discussionId) {
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        document.body.appendChild(overlay);
+
+        const popup = document.createElement('div');
+        popup.className = 'popup';
+        popup.innerHTML = `
+        <div class="popup-content">
+            <h1>IT'S A MATCH!</h1>
+            <button type="button" class="btn btn-danger" onclick="window.location.href='/discussion/${discussionId}'">Go to chat</button>
+        </div>
+    `;
+        document.body.appendChild(popup);
+
+        setTimeout(() => {
+            overlay.classList.add('show');
+            popup.classList.add('show');
+        }, 10);
+
+        setTimeout(() => {
+            popup.classList.remove('show');
+            overlay.classList.remove('show');
+            setTimeout(() => {
+                popup.remove();
+                overlay.remove();
+            }, 500);
+        }, 3000);
+    }
 </script>

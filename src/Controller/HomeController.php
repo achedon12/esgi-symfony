@@ -88,7 +88,7 @@ class HomeController extends AbstractController
                 $discussion->setCreationDate(new \DateTimeImmutable());
                 $entityManager->persist($discussion);
                 $entityManager->flush();
-                return $this->json(['status' => 'success', 'message' => 'It\'s a match!']);
+                return $this->json(['status' => 'match', 'discussionId' => $discussion->getId()]);
             }
 
             return $this->json(['status' => 'success', 'message' => 'User liked successfully']);
