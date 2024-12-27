@@ -1,9 +1,9 @@
 # **Tindoo** 💖
 
-![Tindoo Logo](assets/favicon.png)
+<img alt="Tindoo Logo" height="64" src="assets/favicon.png" width="55"/>
 
 ## **Description** 🎉
-Tindoo est une réinterprétation de l'application Tinder, adaptée pour une utilisation sur desktop. Ce projet vise à recréer les principales fonctionnalités de Tinder tout en mettant en avant une approche backend robuste avec Symfony, et une interface utilisateur simple et efficace grâce à Twig et Bootstrap. 🚀
+Tindoo est une réinterprétation de l'application Tinder, adaptée pour une utilisation sur desktop. Ce projet vise à recréer les principales fonctionnalités de Tinder tout en mettant l'accent sur le backend avec Symfony, et une interface utilisateur simple et efficace grâce à Twig et Bootstrap. 🚀
 
 ---
 
@@ -42,6 +42,9 @@ Tindoo est une réinterprétation de l'application Tinder, adaptée pour une uti
 - Pages personnalisées pour les erreurs courantes (404, 500, etc.).
 - Interface d'administration pour gérer les utilisateurs et modérer les contenus.
 - Système de logs pour suivre et analyser les erreurs.
+
+### **8. Gestion de tâches planifiées** ⏰
+- Cron permettant de supprimer les utilisateurs inactifs après un certain délai.
 
 ---
 
