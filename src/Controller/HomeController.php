@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\DiscussionRepository;
 use App\Repository\LikeRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,7 +77,7 @@ class HomeController extends AbstractController
             $like = new Like();
             $like->setUserLiker($user);
             $like->setUserLiked($slidedUser);
-            $like->setCreationDate(new \DateTimeImmutable());
+            $like->setCreationDate(new DateTimeImmutable());
             $entityManager->persist($like);
             $entityManager->flush();
             $slidedUser->setScore($slidedUser->getScore() + 1);
@@ -85,7 +86,7 @@ class HomeController extends AbstractController
                 $discussion = new Discussion();
                 $discussion->setUserOne($user);
                 $discussion->setUserTwo($slidedUser);
-                $discussion->setCreationDate(new \DateTimeImmutable());
+                $discussion->setCreationDate(new DateTimeImmutable());
                 $entityManager->persist($discussion);
                 $entityManager->flush();
                 return $this->json(['status' => 'match', 'discussionId' => $discussion->getId()]);
@@ -99,5 +100,20 @@ class HomeController extends AbstractController
         } else {
             return $this->json(['status' => 'error', 'message' => 'Direction not found'], 400);
         }
+    }
+
+    #[Route('/suggestion', name: 'suggestion')]
+    public function suggestion(UserRepository $userRepository): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
+        }
+        $suggestedUser = $userRepository->findSuggestedUsers($user);
+
+        return $this->render('home/suggestion/suggestion.html.twig', [
+            'suggestedUser' => $suggestedUser,
+            'user' => $user
+        ]);
     }
 }

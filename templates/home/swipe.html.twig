@@ -1,30 +1,44 @@
+<a href="{{ path('app_home_suggestion') }}" class="position-absolute end-0 m-4 z-3">
+    <button class="btn btn-info">Find suggested user</button>
+</a>
+<button class="btn btn-danger position-absolute m-4 z-3" onclick="window.location.reload()"><i
+            class="fa-solid fa-arrows-rotate"></i></button>
 
 <div class="tinder">
     <div class="tinder--status">
         <i class="fa fa-remove"></i>
         <i class="fa fa-heart"></i>
     </div>
-
-    <div class="tinder--cards">
-        {% for user in users %}
-            <div class="tinder--card">
-                {% if user.image %}
-                    {% if user.image starts with 'people_images/' %}
-                        <img src="{{ asset(user.image) }}" alt="user_image_{{ user.id }}"/>
-                    {% else %}
-                        <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="user_image_{{ user.id }}">
+    {% if users|length > 0 %}
+        <div class="tinder--cards">
+            {% for user in users %}
+                <div class="tinder--card">
+                    {% if user.image %}
+                        {% if user.image starts with 'people_images/' %}
+                            <img src="{{ asset(user.image) }}" alt="user_image_{{ user.id }}"/>
+                        {% else %}
+                            <img src="{{ asset('uploads/profile_images/' ~ user.image) }}"
+                                 alt="user_image_{{ user.id }}">
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                <h3>{{ user.firstname }}, {{ user.age }}</h3>
-                <p>{{ user.bio }}</p>
-            </div>
-        {% endfor %}
-    </div>
+                    <h3>{{ user.firstname }}, {{ user.age }}</h3>
+                    <p>{{ user.bio }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="d-flex flex-column align-items-center justify-content-center h-100">
+            <h1>No more users to show</h1>
+            <p>You have seen all the users in the database. Please come back later.</p>
+        </div>
+    {% endif %}
 
-    <div class="tinder--buttons">
-        <button id="nope"><i class="fa fa-remove"></i></button>
-        <button id="love"><i class="fa fa-heart"></i></button>
-    </div>
+    {% if users|length > 0 %}
+        <div class="tinder--buttons">
+            <button id="nope"><i class="fa fa-remove"></i></button>
+            <button id="love"><i class="fa fa-heart"></i></button>
+        </div>
+    {% endif %}
 </div>
 
 <script>
@@ -177,7 +191,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': csrfToken.getAttribute('content')
                 },
-                body: JSON.stringify({ direction: direction, slidedUserId: slidedUserId })
+                body: JSON.stringify({direction: direction, slidedUserId: slidedUserId})
             })
                 .then(response => response.json())
                 .then(data => {

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tindoo{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_home_index') }}" class="position-absolute m-4 z-3">
+        <button class="btn btn-info">Back</button>
+    </a>
+    {% if suggestedUser %}
+        <div class="suggest--card">
+            {% if suggestedUser.image %}
+                {% if suggestedUser.image starts with 'people_images/' %}
+                    <img src="{{ asset(suggestedUser.image) }}" alt="user_image_{{ suggestedUser.id }}"/>
+                {% else %}
+                    <img src="{{ asset('uploads/profile_images/' ~ suggestedUser.image) }}"
+                         alt="user_image_{{ suggestedUser.id }}">
+                {% endif %}
+            {% endif %}
+            <div class="d-flex flex-column p-4">
+                <h3>{{ suggestedUser.firstname }}, {{ suggestedUser.age }}</h3>
+                <p><strong>Biography : </strong>{{ suggestedUser.bio }}</p>
+                <p><strong>Location : </strong>{{ suggestedUser.longitude }}, {{ suggestedUser.latitude }}</p>
+                <p><strong>Birthdate : </strong>{{ suggestedUser.birthdate|date('d-m-Y') }}</p>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

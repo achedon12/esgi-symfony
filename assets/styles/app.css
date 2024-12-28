@@ -9,7 +9,7 @@
 
 body {
     background: linear-gradient(to right, #ff6b6b, #ffcc70);
-    height: 94vh;
+    height: 100vh;
     -ms-overflow-style: none;
     scrollbar-width: none;
     overflow: hidden;
@@ -42,6 +42,11 @@ body::-webkit-scrollbar {
 header img {
     width: 3rem !important;
     height: 3rem !important;
+}
+
+a {
+    color: var(--black-color);
+    text-decoration: none;
 }
 
 .tinder {
@@ -168,6 +173,35 @@ header img {
 .tinder--buttons i {
     font-size: 32px;
     vertical-align: middle;
+}
+
+.suggest--card {
+    width: 90vw;
+    height: 70vh;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    position: absolute;
+    will-change: transform;
+    transition: all 0.3s ease-in-out;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+
+    img {
+        margin-right: 2rem;
+    }
+
+    h3 {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+    }
+
+    p {
+        font-size: 1.5rem;
+    }
 }
 
 .overlay {

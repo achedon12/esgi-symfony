@@ -57,6 +57,50 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
+    public function findSuggestedUsers(User $user): ?User
+    {
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->andWhere('u.id != :id')
+            ->setParameter('id', $user->getId())
+            ->andWhere('u.id NOT IN (
+            SELECT IDENTITY(l.user_liked)
+            FROM App\Entity\Like l
+            WHERE l.user_liker = :user
+        )')
+            ->setParameter('user', $user)
+            ->setMaxResults(1);
+
+        if (!empty($user->getInterests())) {
+            $queryBuilder->orWhere('u.interests LIKE :interests')
+                ->setParameter('interests', '%' . implode('%', $user->getInterests()) . '%');
+        }
+
+        if ($user->getBirthdate() !== null) {
+            $birthdate = $user->getBirthdate();
+            $startDate = (clone $birthdate)->modify('-10 days');
+            $endDate = (clone $birthdate)->modify('+10 days');
+
+            $queryBuilder->orWhere('u.birthdate BETWEEN :startDate AND :endDate')
+                ->setParameter('startDate', $startDate)
+                ->setParameter('endDate', $endDate);
+        }
+
+        if ($user->getLongitude() !== null && $user->getLatitude() !== null) {
+            $longitude = $user->getLongitude();
+            $latitude = $user->getLatitude();
+            $range = 5.0;
+
+            $queryBuilder->orWhere('u.longitude BETWEEN :minLongitude AND :maxLongitude')
+                ->setParameter('minLongitude', $longitude - $range)
+                ->setParameter('maxLongitude', $longitude + $range)
+                ->orWhere('u.latitude BETWEEN :minLatitude AND :maxLatitude')
+                ->setParameter('minLatitude', $latitude - $range)
+                ->setParameter('maxLatitude', $latitude + $range);
+        }
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
     public function findInactiveUsers(\DateTime $inactiveSince): array
     {
         return $this->createQueryBuilder('u')
@@ -67,28 +111,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

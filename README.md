@@ -1,9 +1,9 @@
-# **Tindoo** 💖
+# **Tindoo**  <img alt="Tindoo Logo" height="35" src="assets/favicon.png" width="30"/>
 
-<img alt="Tindoo Logo" height="64" src="assets/favicon.png" width="55"/>
 
 ## **Description** 🎉
-Tindoo est une réinterprétation de l'application Tinder, adaptée pour une utilisation sur desktop. Ce projet vise à recréer les principales fonctionnalités de Tinder tout en mettant l'accent sur le backend avec Symfony, et une interface utilisateur simple et efficace grâce à Twig et Bootstrap. 🚀
+Tindoo est une réinterprétation de l'application Tinder, adaptée pour une utilisation sur desktop. 
+Ce projet vise à recréer les principales fonctionnalités de Tinder tout en mettant l'accent sur le backend via Symfony, et une interface utilisateur basée sur Twig et Bootstrap. 🚀
 
 ---
 
@@ -20,12 +20,11 @@ Tindoo est une réinterprétation de l'application Tinder, adaptée pour une uti
 
 ### **3. Système de "swipe"** 👈👉
 - Découverte aléatoire des profils d'autres utilisateurs.
-- Fonctionnalités "Like" et "Dislike" pour interagir avec les profils.
-- Historique des interactions pour éviter les doublons.
+- Fonctionnalités "Like" et "Dislike" pour exprimer son intérêt ou non (gestion de score).
 
 ### **4. Matching et messagerie** 💬
 - Création d'un "match" lorsque deux utilisateurs se "likent".
-- Système de messagerie simple pour échanger entre utilisateurs connectés.
+- Système de messagerie simple pour échanger entre utilisateurs.
 - Historique des conversations.
 
 ### **5. Recherche avancée** 🔍
@@ -36,7 +35,6 @@ Tindoo est une réinterprétation de l'application Tinder, adaptée pour une uti
 
 ### **6. Multilingue** 🌐
 - Interface disponible en plusieurs langues (ex. : français, anglais).
-- Sélection de la langue via une barre de navigation.
 
 ### **7. Gestion des erreurs et administration** ⚙️
 - Pages personnalisées pour les erreurs courantes (404, 500, etc.).
@@ -52,56 +50,6 @@ Tindoo est une réinterprétation de l'application Tinder, adaptée pour une uti
 - **Backend** : Symfony
 - **Frontend** : Twig, Bootstrap
 - **Base de données** : MySQL (ou autre SGBD compatible avec Doctrine)
-- **Autres outils** :
-    - Symfony Security pour l'authentification.
-    - Symfony Translation pour la gestion multilingue.
-    - Symfony Validator pour la validation des données.
-    - Symfony Messenger pour les messages et notifications.
-
----
-
-## **Installation et utilisation** 📦
-### **Prérequis** 📝
-- PHP 8.1 ou supérieur.
-- Composer.
-- Serveur web (Apache ou Nginx).
-- MySQL ou tout autre SGBD compatible.
-
-### **Étapes d'installation** 🛠️
-1. Clonez le dépôt :
-   ```bash
-   git clone https://github.com/achedon12/tindoo.git
-   cd tindoo
-    ```
-   
-2. Installez les dépendances PHP :
-
-    ```bash
-    composer install
-    ```
-   
-3. Configurer et créer la base de données :
-    - Créez la base de données :
-       ```bash
-          php bin/console doctrine:database:create
-       ```
-    - Copiez le fichier `.env` en `.env.local` et configurez les variables d'environnement pour la base de données.
-    - Créez la base de données :
-        ```bash
-          php bin/console doctrine:migrations:migrate
-        ```
-   
-4. Lancez le serveur local :
-
-    ```bash
-      symfony server:start
-    ```
-   
-5. Accédez à l'application dans votre navigateur :
-
-    ```
-    http://localhost:8000
-    ```
 
 ---
 
