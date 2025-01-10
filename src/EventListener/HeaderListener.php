@@ -14,7 +14,7 @@ class HeaderListener
         $response = $event->getResponse();
 
         $response->headers->add([
-            'X-DEVELOPED-BY' => 'leo deroin & Mathys Farineau'
+            'X-DEVELOPED-BY' => 'leo Deroin & Mathys Farineau'
         ]);
     }
 }

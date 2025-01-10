@@ -7,6 +7,7 @@ use App\Form\ChangePasswordFormType;
 use App\Form\UpdateUserFormType;
 use App\Repository\DiscussionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -138,11 +139,16 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/updateLanguage', name: 'update_language',methods: ['POST'])]
-    public function updateLanguage(Request $request, EntityManagerInterface $entityManager): Response
+    public function updateLanguage(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
         $user = $this->getUser();
-        $user->setLanguage($request->request->get('language'));
+        $user->setLanguage($language = $request->request->get('language'));
         $entityManager->flush();
+        $request->setLocale($language);
+        $request->setDefaultLocale($language);
+        $request->getSession()->set('_locale', $language);
+        $request->getSession()->set('_default_locale', $language);
+
 
         return $this->redirectToRoute('app_profile_index');
     }
