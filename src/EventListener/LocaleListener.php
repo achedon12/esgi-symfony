@@ -21,8 +21,8 @@ class LocaleListener
         if (!$request->hasPreviousSession()) {
             return;
         }
-        $request->setLocale($request->getSession()->get('_locale'));
-        $request->setDefaultLocale($request->getSession()->get('_default_locale') ?? 'fr');
-        $this->translator->setLocale($request->getSession()->get('_default_locale') ?? 'fr');
+        $request->setLocale($request->getSession()?->get('_locale') ?? 'en');
+        $request->setDefaultLocale($request->getSession()?->get('_default_locale') ?? 'en');
+        $this->translator->setLocale($request->getSession()?->get('_default_locale') ?? 'en');
     }
 }
