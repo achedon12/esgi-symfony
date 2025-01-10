@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur{% endblock %}
+
+{% block body %}
+    <style>
+        .error-container {
+            text-align: center;
+            margin-top: 2em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .error-container h1 {
+            font-size: 3em;
+            color: #e74c3c;
+        }
+
+        .error-container p {
+            font-size: 1.5em;
+            margin: 1em 0;
+        }
+
+        .go-back {
+            display: block;
+            margin-top: 1em;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 0.5em 1em;
+            background-color: #159bf6;
+            width: fit-content;
+            border-radius: 0.5em;
+            transition: background-color 0.3s;
+        }
+
+        .go-back:hover {
+            background-color: #0a6ebd;
+        }
+    </style>
+
+    <div class="error-container">
+        <h1>Erreur {{ status_code }}</h1>
+        <p>{{ status_text }}</p>
+        <a href="{{ path('homepage') }}" class="go-back">Retour à l'accueil</a>
+    </div>
+{% endblock %}
