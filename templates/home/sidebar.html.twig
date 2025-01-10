@@ -92,6 +92,8 @@
                     {% if user.image %}
                         {% if user.image starts with 'people_images/' %}
                             <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}"/>
+                        {% elseif user.image starts with 'https' or user.image starts with 'http' %}
+                            <img src="{{ user.image }}" alt="{{ user.firstname }}"/>
                         {% else %}
                             <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture">
                         {% endif %}
@@ -112,6 +114,8 @@
                         {% if d.userTwo.image %}
                             {% if d.userTwo.image starts with 'people_images/' %}
                                 <img src="{{ asset(d.userTwo.image) }}" alt="{{ d.userTwo.firstname }}"/>
+                            {% elseif d.userTwo.image starts with 'https' or d.userTwo.image starts with 'http' %}
+                                <img src="{{ d.userTwo.image }}" alt="{{ d.userTwo.firstname }}"/>
                             {% else %}
                                 <img src="{{ asset('uploads/profile_images/' ~ d.userTwo.image) }}" alt="Profile Picture">
                             {% endif %}
