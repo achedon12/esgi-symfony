@@ -57,3 +57,19 @@ Ce projet vise à recréer les principales fonctionnalités de Tinder tout en me
 
 - **Léo Deroin** - [achedon12](https://github.com/achedon12)
 - **Mathys Farineau** - [IPandragonI](https://github.com/IPandragonI)
+
+## Une fois le projet lancé...
+
+  > Connecter votre base de données
+  > Lancer les fixtures
+  > Lancer le serveur symfony
+  > Connecter vous avec les identifiants suivants :
+  >> compte administrateur :
+  >> email : `admin@gmail.com`
+  >> mot de passe : `admin`
+  > 
+  >> compte utilisateur :
+  >> email : `regular@gmail.com`
+  >> mot de passe : `regular`
+
+> **Note :** L'administrateur peut se rendre sur la page /admin qui lui permet de gérer l'application.
