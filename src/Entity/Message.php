@@ -69,4 +69,9 @@ class Message
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->author->getFirstname() . ' ' . $this->author->getLastname() . ' : ' . $this->content;
+    }
+
 }

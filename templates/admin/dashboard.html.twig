@@ -8,7 +8,7 @@
             Vous trouverez ci-dessous des accès rapides vers les principales sections.
         </p>
 
-        <div class="row mt-4">
+        <div class="row mt-4 align-items-center justify-content-center">
             <div class="col-md-4">
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
@@ -17,6 +17,45 @@
                             Consultez, ajoutez ou modifiez les utilisateurs de votre application.
                         </p>
                         <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\UserCrudController&entityFqcn=App\Entity\User" class="btn btn-primary">
+                            Accéder
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">💬 Gestion des discussions</h5>
+                        <p class="card-text text-muted">
+                            Consultez, ajoutez ou modifiez les discussions de votre application.
+                        </p>
+                        <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\DiscussionCrudController&entityFqcn=App\Entity\Discussion" class="btn btn-primary">
+                            Accéder
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">📧 Gestion des messages</h5>
+                        <p class="card-text text-muted">
+                            Consultez, ajoutez ou modifiez les messages de votre application.
+                        </p>
+                        <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\MessageCrudController&entityFqcn=App\Entity\Message" class="btn btn-primary">
+                            Accéder
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-4">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">❤️ Gestion des likes</h5>
+                        <p class="card-text text-muted">
+                            Consultez, ajoutez ou modifiez les likes de votre application.
+                        </p>
+                        <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\LikeCrudController&entityFqcn=App\Entity\Like" class="btn btn-primary">
                             Accéder
                         </a>
                     </div>

@@ -91,4 +91,9 @@ class Discussion
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->userOne->getFirstname() . ' ' . $this->userOne->getLastname() . ' - ' . $this->userTwo->getFirstname() . ' ' . $this->userTwo->getLastname();
+    }
 }

@@ -53,4 +53,9 @@ class Like
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->user_liker->getFirstname() . ' ' . $this->user_liker->getLastname() . ' likes ' . $this->user_liked->getFirstname() . ' ' . $this->user_liked->getLastname();
+    }
 }
