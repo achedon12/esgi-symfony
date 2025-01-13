@@ -29,6 +29,13 @@ services:
     depends_on:
       - composer
 
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1027:1025"
+      - "8025:8025"
+
+
   composer:
     image: composer:latest
     command: install --ignore-platform-reqs --no-scripts

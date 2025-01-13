@@ -9,10 +9,14 @@ use App\Form\ChangePasswordFormType;
 use App\Form\UpdateUserFormType;
 use App\Repository\DiscussionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -24,7 +28,8 @@ class ProfileController extends AbstractController
     public function __construct(private readonly DiscussionRepository $discussionRepository,
                                 private readonly EntityManagerInterface $entityManager,
                                 private readonly UserPasswordHasherInterface $userPasswordHasher,
-                                private readonly SluggerInterface $slugger)
+                                private readonly SluggerInterface $slugger,
+                                private readonly MailerInterface $mailer)
     {
     }
 
@@ -280,6 +285,9 @@ class ProfileController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     #[Route('/change_offer', name: 'offer_change')]
     public function changeOffer(Request $request): Response
     {
@@ -301,6 +309,30 @@ class ProfileController extends AbstractController
         if($offer_id !== 0) {
             $offer = $this->entityManager->getRepository(Offer::class)->find($offer_id);
             $user->setOffer($offer);
+            $offer->addUser($user);
+
+            try {
+                $email = (new Email())
+                    ->from('no-reply@tindoo.com')
+                    ->to($user->getEmail())
+                    ->subject('Offer changed')
+                    ->html($this->renderView('emails/payment_confirmation.html.twig', [
+                        'user' => $user,
+                        'offer' => $offer,
+                        'transaction_id' => uniqid(),
+                        'amount' => $offer->getPrice(),
+                        'currency' => 'EUR'
+                    ]));
+
+                $this->mailer->send($email);
+            } catch (TransportExceptionInterface $e) {
+                $this->addFlash('error', 'An error occurred while sending the email.');
+                return $this->redirectToRoute('app_profile_offer', [
+                    'user' => $user,
+                    'discussions' => $discussions,
+                ]);
+            }
+
             $this->entityManager->flush();
             $this->addFlash('success', 'Offer changed successfully!');
         }
@@ -310,4 +342,5 @@ class ProfileController extends AbstractController
             'discussions' => $discussions,
         ]);
     }
+
 }
