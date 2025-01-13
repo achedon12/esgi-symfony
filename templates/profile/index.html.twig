@@ -7,13 +7,67 @@
         <div class="w-25 h-100 sidebar-wrapper">
             {% include 'home/sidebar.html.twig' %}
         </div>
-        <div class="w-75 h-100 swipe-wrapper">
-            <div class="profile-container">
+        <div class="w-75 swipe-wrapper overflow-auto">
+            <header class="d-flex row align-content-end w-100">
+                <div class="col-12 d-flex justify-content-between align-items-center">
+                    <a href="{{ path('app_home_index') }}"><i class="fas fa-arrow-left fa-xl"></i></a>
+                    <i class="fas fa-user fa-xl text-primary text-center"></i>
+                    <i class="fas fa-fire fa-xl"></i>
+                </div>
+            </header>
+            <div class="user-profile">
+                {% if user.image %}
+                    {% if user.image starts with 'people_images/' %}
+                        <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}" class="rounded-circle w-25"/>
+                    {% elseif user.image starts with 'https' or user.image starts with 'http' %}
+                        <img src="{{ user.image }}" alt="{{ user.firstname }}" class="rounded-circle w-25"/>
+                    {% else %}
+                        <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture" class="rounded-circle w-25">
+                    {% endif %}
+                {% endif %}
+                <h1 class="text-justify w-50 mx-auto text-center">{{ user.firstname }} {{ user.lastname }}, {{ user.age }}</h1>
+
+                <div class="actions">
+                    <a class="action" href="#">
+                        <i class="fas fa-cog fa-2x"></i>
+                        <p>{{ 'profile.actions.settings'|trans }}</p>
+                    </a>
+                    <a class="action" href="#">
+                        <div>
+                            <i class="media fas fa-camera fa-2x"></i>
+                            <i class="more fas fa-plus fa-2x"></i>
+                        </div>
+                        <p>{{ 'profile.actions.add'|trans }}</p>
+                    </a>
+                    <a class="action" href="#">
+                        <i class="fas fa-pencil-alt fa-2x"></i>
+                        <p>{{ 'profile.actions.edit'|trans }}</p>
+                    </a>
+                </div>
+
+                <p class="text-muted w-50 mx-auto mt-3 text-justify text-center text-break text-wrap text-truncate">{{ user.bio }}</p>
+
+                <div class="tinder-plus">
+                    <h2 class="h1">
+                        <i class="fas fa-bolt"></i>
+                        Get Matches Faster
+                    </h2>
+                    <p>Get unlimited likes with Tinder Plus</p>
+                    <p>Boost your profile once per month</p>
+                    <p>Control your profile visibility</p>
+                    <a href="#">
+                        Get tinder plus
+                    </a>
+                </div>
+            </div>
+            {#<div class="profile-container">
                 <div class="profile-details">
                     <div class="profile-image">
                         {% if user.image %}
                             {% if user.image starts with 'people_images/' %}
                                 <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}"/>
+                            {% elseif user.image starts with 'https' or user.image starts with 'http' %}
+                                <img src="{{ user.image }}" alt="{{ user.firstname }}"/>
                             {% else %}
                                 <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture">
                             {% endif %}
@@ -49,14 +103,15 @@
                         <button type="submit" class="btn btn-primary">{{ 'profile.changeLanguage'|trans }}</button>
                     </form>
                 </div>
-            </div>
+            </div>#}
         </div>
     </section>
 {% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <style>
-        .profile-container {
+        /*.profile-container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -89,6 +144,6 @@
         }
         .btn:hover {
             background-color: #0056b3;
-        }
+        }*/
     </style>
 {% endblock %}

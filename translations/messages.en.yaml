@@ -11,3 +11,7 @@ profile:
   updateAccount: Update account
   changePassword: Update password
   changeLanguage: Change language
+  actions:
+    settings: Settings
+    edit: Edit
+    add: Add media

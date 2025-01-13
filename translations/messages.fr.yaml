@@ -11,3 +11,7 @@ profile:
   updateAccount: Mettre à jour le compte
   changePassword: Mettre à jour le mot de passe
   changeLanguage: Changer la langue
+  actions:
+    settings: Paramètres
+    edit: Modifier
+    add: Ajouter un média

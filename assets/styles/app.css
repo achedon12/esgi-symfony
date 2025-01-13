@@ -248,3 +248,118 @@ a {
         font-style: italic;
     }
 }
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.text-secondary {
+    color: var(--secondary-color) !important;
+}
+
+.bg-secondary {
+    background-color: var(--secondary-color) !important;
+}
+
+.text-tertiary {
+    color: var(--tertiary-color) !important;
+}
+
+.bg-tertiary {
+    background-color: var(--tertiary-color) !important;
+}
+
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+    position: relative;
+    background: var(--gray-400);
+
+    .actions {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+        width: 70%;
+        .action {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            &:hover {
+                >div,
+                >i:not(.more) {
+                    transform: scale(1.1);
+                }
+            }
+
+            >div,
+            >i {
+                padding: 1rem;
+                background: var(--white-color);
+                filter: drop-shadow(0 0 0.75rem rgba(0, 0, 0, 0.1));
+                border-radius: 50%;
+                color: gray;
+                transition: all 0.3s ease-in-out;
+                &.media {
+                    background: var(--primary-color);
+                    color: var(--white-color);
+                }
+            }
+            p {
+                margin-top: 1rem;
+                text-transform: uppercase;
+                color: gray;
+            }
+
+            .more {
+                position: absolute;
+                bottom: -1rem;
+                right: -1rem;
+                background: var(--white-color);
+                color: var(--primary-color);
+                padding: 0.5rem;
+                border-radius: 50%;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.tinder-plus {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+
+    h2 {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        i {
+            color: rebeccapurple;
+        }
+    }
+
+    a {
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        padding: 1rem 2rem;
+        color: var(--white-color);
+        border-radius: 1rem;
+    }
+}

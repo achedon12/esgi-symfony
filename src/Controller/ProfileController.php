@@ -50,6 +50,22 @@ class ProfileController extends AbstractController
         ]);
     }
 
+    #[Route('/settings', name: 'settings')]
+    public function settings(): Response
+    {
+        return $this->render('profile/settings.html.twig', [
+            'user' => $this->getUser()
+        ]);
+    }
+
+    #[Route('/edit', name: 'edit')]
+    public function edit(): Response
+    {
+        return $this->render('profile/edit.html.twig', [
+            'user' => $this->getUser()
+        ]);
+    }
+
     #[Route('/filters', name: 'filters')]
     public function filters(): Response
     {
