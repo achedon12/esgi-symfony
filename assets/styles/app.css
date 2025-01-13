@@ -2,6 +2,7 @@
     --primary-color: #ff6b6b;
     --secondary-color: #ffcc70;
     --tertiary-color: #6af194;
+    --quaternary-color: #70a1ff;
 
     --white-color: #f7f7f7;
     --black-color: #333;
@@ -367,4 +368,27 @@ a {
 .profile-header i:hover {
     color: var(--primary-color);
     transition: .2s ease-in-out;
+}
+
+.offer-grid {
+    width: 90% !important;
+    h2 {
+        font-weight: bolder;
+        margin-bottom: 3rem;
+    }
+    p {
+        font-size: 1.5rem;
+    }
+}
+
+.offer-grid>div:not(:last-child) {
+    border-right: 2px solid #333
+}
+
+.offer-grid div:nth-child(2) h2 {
+    color: var(--quaternary-color);
+}
+
+.offer-grid div:nth-child(3) h2 {
+    color: var(--secondary-color);
 }

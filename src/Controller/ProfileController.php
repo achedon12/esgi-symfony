@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Enum\LanguageEnum;
 use App\Form\ChangePasswordFormType;
 use App\Form\UpdateUserFormType;
@@ -171,5 +172,31 @@ class ProfileController extends AbstractController
 
 
         return $this->redirectToRoute('app_profile_settings');
+    }
+
+    #[Route('/offer', name: 'offer')]
+    public function offer(): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
+        }
+        $discussions = $this->discussionRepository->findByUser($user);
+
+        $offer_name = $user->getOffer()->getName();
+
+        array_map(function($discussion) use ($user) {
+            if($discussion->getUserOne() === $user) {
+                $discussion->setUserTwo($discussion->getUserTwo());
+            } else {
+                $discussion->setUserTwo($discussion->getUserOne());
+            }
+        }, $discussions);
+
+        return $this->render('profile/offer.html.twig', [
+            'user' => $user,
+            'discussions' => $discussions,
+            'offer_name' => $offer_name
+        ]);
     }
 }

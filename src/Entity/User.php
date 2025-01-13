@@ -88,6 +88,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sexualOrientation = null;
 
+    #[ORM\ManyToOne(targetEntity: Offer::class, inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Offer $offer = null;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
@@ -379,5 +383,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString(): string
     {
         return $this->getFirstname() . ' ' . $this->getLastname();
+    }
+
+    public function getOffer(): ?Offer
+    {
+        return $this->offer;
+    }
+
+    public function setOffer(?Offer $offer): static
+    {
+        $this->offer = $offer;
+
+        return $this;
     }
 }

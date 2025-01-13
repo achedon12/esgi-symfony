@@ -4,8 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\Discussion;
 use App\Entity\Message;
+use App\Entity\Offer;
 use App\Entity\User;
 use App\Enum\LanguageEnum;
+use App\Repository\OfferRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -26,6 +28,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('en_US');
+        $this->loadOffers($manager, $faker);
         $this->loadUsers($manager, $faker);
         $manager->flush();
 
@@ -65,6 +68,34 @@ class AppFixtures extends Fixture
         }
     }
 
+    private function loadOffers(ObjectManager $manager): void
+    {
+        $basicOffer = new Offer();
+        $basicOffer
+            ->setName('Basic')
+            ->setPrice(0)
+            ->setLikeNumber(20)
+            ->setDirectMessageNumber(0);
+
+        $premiumOffer = new Offer();
+        $premiumOffer
+            ->setName('Premium')
+            ->setPrice(9.99)
+            ->setLikeNumber(50)
+            ->setDirectMessageNumber(5);
+
+        $proOffer = new Offer();
+        $proOffer
+            ->setName('Pro')
+            ->setPrice(19.99)
+            ->setLikeNumber(999999999)
+            ->setDirectMessageNumber(999999999);
+
+        $manager->persist($basicOffer);
+        $manager->persist($premiumOffer);
+        $manager->persist($proOffer);
+        $manager->flush();
+    }
 
     private function loadUsers(ObjectManager $manager, $faker): void
     {
@@ -93,7 +124,8 @@ class AppFixtures extends Fixture
                 ->setInterests($faker->words($faker->numberBetween(1, 5)))
                 ->setScore($faker->numberBetween(0, 100))
                 ->setLanguage($faker->randomElement([LanguageEnum::FRENCH->value, LanguageEnum::ENGLISH->value]))
-                ->setSexualOrientation($this->getSexualOrientation($gender, $faker));
+                ->setSexualOrientation($this->getSexualOrientation($gender, $faker))
+                ->setOffer($manager->getRepository(Offer::class)->findOneBy(['name' => 'Basic']));
 
             if ($faker->boolean(90)) {
                 $regularUser->setUpdateDate(new \DateTimeImmutable($faker->dateTimeBetween($now, 'now')->format('Y-m-d H:i:s')));
@@ -120,7 +152,8 @@ class AppFixtures extends Fixture
             ->setGender($faker->randomElement([User::GENDER_MALE, User::GENDER_FEMALE, User::GENDER_OTHER]))
             ->setBirthdate(new \DateTimeImmutable($faker->dateTimeBetween('-100 years', '-18 years')->format('Y-m-d')))
             ->setLanguage($faker->randomElement([LanguageEnum::FRENCH->value, LanguageEnum::ENGLISH->value]))
-            ->setSexualOrientation('female');
+            ->setSexualOrientation('female')
+            ->setOffer($manager->getRepository(Offer::class)->findOneBy(['name' => 'Pro']));
 
         $manager->persist($adminUser);
 
@@ -142,7 +175,8 @@ class AppFixtures extends Fixture
             ->setGender($faker->randomElement([User::GENDER_MALE, User::GENDER_FEMALE, User::GENDER_OTHER]))
             ->setBirthdate(new \DateTimeImmutable($faker->dateTimeBetween('-100 years', '-18 years')->format('Y-m-d')))
             ->setLanguage($faker->randomElement([LanguageEnum::FRENCH->value, LanguageEnum::ENGLISH->value]))
-            ->setSexualOrientation('female');
+            ->setSexualOrientation('female')
+            ->setOffer($manager->getRepository(Offer::class)->findOneBy(['name' => 'Premium']));
         $manager->persist($specificUser);
     }
 
