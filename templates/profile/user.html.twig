@@ -3,7 +3,7 @@
         <div class="user-header">
             <div class="user-image">
                 {% if user.image[0] %}
-                    {% if user.image starts with 'people_images/' %}
+                    {% if user.image[0] starts with 'people_images/' %}
                         <img src="{{ asset(user.image[0]) }}" alt="{{ user.firstname }}"/>
                     {% elseif user.image[0] starts with 'https' or user.image[0] starts with 'http' %}
                         <img src="{{ user.image[0] }}" alt="{{ user.firstname }}"/>
@@ -15,6 +15,12 @@
             </div>
             <p class="user-bio">
                 {{ user.bio }}
+            </p>
+            <p class="user-interests">
+                {{ 'profile.interests'|trans }}:
+                {% for interest in user.interests %}
+                    <span class="badge bg-primary">{{ interest }}</span>
+                {% endfor %}
             </p>
         </div>
         {% if canUpdate %}

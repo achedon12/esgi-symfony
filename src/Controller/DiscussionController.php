@@ -38,6 +38,14 @@ class DiscussionController extends AbstractController
 
         $discussions = $this->discussionRepository->findByUser($user);
 
+        array_map(function($discussion) use ($user) {
+            if($discussion->getUserOne() === $user) {
+                $discussion->setUserTwo($discussion->getUserTwo());
+            } else {
+                $discussion->setUserTwo($discussion->getUserOne());
+            }
+        }, $discussions);
+
         return $this->render('discussion/index.html.twig', [
             'user' => $user,
             'discussion' => $discussion,

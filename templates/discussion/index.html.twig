@@ -127,13 +127,15 @@
 
                     <div class="profile-info">
                         {% if discussion.userTwo.image[0] %}
-                            {% if discussion.userTwo.image[0] starts with 'people_images/' %}
-                                <img src="{{ asset(discussion.userTwo.image[0]) }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
-                            {% elseif discussion.userTwo.image[0] starts with 'https' or discussion.userTwo.image[0] starts with 'http' %}
-                                <img src="{{ discussion.userTwo.image[0] }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
-                            {% else %}
-                                <img src="{{ asset('uploads/profile_images/' ~ discussion.userTwo.image[0]) }}" alt="Profile Picture" class="rounded-5">
-                            {% endif %}
+                            <a href="{{ path('app_user_show', {id: discussion.userTwo.id, redirect_url: path('app_discussion_index', {id: discussion.id})}) }}">
+                                {% if discussion.userTwo.image[0] starts with 'people_images/' %}
+                                    <img src="{{ asset(discussion.userTwo.image[0]) }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
+                                {% elseif discussion.userTwo.image[0] starts with 'https' or discussion.userTwo.image[0] starts with 'http' %}
+                                    <img src="{{ discussion.userTwo.image[0] }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
+                                {% else %}
+                                    <img src="{{ asset('uploads/profile_images/' ~ discussion.userTwo.image[0]) }}" alt="Profile Picture" class="rounded-5">
+                                {% endif %}
+                            </a>
                         {% endif %}
                         <div>
                             <div class="user-name">{{ discussion.userTwo.firstname }} {{ discussion.userTwo.lastname }}</div>
