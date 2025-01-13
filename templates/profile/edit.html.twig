@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+    <section class="d-flex w-100 h-100">
+        <div class="w-25 h-100 sidebar-wrapper">
+            {% include 'home/sidebar.html.twig' %}
+        </div>
+        <div class="w-75 swipe-wrapper overflow-auto">
+            <header class="d-flex row align-content-end w-100">
+                <div class="col-12 d-flex justify-content-between align-items-center">
+                    <a href="{{ path('app_profile_index') }}"><i class="fas fa-arrow-left fa-xl"></i></a>
+                    <i class="fas fa-user fa-xl text-primary text-center"></i>
+                    <i class="fas fa-fire fa-xl"></i>
+                </div>
+            </header>
+            <div class="w-auto mx-auto text-center">
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success mt-4">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger mt-4">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="p-4 h-auto">
+                {{ form_start(updateForm, { 'attr': {'class': 'row g-3'} }) }}
+
+                <div class="col-md-6">
+                    {{ form_row(updateForm.firstname, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
+
+                <div class="col-md-6">
+                    {{ form_row(updateForm.lastname, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
+
+                <div class="col-md-6">
+                    {{ form_row(updateForm.image, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
+
+                <div class="col-md-6">
+                    {{ form_row(updateForm.birthdate, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
+
+                <div class="col-md-6">
+                    {{ form_row(updateForm.longitude, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
+
+                <div class="col-md-6">
+                    {{ form_row(updateForm.latitude, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
+
+                <div class="col-md-12">
+                    {{ form_row(updateForm.bio, {
+                        'attr': {'class': 'form-control', 'rows': 3}
+                    }) }}
+                </div>
+
+                <div class="col-md-6">
+                    {{ form_row(updateForm.gender, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
+
+                <div class="col-md-12">
+                    {% if user.interests is iterable %}
+                        <p><strong>Interests:</strong> {{ user.interests|join(', ') }}</p>
+                    {% else %}
+                        <p><strong>Interests:</strong> {{ user.interests }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-primary px-4">Update</button>
+                    <a href="{{ path('app_profile_index') }}" class="btn btn-secondary px-4">{{ 'goBack'|trans }}</a>
+                </div>
+
+                {{ form_end(updateForm) }}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .profile-details {
+            display: flex;
+            align-items: center;
+        }
+        .profile-image img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .profile-info p {
+            margin: 5px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+{% endblock %}

@@ -7,7 +7,6 @@ use App\Form\ChangePasswordFormType;
 use App\Form\UpdateUserFormType;
 use App\Repository\DiscussionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,20 +19,19 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class ProfileController extends AbstractController
 {
 
+    public function __construct(private readonly DiscussionRepository $discussionRepository,
+                                private readonly EntityManagerInterface $entityManager,
+                                private readonly UserPasswordHasherInterface $userPasswordHasher,
+                                private readonly SluggerInterface $slugger)
+    {
+    }
+
     #[Route('/', name: 'index')]
-    public function index(DiscussionRepository $discussionRepository): Response
+    public function index(): Response
     {
         $user = $this->getUser();
 
-        $discussions = $discussionRepository->findByUser($user);
-
-        array_map(function($discussion) use ($user) {
-            if($discussion->getUserOne() === $user) {
-                $discussion->setUserTwo($discussion->getUserTwo());
-            } else {
-                $discussion->setUserTwo($discussion->getUserOne());
-            }
-        }, $discussions);
+        $discussions = $this->discussionRepository->findByUser($user);
 
         array_map(function($discussion) use ($user) {
             if($discussion->getUserOne() === $user) {
@@ -45,43 +43,16 @@ class ProfileController extends AbstractController
 
         return $this->render('profile/index.html.twig', [
             'user' => $user,
-            'discussions' => $discussions,
-            'availableLanguages' => LanguageEnum::getAvailableLanguages()
+            'discussions' => $discussions
         ]);
     }
 
     #[Route('/settings', name: 'settings')]
     public function settings(): Response
     {
-        return $this->render('profile/settings.html.twig', [
-            'user' => $this->getUser()
-        ]);
-    }
-
-    #[Route('/edit', name: 'edit')]
-    public function edit(): Response
-    {
-        return $this->render('profile/edit.html.twig', [
-            'user' => $this->getUser()
-        ]);
-    }
-
-    #[Route('/filters', name: 'filters')]
-    public function filters(): Response
-    {
-        return $this->render('profile/filters.html.twig', [
-            'user' => $this->getUser()
-        ]);
-    }
-
-    #[Route('/update', name: 'update')]
-    public function update(Request $request, SluggerInterface $slugger, EntityManagerInterface $entityManager, DiscussionRepository $discussionRepository): Response
-    {
         $user = $this->getUser();
-        $form = $this->createForm(UpdateUserFormType::class, $user);
-        $form->handleRequest($request);
 
-        $discussions = $discussionRepository->findByUser($user);
+        $discussions = $this->discussionRepository->findByUser($user);
 
         array_map(function($discussion) use ($user) {
             if($discussion->getUserOne() === $user) {
@@ -91,12 +62,36 @@ class ProfileController extends AbstractController
             }
         }, $discussions);
 
+        return $this->render('profile/settings.html.twig', [
+            'user' => $user,
+            'discussions' => $discussions,
+            'availableLanguages' => LanguageEnum::getAvailableLanguages()
+        ]);
+    }
+
+    #[Route('/edit', name: 'edit')]
+    public function edit(Request $request): Response
+    {
+        $user = $this->getUser();
+
+        $discussions = $this->discussionRepository->findByUser($user);
+
+        array_map(function($discussion) use ($user) {
+            if($discussion->getUserOne() === $user) {
+                $discussion->setUserTwo($discussion->getUserTwo());
+            } else {
+                $discussion->setUserTwo($discussion->getUserOne());
+            }
+        }, $discussions);
+
+        $form = $this->createForm(UpdateUserFormType::class, $user);
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
 
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
+                $safeFilename = $this->slugger->slug($originalFilename);
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
 
                 try {
@@ -121,18 +116,27 @@ class ProfileController extends AbstractController
             }
 
             $this->addFlash('success', 'Profile updated successfully!');
-            $entityManager->flush();
+            $this->entityManager->flush();
         }
 
-        return $this->render('profile/update.html.twig', [
-            'updateForm' => $form->createView(),
+        return $this->render('profile/edit.html.twig', [
             'user' => $user,
-            'discussions' => $discussions
+            'discussions' => $discussions,
+            'availableLanguages' => LanguageEnum::getAvailableLanguages(),
+            'updateForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/filters', name: 'filters')]
+    public function filters(): Response
+    {
+        return $this->render('profile/filters.html.twig', [
+            'user' => $this->getUser()
         ]);
     }
 
     #[Route('/update-password', name: 'update_password')]
-    public function updatePassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function updatePassword(Request $request): Response
     {
         $user = $this->getUser();
         $form = $this->createForm(ChangePasswordFormType::class);
@@ -141,11 +145,11 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // update password hash
             $user->setPassword(
-                $userPasswordHasher->hashPassword($user, $form->get('newPassword')->getData())
+                $this->userPasswordHasher->hashPassword($user, $form->get('newPassword')->getData())
             );
 
             $this->addFlash('success', 'Password updated successfully!');
-            $entityManager->flush();
+            $this->entityManager->flush();
         }
 
         return $this->render('profile/update_password.html.twig', [
@@ -155,11 +159,11 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/updateLanguage', name: 'update_language',methods: ['POST'])]
-    public function updateLanguage(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
+    public function updateLanguage(Request $request): Response
     {
         $user = $this->getUser();
         $user->setLanguage($language = $request->request->get('language'));
-        $entityManager->flush();
+        $this->entityManager->flush();
         $request->setLocale($language);
         $request->setDefaultLocale($language);
         $request->getSession()->set('_locale', $language);
