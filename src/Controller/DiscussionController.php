@@ -32,6 +32,10 @@ class DiscussionController extends AbstractController
             throw $this->createNotFoundException('Discussion not found.');
         }
 
+        if (!$discussion->getUsers()->contains($user)) {
+            throw $this->createAccessDeniedException('You are not allowed to access this discussion.');
+        }
+
         $discussions = $this->discussionRepository->findByUser($user);
 
         return $this->render('discussion/index.html.twig', [
