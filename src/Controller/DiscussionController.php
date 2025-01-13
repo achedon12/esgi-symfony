@@ -32,7 +32,7 @@ class DiscussionController extends AbstractController
             throw $this->createNotFoundException('Discussion not found.');
         }
 
-        if (!$discussion->getUsers()->contains($user)) {
+        if (!$discussion->getUserOne() === $user || !$discussion->getUserTwo() === $user) {
             throw $this->createAccessDeniedException('You are not allowed to access this discussion.');
         }
 
