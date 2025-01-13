@@ -183,8 +183,6 @@ class ProfileController extends AbstractController
         }
         $discussions = $this->discussionRepository->findByUser($user);
 
-        $offer_name = $user->getOffer()->getName();
-
         array_map(function($discussion) use ($user) {
             if($discussion->getUserOne() === $user) {
                 $discussion->setUserTwo($discussion->getUserTwo());
@@ -196,7 +194,6 @@ class ProfileController extends AbstractController
         return $this->render('profile/offer.html.twig', [
             'user' => $user,
             'discussions' => $discussions,
-            'offer_name' => $offer_name
         ]);
     }
 }

@@ -88,8 +88,8 @@ class AppFixtures extends Fixture
         $proOffer
             ->setName('Pro')
             ->setPrice(19.99)
-            ->setLikeNumber(999999999)
-            ->setDirectMessageNumber(999999999);
+            ->setLikeNumber(-1)
+            ->setDirectMessageNumber(-1);
 
         $manager->persist($basicOffer);
         $manager->persist($premiumOffer);

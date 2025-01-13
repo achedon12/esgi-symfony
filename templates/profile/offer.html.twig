@@ -23,7 +23,7 @@
                     <p>➕ 20 likes / jour </p>
                     <p>❌ Pas de messages direct </p>
                 </div>
-                {% if offer_name === 'Basic' %}
+                {% if user.offer.name == 'Basic' %}
                     <p>Choisi</p>
                 {% endif %}
             </div>
@@ -33,7 +33,7 @@
                     <p>➕ 50 likes / jour </p>
                     <p>➕ 5 messages direct / jour </p>
                 </div>
-                {% if offer_name === 'Premium' %}
+                {% if user.offer.name == 'Premium' %}
                     <p>Choisi</p>
                 {% endif %}
             </div>
@@ -43,7 +43,7 @@
                     <p>✅ Like illimité </p>
                     <p>✅ Messages direct illimité </p>
                 </div>
-                {% if offer_name === 'Pro' %}
+                {% if user.offer.name == 'Pro' %}
                     <p>Choisi</p>
                 {% endif %}
             </div>
