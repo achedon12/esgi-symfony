@@ -6,6 +6,9 @@ discussion:
   goBack: Home
   online: Online
 profile:
+  account:
+    settings: Account Settings
+    language: Language Settings
   title: Profile
   online: Online
   updateAccount: Update account

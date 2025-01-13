@@ -65,7 +65,7 @@ class ProfileController extends AbstractController
         return $this->render('profile/settings.html.twig', [
             'user' => $user,
             'discussions' => $discussions,
-            'availableLanguages' => LanguageEnum::getAvailableLanguages()
+            'availableLanguages' => LanguageEnum::getAvailableLanguages(),
         ]);
     }
 
@@ -170,6 +170,6 @@ class ProfileController extends AbstractController
         $request->getSession()->set('_default_locale', $language);
 
 
-        return $this->redirectToRoute('app_profile_index');
+        return $this->redirectToRoute('app_profile_settings');
     }
 }

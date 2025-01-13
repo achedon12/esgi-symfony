@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Profile Settings{% endblock %}
 
 {% block body %}
     <section class="d-flex w-100 h-100">
@@ -10,46 +10,13 @@
         <div class="w-75 swipe-wrapper overflow-auto">
             <header class="d-flex row align-content-end w-100">
                 <div class="col-12 d-flex justify-content-between align-items-center">
-                    <a href="{{ path('app_profile_index') }}"><i class="fas fa-arrow-left fa-xl"></i></a>
-                    <i class="fas fa-user fa-xl text-primary text-center"></i>
-                    <i class="fas fa-fire fa-xl"></i>
+                    <a href="{{ path('app_profile_index') }}" class="btn btn-link"><i class="fas fa-arrow-left fa-lg"></i> Back</a>
+                    <h2 class="text-primary">Profile Settings</h2>
                 </div>
             </header>
-            <div class="user-profile">
-                {% if user.image %}
-                    {% if user.image starts with 'people_images/' %}
-                        <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}" class="rounded-circle w-25"/>
-                    {% elseif user.image starts with 'https' or user.image starts with 'http' %}
-                        <img src="{{ user.image }}" alt="{{ user.firstname }}" class="rounded-circle w-25"/>
-                    {% else %}
-                        <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture" class="rounded-circle w-25">
-                    {% endif %}
-                {% endif %}
-                <h1 class="text-justify w-50 mx-auto text-center">{{ user.firstname }} {{ user.lastname }}, {{ user.age }}</h1>
-
-                <div class="actions">
-                    <a class="action" href="{{ path('app_profile_settings') }}">
-                        <i class="fas fa-cog fa-2x"></i>
-                        <p>{{ 'profile.actions.settings'|trans }}</p>
-                    </a>
-                    <a class="action" href="#">
-                        <div>
-                            <i class="media fas fa-camera fa-2x"></i>
-                            <i class="more fas fa-plus fa-2x"></i>
-                        </div>
-                        <p>{{ 'profile.actions.add'|trans }}</p>
-                    </a>
-                    <a class="action" href="{{ path('app_profile_edit') }}">
-                        <i class="fas fa-pencil-alt fa-2x"></i>
-                        <p>{{ 'profile.actions.edit'|trans }}</p>
-                    </a>
-                </div>
-
-                <p class="text-muted w-50 mx-auto mt-3 text-justify text-center text-break text-wrap text-truncate">{{ user.bio }}</p>
-            </div>
-            {#<div class="profile-container">
-                <div class="profile-details">
-                    <div class="profile-image">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar">
                         {% if user.image %}
                             {% if user.image starts with 'people_images/' %}
                                 <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}"/>
@@ -60,37 +27,39 @@
                             {% endif %}
                         {% endif %}
                     </div>
-
                     <div class="profile-info">
-                        <p><strong>Email:</strong> {{ user.email }}</p>
-                        <p><strong>Gender:</strong> {{ user.gender }}</p>
-                        <p><strong>Birthdate:</strong> {{ user.birthdate|date('Y-m-d') }}</p>
-                        {% if user.interests is iterable %}
-                            <p><strong>Interests:</strong> {{ user.interests|join(', ') }}</p>
-                        {% else %}
-                            <p><strong>Interests:</strong> {{ user.interests }}</p>
-                        {% endif %}
-                        <p><strong>Bio:</strong> {{ user.bio }}</p>
-                        <p><strong>Location:</strong> {{ user.latitude }}, {{ user.longitude }}</p>
+                        <h3>{{ app.user.firstname }} {{ app.user.lastname }}</h3>
+                        <p>{{ app.user.email }}</p>
                     </div>
                 </div>
 
                 <div class="profile-actions">
-                    <a href="{{ path('app_home_index') }}" class="btn btn-primary">{{ 'home'|trans }}</a>
-                    <a href="{{ path('app_profile_update') }}" class="btn btn-primary">{{ 'profile.updateAccount'|trans }}</a>
-                    <a href="{{ path('app_profile_update_password') }}" class="btn btn-secondary">{{ 'profile.changePassword'|trans }}</a>
-                    <a href="{{ path('app_logout') }}" class="btn btn-danger">{{ 'logout'|trans }}</a>
-                    <form action="{{ path('app_profile_update_language') }}" method="post">
-                        <label for="language">{{ 'profile.changeLanguage'|trans }}</label>
-                        <select name="language" id="language" class="form-control">
+                    <h4>{{ 'profile.account.settings'|trans }}</h4>
+                    <div class="action-buttons">
+                        <a href="{{ path('app_profile_update_password') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-lock"></i> {{ 'profile.changePassword'|trans }}
+                        </a>
+                        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">
+                            <i class="fas fa-sign-out-alt"></i> {{ 'logout'|trans }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="language-settings">
+                    <h4>{{ 'profile.account.language'|trans }}</h4>
+                    <form action="{{ path('app_profile_update_language') }}" method="post" class="form-inline">
+                        <label for="language" class="mr-2"></label>
+                        <select name="language" id="language" class="form-control mr-2">
                             {% for language in availableLanguages %}
-                                <option value="{{ language.value }}" {% if language == app.request.locale %}selected{% endif %}>{{ language.value }}</option>
+                                <option value="{{ language.value }}" {% if language.value == user.language %}selected{% endif %}>{{ language.value }}</option>
                             {% endfor %}
                         </select>
-                        <button type="submit" class="btn btn-primary">{{ 'profile.changeLanguage'|trans }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-language"></i> {{'profile.changeLanguage'|trans }}
+                        </button>
                     </form>
                 </div>
-            </div>#}
+            </div>
         </div>
     </section>
 {% endblock %}
@@ -98,39 +67,118 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        /*.profile-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .profile-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-        .profile-details {
+
+        .profile-header {
             display: flex;
             align-items: center;
+            margin-bottom: 30px;
         }
-        .profile-image img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
+
+        .profile-avatar img {
+            width: 120px;
+            height: 120px;
             object-fit: cover;
+            border: 3px solid #007bff;
             margin-right: 20px;
         }
+
+        .profile-info h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #333;
+        }
+
         .profile-info p {
-            margin: 5px 0;
+            font-size: 1rem;
+            color: #777;
         }
-        .btn {
+
+        .profile-actions h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .action-buttons a {
             display: inline-block;
+            margin-right: 15px;
             padding: 10px 20px;
-            margin-top: 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
             border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
         }
-        .btn:hover {
+
+        .action-buttons a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .language-settings h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-inline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-inline select {
+            margin-right: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-outline-primary {
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-outline-danger {
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
             background-color: #0056b3;
-        }*/
+        }
+
+        .btn-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
     </style>
 {% endblock %}
