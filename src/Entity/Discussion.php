@@ -30,6 +30,9 @@ class Discussion
     #[ORM\JoinColumn(nullable: false)]
     private ?User $userTwo = null;
 
+    #[ORM\Column]
+    private ?bool $isApproved = null;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -95,5 +98,17 @@ class Discussion
     public function __toString(): string
     {
         return $this->userOne->getFirstname() . ' ' . $this->userOne->getLastname() . ' - ' . $this->userTwo->getFirstname() . ' ' . $this->userTwo->getLastname();
+    }
+
+    public function isApproved(): ?bool
+    {
+        return $this->isApproved;
+    }
+
+    public function setApproved(bool $isApproved): static
+    {
+        $this->isApproved = $isApproved;
+
+        return $this;
     }
 }

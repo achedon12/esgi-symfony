@@ -112,6 +112,26 @@
             align-items: center;
             color: #6c757d;
         }
+        .toApproveMessages {
+            position: relative;
+        }
+
+        .toApproveMessages::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .toApproveMessages .messages,
+        .toApproveMessages .message-form {
+            pointer-events: none;
+        }
     </style>
     <section class="d-flex w-100 h-100">
         <div class="w-25 h-100 sidebar-wrapper">
@@ -147,7 +167,24 @@
                 </div>
             </header>
 
-            <div class="messages">
+            {% if discussion.isApproved == false %}
+                <div class="alert alert-warning d-flex justify-content-between align-items-center">
+                    <p class="mb-0">Discussion is not approved yet</p>
+                    <div>
+                        <form action="{{ path('app_discussion_manage') }}" method="POST" class="d-inline">
+                            <input type="hidden" name="action" value="{{ 1 }}">
+                            <input type="hidden" name="discussion_id" value="{{ discussion.id }}">
+                            <button type="submit" class="btn btn-outline-warning">Approve</button>
+                        </form>
+                        <form action="{{ path('app_discussion_manage') }}" method="POST" class="d-inline">
+                            <input type="hidden" name="action" value="{{ 0 }}">
+                            <input type="hidden" name="discussion_id" value="{{ discussion.id }}">
+                            <button type="submit" class="btn btn-danger">Decline</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="messages {% if discussion.isApproved == false %}toApproveMessages{% endif %}">
                 {% for message in discussion.messages %}
                     <div class="d-flex {% if message.author == user %}justify-content-end{% else %}justify-content-start{% endif %} mb-3">
                         <div class="message p-3 {% if message.author == user %}user-message{% else %}other-message{% endif %} position-relative">

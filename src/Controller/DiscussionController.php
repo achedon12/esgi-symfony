@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Discussion;
+use App\Entity\Like;
 use App\Entity\Message;
 use App\Repository\DiscussionRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -83,6 +85,42 @@ class DiscussionController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirectToRoute('app_discussion_index', ['id' => $discussionId]);
+    }
+
+    #[Route('/manage', name: 'manage', methods: ['POST'])]
+    public function manage(Request $request, DiscussionRepository $discussionRepository, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        $action = (int) $request->request->get('action');
+        $discussionId = $request->request->get('discussion_id');
+
+        $discussion = $discussionRepository->find($discussionId);
+        if (!$discussion) {
+            throw $this->createNotFoundException('Discussion introuvable.');
+        }
+
+        if($action == 1) {
+            $discussion->setApproved(true);
+            $user1 = $discussion->getUserOne();
+            $user2 = $discussion->getUserTwo();
+            $notMe = $user1->getId() == $user->getId() ? $user2 : $user1;
+
+            $like = new Like();
+            $like->setUserLiker($notMe);
+            $like->setUserLiked($user);
+            $like->setCreationDate(new DateTimeImmutable());
+            $entityManager->persist($like);
+            $entityManager->flush();
+            $user->setScore($user->getScore() + 1);
+            return $this->redirectToRoute('app_discussion_index', ['id' => $discussionId]);
+
+        } else {
+            $entityManager->remove($discussion);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_home_index');
+        }
+
+
     }
 
 }

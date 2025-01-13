@@ -158,6 +158,7 @@ a {
     display: inline-block;
     margin: 0 8px;
     color: var(--white-color);
+    background: violet;
 
     &:first-child {
         background: var(--black-color);

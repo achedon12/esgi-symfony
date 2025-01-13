@@ -36,6 +36,9 @@
     {% if users|length > 0 %}
         <div class="tinder--buttons">
             <button id="nope"><i class="fa fa-remove"></i></button>
+            {% if user.offer.id != 1 %}
+            <button id="star"><i class="fa fa-star"></i></button>
+            {% endif %}
             <button id="love"><i class="fa fa-heart"></i></button>
         </div>
     {% endif %}
@@ -45,9 +48,28 @@
     document.addEventListener('DOMContentLoaded', function () {
         "use strict";
 
+        const localStorage = window.localStorage;
+        const today = new Date().toISOString().split('T')[0];
+
+        let likeNumber = localStorage.getItem('likeNumber');
+        let directMessageNumber = localStorage.getItem('directMessageNumber');
+        let storedDate = localStorage.getItem('storedDate');
+
+        if (storedDate !== today) {
+            likeNumber = {{ user.offer.likeNumber }};
+            directMessageNumber = {{ user.offer.directMessageNumber }};
+            localStorage.setItem('likeNumber', likeNumber);
+            localStorage.setItem('directMessageNumber', directMessageNumber);
+            localStorage.setItem('storedDate', today);
+        } else {
+            likeNumber = parseInt(likeNumber, 10);
+            directMessageNumber = parseInt(directMessageNumber, 10);
+        }
+
         let tinderContainer = document.querySelector(".tinder");
         let allCards = document.querySelectorAll(".tinder--card");
         let nope = document.getElementById("nope");
+        let star = document.getElementById("star");
         let love = document.getElementById("love");
 
         function initCards() {
@@ -118,6 +140,12 @@
                 tinderContainer.classList.remove("tinder_love");
                 tinderContainer.classList.remove("tinder_nope");
 
+                if (parseInt(likeNumber) === 0) {
+                    showLimitPopup('like');
+                    event.target.style.transform = "";
+                    return;
+                }
+
                 let moveOutWidth = document.body.clientWidth;
                 let keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
 
@@ -146,12 +174,19 @@
                     sendSwipeRequest(event.deltaX > 0 ? 'like' : 'dislike');
                     event.target.remove();
                     initCards();
+                    likeNumber--;
+                    localStorage.setItem('likeNumber', likeNumber);
                 }
             });
         });
 
-        function createButtonListener(love) {
+        function createButtonListener(isLove) {
             return function (event) {
+                if (parseInt(likeNumber) === 0) {
+                    showLimitPopup('like');
+                    return;
+                }
+
                 let cards = document.querySelectorAll(".tinder--card:not(.removed)");
                 let moveOutWidth = document.body.clientWidth * 1.5;
 
@@ -161,7 +196,7 @@
 
                 card.classList.add("removed");
 
-                if (love) {
+                if (isLove) {
                     card.style.transform = "translate(" + moveOutWidth + "px, -100px) rotate(-30deg)";
                     sendSwipeRequest('like');
                 } else {
@@ -171,15 +206,50 @@
 
                 card.remove();
                 initCards();
+                likeNumber--;
+                localStorage.setItem('likeNumber', likeNumber);
+                event.preventDefault();
+            };
+        }
 
+        function createDirectMessageListener() {
+            return function (event) {
+                if (parseInt(directMessageNumber) === 0) {
+                    showLimitPopup('direct message');
+                    return;
+                }
+
+                let cards = document.querySelectorAll(".tinder--card:not(.removed)");
+                let moveOutWidth = document.body.clientWidth * 1.5;
+
+                if (!cards.length) return false;
+
+                let card = cards[0];
+
+                card.classList.add("removed");
+
+                card.style.transform = "translate(-" + moveOutWidth + "px, -100px) rotate(30deg)";
+                if(parseInt(directMessageNumber) === 0) {
+                    showLimitPopup('direct message');
+                    return
+                } else {
+                    directMessageNumber--;
+                    localStorage.setItem('directMessageNumber', directMessageNumber);
+                    forceDiscussion();
+                }
+
+                card.remove();
+                initCards();
                 event.preventDefault();
             };
         }
 
         let nopeListener = createButtonListener(false);
+        let starListener = createDirectMessageListener();
         let loveListener = createButtonListener(true);
 
         nope.addEventListener("click", nopeListener);
+        if (star) star.addEventListener("click", starListener);
         love.addEventListener("click", loveListener);
 
         function sendSwipeRequest(direction) {
@@ -201,6 +271,27 @@
                 })
                 .catch(error => console.error('Error sending swipe request:', error));
         }
+
+        function forceDiscussion() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            const slidedUserId = document.querySelector('.tinder--card img').alt.split('_').pop();
+            fetch('/home/forceDiscussion', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken.getAttribute('content')
+                },
+                body: JSON.stringify({slidedUserId: slidedUserId})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === 'success') {
+                        console.log('Discussion forced');
+                        window.location.href = '/discussion/' + data.discussionId;
+                    }
+                })
+                .catch(error => console.error('Error forcing discussion', error));
+        }
     });
 
     function showMatchPopup(discussionId) {
@@ -216,6 +307,34 @@
             <button type="button" class="btn btn-danger" onclick="window.location.href='/discussion/${discussionId}'">Go to chat</button>
         </div>
     `;
+        document.body.appendChild(popup);
+
+        setTimeout(() => {
+            overlay.classList.add('show');
+            popup.classList.add('show');
+        }, 10);
+
+        setTimeout(() => {
+            popup.classList.remove('show');
+            overlay.classList.remove('show');
+            setTimeout(() => {
+                popup.remove();
+                overlay.remove();
+            }, 500);
+        }, 3000);
+    }
+
+    function showLimitPopup(type) {
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        document.body.appendChild(overlay);
+
+        const popup = document.createElement('div');
+        popup.className = 'popup';
+        popup.innerHTML = `
+    <div class="popup-content">
+        <h1>You have reached your daily limit of ${type}s</h1>
+    </div>`;
         document.body.appendChild(popup);
 
         setTimeout(() => {

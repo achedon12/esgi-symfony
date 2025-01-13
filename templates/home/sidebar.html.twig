@@ -46,6 +46,14 @@
             padding-left: calc(1rem - 4px);
         }
 
+        .discussions a.toApprove {
+            border-left: 4px solid #f7ff07;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            padding-left: calc(1rem - 4px);
+        }
+
         .discussions a.active hr {
             display: none;
         }
@@ -65,14 +73,6 @@
             content: "";
             display: block;
             border: 1px solid #e9ecef;
-        }
-
-        .profile-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 1rem;
-            object-fit: cover;
         }
 
         .settings-icon {
@@ -106,7 +106,7 @@
             <h5 class="text-white px-2 pt-2">{{ 'discussion.title'|trans }}</h5>
             {% for d in discussions %}
                 {% set lastMessage = d.messages.last %}
-                <a href="{{ path('app_discussion_index', {id: d.id}) }}" class="d-flex align-items-center flex-row p-4 d-flex flex-column text-decoration-none {% if discussion is defined and discussion == d %}active{% endif %}">
+                <a href="{{ path('app_discussion_index', {id: d.id}) }}" class="d-flex align-items-center flex-row p-4 d-flex flex-column text-decoration-none {% if discussion is defined and discussion == d %}active{% endif %} {% if d.isApproved == false %}toApprove{% endif %}">
                     <div class="d-flex flex-row w-100 align-items-center">
                         {% if d.userTwo.image[0] %}
                             {% if d.userTwo.image[0] starts with 'people_images/' %}

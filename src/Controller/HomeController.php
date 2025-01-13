@@ -95,6 +95,7 @@ class HomeController extends AbstractController
                 $discussion->setUserOne($user);
                 $discussion->setUserTwo($slidedUser);
                 $discussion->setCreationDate(new DateTimeImmutable());
+                $discussion->setApproved(true);
                 $this->entityManager->persist($discussion);
                 $this->entityManager->flush();
                 return $this->json(['status' => 'match', 'discussionId' => $discussion->getId()]);
@@ -108,6 +109,37 @@ class HomeController extends AbstractController
         } else {
             return $this->json(['status' => 'error', 'message' => 'Direction not found'], 400);
         }
+    }
+
+    #[Route('/forceDiscussion', name: 'forceDiscussion')]
+    public function forceDiscussion(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $slidedUserId = $data['slidedUserId'] ?? null;
+        $slidedUser = $entityManager->getRepository(User::class)->find($slidedUserId);
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
+        }
+
+        $like = new Like();
+        $like->setUserLiker($user);
+        $like->setUserLiked($slidedUser);
+        $like->setCreationDate(new DateTimeImmutable());
+        $entityManager->persist($like);
+        $entityManager->flush();
+        $slidedUser->setScore($slidedUser->getScore() + 1);
+
+        $discussion = new Discussion();
+        $discussion->setUserOne($user);
+        $discussion->setUserTwo($slidedUser);
+        $discussion->setCreationDate(new DateTimeImmutable());
+        $discussion->setApproved(false);
+        $entityManager->persist($discussion);
+        $entityManager->flush();
+
+        return $this->json(['status' => 'success', 'discussionId' => $discussion->getId()]);
     }
 
     #[Route('/suggestion', name: 'suggestion')]
