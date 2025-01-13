@@ -118,10 +118,27 @@ class HomeController extends AbstractController
             throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
         }
         $suggestedUser = $this->userRepository->findSuggestedUsers($user);
+        $distance = $this->calculateDistance($user->getLatitude(), $user->getLongitude(), $suggestedUser->getLatitude(), $suggestedUser->getLongitude());
 
         return $this->render('home/suggestion/suggestion.html.twig', [
             'suggestedUser' => $suggestedUser,
-            'user' => $user
+            'distance' => $distance,
         ]);
+    }
+
+    private function calculateDistance($lat1, $lon1, $lat2, $lon2): float|int
+    {
+        $earthRadius = 6371; // Rayon de la Terre en kilomètres
+
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+            cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+            sin($dLon / 2) * sin($dLon / 2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return $earthRadius * $c;
     }
 }

@@ -17,10 +17,15 @@
                 {% endif %}
             {% endif %}
             <div class="d-flex flex-column p-4">
-                <h3>{{ suggestedUser.firstname }}, {{ suggestedUser.age }}</h3>
+                <h3>{{ suggestedUser.firstname }}, {{ suggestedUser.age }} {{ 'profile.years'|trans }}</h3>
                 <p><strong>Biography : </strong>{{ suggestedUser.bio }}</p>
-                <p><strong>Location : </strong>{{ suggestedUser.longitude }}, {{ suggestedUser.latitude }}</p>
-                <p><strong>Birthdate : </strong>{{ suggestedUser.birthdate|date('d-m-Y') }}</p>
+                <p><strong>Distance : </strong>{{ distance }} kms</p>
+                <p><strong>Birthdate : </strong>{{ suggestedUser.birthdate|date('d m Y') }}</p>
+                <p><strong>Interests: </strong>
+                    {% for interest in suggestedUser.interests %}
+                        <span class="badge bg-primary">{{ interest }}</span>
+                    {% endfor %}
+                </p>
             </div>
         </div>
     {% endif %}
