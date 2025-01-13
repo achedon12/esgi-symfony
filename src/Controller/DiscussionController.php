@@ -6,6 +6,7 @@ use App\Entity\Discussion;
 use App\Entity\Like;
 use App\Entity\Message;
 use App\Repository\DiscussionRepository;
+use App\Repository\LikeRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +21,7 @@ class DiscussionController extends AbstractController
 {
 
     public function __construct(private readonly DiscussionRepository $discussionRepository,
+                                private readonly LikeRepository $likeRepository,
                                 private readonly EntityManagerInterface $entityManager)
     {
     }
@@ -48,10 +50,22 @@ class DiscussionController extends AbstractController
             }
         }, $discussions);
 
+
+        $isCurrentUserDemanding = false;
+        $like = $this->likeRepository->findOneBy([
+            'user_liker' => $user,
+            'user_liked' => $discussion->getUserOne() === $user ? $discussion->getUserTwo() : $discussion->getUserOne()
+        ]);
+
+        if($like) {
+            $isCurrentUserDemanding = true;
+        }
+
         return $this->render('discussion/index.html.twig', [
             'user' => $user,
             'discussion' => $discussion,
-            'discussions' => $discussions
+            'discussions' => $discussions,
+            'isCurrentUserDemanding' => $isCurrentUserDemanding
         ]);
     }
 

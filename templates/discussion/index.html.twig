@@ -167,7 +167,7 @@
                 </div>
             </header>
 
-            {% if discussion.isApproved == false %}
+            {% if discussion.isApproved == false and isCurrentUserDemanding == false %}
                 <div class="alert alert-warning d-flex justify-content-between align-items-center">
                     <p class="mb-0">Discussion is not approved yet</p>
                     <div>
@@ -184,7 +184,7 @@
                     </div>
                 </div>
             {% endif %}
-            <div class="messages {% if discussion.isApproved == false %}toApproveMessages{% endif %}">
+            <div class="messages {% if discussion.isApproved == false and isCurrentUserDemanding == false %}toApproveMessages{% endif %}">
                 {% for message in discussion.messages %}
                     <div class="d-flex {% if message.author == user %}justify-content-end{% else %}justify-content-start{% endif %} mb-3">
                         <div class="message p-3 {% if message.author == user %}user-message{% else %}other-message{% endif %} position-relative">
@@ -203,7 +203,7 @@
                                          class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;">
                                 {% else %}
-                                    <img src="{{ asset('uploads/profile_images/' ~ message.author.image) }}" alt="Profile Picture" class="rounded-circle position-absolute"
+                                    <img src="{{ asset('uploads/profile_images/' ~ message.author.image[0]) }}" alt="Profile Picture" class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;">
                                 {% endif %}
                             {% endif %}
@@ -213,10 +213,10 @@
                 {% endfor %}
             </div>
 
-            <div class="message-form">
+            <div class="message-form {% if discussion.isApproved == false and isCurrentUserDemanding == false %}toApproveMessages{% endif %}">
                 <form action="{{ path('app_discussion_send') }}" method="post" class="d-flex gap-2">
                     <input type="hidden" name="discussion_id" value="{{ discussion.id }}">
-                    <input type="text" name="message" class="form-control" placeholder="Type a message">
+                    <input type="text" name="message" class="form-control" placeholder="Type a message" {% if discussion.isApproved == false and isCurrentUserDemanding == false %}disabled{% endif %}>
                     <button type="submit" class="btn btn-primary">Send</button>
                 </form>
             </div>
