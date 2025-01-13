@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Offer;
 use App\Entity\User;
 use App\Enum\LanguageEnum;
 use App\Form\ChangePasswordFormType;
@@ -192,6 +193,62 @@ class ProfileController extends AbstractController
         }, $discussions);
 
         return $this->render('profile/offer.html.twig', [
+            'user' => $user,
+            'discussions' => $discussions,
+        ]);
+    }
+
+    #[Route('/pay_offer', name: 'offer_pay')]
+    public function payOffer(Request $request): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
+        }
+        $discussions = $this->discussionRepository->findByUser($user);
+        $offer_id = (int) $request->request->get('offer_id');
+
+        array_map(function($discussion) use ($user) {
+            if($discussion->getUserOne() === $user) {
+                $discussion->setUserTwo($discussion->getUserTwo());
+            } else {
+                $discussion->setUserTwo($discussion->getUserOne());
+            }
+        }, $discussions);
+
+        return $this->render('profile/pay_offer.html.twig', [
+            'user' => $user,
+            'discussions' => $discussions,
+            'offer_id' => $offer_id
+        ]);
+    }
+
+    #[Route('/change_offer', name: 'offer_change')]
+    public function changeOffer(Request $request): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
+        }
+        $discussions = $this->discussionRepository->findByUser($user);
+        $offer_id = (int) $request->request->get('offer_id');
+
+        array_map(function($discussion) use ($user) {
+            if($discussion->getUserOne() === $user) {
+                $discussion->setUserTwo($discussion->getUserTwo());
+            } else {
+                $discussion->setUserTwo($discussion->getUserOne());
+            }
+        }, $discussions);
+
+        if($offer_id !== 0) {
+            $offer = $this->entityManager->getRepository(Offer::class)->find($offer_id);
+            $user->setOffer($offer);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Offer changed successfully!');
+        }
+
+        return $this->redirectToRoute('app_profile_offer', [
             'user' => $user,
             'discussions' => $discussions,
         ]);

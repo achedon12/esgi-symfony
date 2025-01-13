@@ -3,52 +3,81 @@
 {% block title %}Offres{% endblock %}
 
 {% block body %}
-<section class="d-flex w-100 h-100">
-    <div class="w-25 h-100 sidebar-wrapper">
-        {% include 'home/sidebar.html.twig' %}
-    </div>
-    <div class="w-75 swipe-wrapper overflow-auto">
-        <header class="d-flex row align-content-end w-100">
-            <div class="col-12 d-flex justify-content-between align-items-center profile-header">
-                <a href="{{ path('app_home_index') }}"><i class="fas fa-arrow-left fa-xl"></i></a>
-                <i class="fas fa-user fa-xl text-primary text-center"></i>
-                <a href="/offer"><i class="fas fa-fire fa-xl"></i></a>
-            </div>
-        </header>
-        <h1 class="text-primary text-center m-4">Choisissez votre offre !</h1>
-        <div class="row mt-5 mx-auto offer-grid w-100">
-            <div class="col">
-                <h2 class="text-center">Basic</h2>
-                <div class="info">
-                    <p>➕ 20 likes / jour </p>
-                    <p>❌ Pas de messages direct </p>
+    <section class="d-flex w-100 h-100">
+        <div class="w-25 h-100 sidebar-wrapper">
+            {% include 'home/sidebar.html.twig' %}
+        </div>
+        <div class="w-75 swipe-wrapper overflow-auto">
+            <header class="d-flex row align-content-end w-100">
+                <div class="col-12 d-flex justify-content-between align-items-center profile-header">
+                    <a href="{{ path('app_profile_index') }}"><i class="fas fa-arrow-left fa-xl"></i></a>
+                    <i class="fas fa-user fa-xl text-primary text-center"></i>
                 </div>
-                {% if user.offer.name == 'Basic' %}
-                    <p>Choisi</p>
-                {% endif %}
-            </div>
-            <div class="col">
-                <h2 class="text-center">🔹 Premium 🔹</h2>
-                <div class="info">
-                    <p>➕ 50 likes / jour </p>
-                    <p>➕ 5 messages direct / jour </p>
+            </header>
+            <h1 class="text-primary text-center offer-title">Choisissez votre offre !</h1>
+            <div class="row mt-5 mx-auto offer-grid w-100">
+                <div class="col">
+                    <h2 class="text-center">Basic</h2>
+                    <div class="info">
+                        <p>➕ 20 likes / jour </p>
+                        <p>❌ Pas de messages direct </p>
+                    </div>
+                    {% if user.offer.name == 'Basic' %}
+                        <div class="d-flex justify-content-center mt-5">
+                            <div class="check-succes bg-success">
+                                <i class="fa-solid fa-check fs-4 text-light"></i>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-                {% if user.offer.name == 'Premium' %}
-                    <p>Choisi</p>
-                {% endif %}
-            </div>
-            <div class="col">
-                <h2 class="text-center">✨ Pro ✨</h2>
-                <div class="info">
-                    <p>✅ Like illimité </p>
-                    <p>✅ Messages direct illimité </p>
+                <div class="col">
+                    <h2 class="text-center">🔹 Premium 🔹</h2>
+                    <div class="info">
+                        <p>➕ 50 likes / jour </p>
+                        <p>➕ 5 messages direct / jour </p>
+                    </div>
+                    {% if user.offer.name == 'Premium' %}
+                        <div class="d-flex justify-content-center mt-5">
+                            <div class="check-succes bg-success">
+                                <i class="fa-solid fa-check fs-4 text-light"></i>
+                            </div>
+                        </div>
+                    {% elseif user.offer.name == 'Basic' %}
+                        <div class="d-flex justify-content-center mt-5">
+                            <div class="check-succes">
+                                <form action="{{ path('app_profile_offer_pay') }}" method="POST" class="d-inline">
+                                    <input type="hidden" name="offer_id" value="{{ 2 }}">
+                                    <button type="submit" class="btn btn-outline-info fs-4">Choisir</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-                {% if user.offer.name == 'Pro' %}
-                    <p>Choisi</p>
-                {% endif %}
+                <div class="col">
+                    <h2 class="text-center">✨ Pro ✨</h2>
+                    <div class="info">
+                        <p>✅ Like illimité </p>
+                        <p>✅ Messages direct illimité </p>
+                    </div>
+                    {% if user.offer.name == 'Pro' %}
+                        <div class="d-flex justify-content-center mt-5">
+                            <div class="check-succes bg-success">
+                                <i class="fa-solid fa-check fs-4 text-light"></i>
+                            </div>
+                        </div>
+                    {% elseif user.offer.name == 'Basic' or user.offer.name == 'Premium' %}
+                        <div class="d-flex justify-content-center mt-5">
+                            <div class="check-succes">
+                                <form action="{{ path('app_profile_offer_pay') }}" method="POST" class="d-inline">
+                                    <input type="hidden" name="offer_id" value="{{ 3 }}">
+                                    <button type="submit" class="btn btn-outline-warning fs-4">Choisir</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 {% endblock %}
