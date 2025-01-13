@@ -191,14 +191,6 @@ class ProfileController extends AbstractController
         return $this->redirectToRoute('app_profile_media');
     }
 
-    #[Route('/filters', name: 'filters')]
-    public function filters(): Response
-    {
-        return $this->render('profile/filters.html.twig', [
-            'user' => $this->getUser()
-        ]);
-    }
-
     #[Route('/update-password', name: 'update_password')]
     public function updatePassword(Request $request): Response
     {
