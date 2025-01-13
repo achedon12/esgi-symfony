@@ -33,64 +33,97 @@
                 {{ form_start(updateForm, { 'attr': {'class': 'row g-3'} }) }}
 
                 <div class="col-md-6">
-                    {{ form_row(updateForm.firstname, {
-                        'attr': {'class': 'form-control'}
-                    }) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        {{ form_widget(updateForm.firstname, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+                    </div>
                 </div>
 
                 <div class="col-md-6">
-                    {{ form_row(updateForm.lastname, {
-                        'attr': {'class': 'form-control'}
-                    }) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        {{ form_widget(updateForm.lastname, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+                    </div>
                 </div>
 
                 <div class="col-md-6">
-                    {{ form_row(updateForm.image, {
-                        'attr': {'class': 'form-control'}
-                    }) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                        {{ form_widget(updateForm.gender, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+                    </div>
                 </div>
 
                 <div class="col-md-6">
-                    {{ form_row(updateForm.birthdate, {
-                        'attr': {'class': 'form-control'}
-                    }) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        {{ form_widget(updateForm.birthdate, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+                    </div>
                 </div>
 
-                <div class="col-md-6">
-                    {{ form_row(updateForm.longitude, {
-                        'attr': {'class': 'form-control'}
-                    }) }}
-                </div>
+                {{ form_widget(updateForm.longitude, {
+                    'attr': {'class': 'form-control'}
+                }) }}
 
-                <div class="col-md-6">
-                    {{ form_row(updateForm.latitude, {
-                        'attr': {'class': 'form-control'}
-                    }) }}
+                {{ form_widget(updateForm.latitude, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-image"></i></span>
+                        {{ form_widget(updateForm.image, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+                    </div>
                 </div>
 
                 <div class="col-md-12">
-                    {{ form_row(updateForm.bio, {
-                        'attr': {'class': 'form-control', 'rows': 3}
-                    }) }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                        {{ form_widget(updateForm.bio, {
+                            'attr': {'class': 'form-control', 'rows': 3}
+                        }) }}
+                    </div>
                 </div>
 
-                <div class="col-md-6">
-                    {{ form_row(updateForm.gender, {
-                        'attr': {'class': 'form-control'}
-                    }) }}
-                </div>
+                <input type="hidden" id="user_latitude" name="update_user_form[latitude]" value="">
+                <input type="hidden" id="user_longitude" name="update_user_form[longitude]" value="">
 
                 <div class="col-md-12">
-                    {% if user.interests is iterable %}
-                        <p><strong>Interests:</strong> {{ user.interests|join(', ') }}</p>
-                    {% else %}
-                        <p><strong>Interests:</strong> {{ user.interests }}</p>
-                    {% endif %}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-heart"></i></span>
+                        <label for="user_interests">Interests</label>
+                    </div>
+                    <div id="interests-container">
+                        {% for interest in updateForm.interests %}
+                            <div class="input-group mb-2">
+                                {{ form_widget(interest, {'attr': {'class': 'form-control'}}) }}
+                                <button class="btn btn-danger" type="button" onclick="this.closest('.input-group').remove();">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="btn btn-success mt-2" type="button" id="add-interest">
+                        <i class="fas fa-plus"></i> Add Interest
+                    </button>
                 </div>
 
                 <div class="col-md-12 text-center">
-                    <button class="btn btn-primary px-4">Update</button>
-                    <a href="{{ path('app_profile_index') }}" class="btn btn-secondary px-4">{{ 'goBack'|trans }}</a>
+                    <button class="btn btn-primary px-4">
+                        <i class="fas fa-save"></i> Update
+                    </button>
+                    <a href="{{ path('app_profile_index') }}" class="btn btn-secondary px-4">
+                        <i class="fas fa-arrow-left"></i> {{ 'goBack'|trans }}
+                    </a>
                 </div>
 
                 {{ form_end(updateForm) }}
@@ -99,21 +132,54 @@
     </section>
 {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function requestGeolocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        const userLat = position.coords.latitude;
+                        const userLng = position.coords.longitude;
+
+                        document.getElementById('user_latitude').value = userLat;
+                        document.getElementById('user_longitude').value = userLng;
+                        console.log(`Latitude: ${userLat}, Longitude: ${userLng}`);
+                    }, function(error) {
+                        if (error.code === error.PERMISSION_DENIED) {
+                            alert("Please enable location access to update your position.");
+                            requestGeolocation();
+                        }
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            }
+
+            requestGeolocation();
+
+            const addInterestButton = document.getElementById('add-interest');
+            const interestContainer = document.getElementById('interests-container');
+
+            addInterestButton.addEventListener('click', function() {
+                const index = interestContainer.children.length;
+                const newInterest = document.createElement('div');
+                newInterest.classList.add('input-group', 'mb-2');
+                newInterest.innerHTML = `
+            <input type="text" name="update_user_form[interests][${index}]" class="form-control">
+            <button class="btn btn-danger" type="button" onclick="this.closest('.input-group').remove();">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        `;
+                interestContainer.appendChild(newInterest);
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        .profile-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .profile-details {
-            display: flex;
-            align-items: center;
-        }
         .profile-image img {
             border-radius: 50%;
             width: 150px;
@@ -135,6 +201,16 @@
         }
         .btn:hover {
             background-color: #0056b3;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group-text {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+        }
+        .input-group .form-control {
+            border-left: none;
         }
     </style>
 {% endblock %}
