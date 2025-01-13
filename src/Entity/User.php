@@ -58,8 +58,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $image = null;
+    #[ORM\Column]
+    private array $image = [];
 
     #[ORM\Column(type: Types::DECIMAL, precision: 20, scale: 16, nullable: true)]
     private ?string $longitude = null;
@@ -196,14 +196,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getImage(): array
     {
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function addImage(string $image): static
     {
-        $this->image = $image;
+        $this->image[] = $image;
+
+        return $this;
+    }
+
+    public function setImage(string|array $image): static
+    {
+        is_array($image) ? $this->image = $image : $this->image[] = $image;
+
+        return $this;
+    }
+
+    public function removeImage(string $image): static
+    {
+        $key = array_search($image, $this->image);
+        if ($key !== false) {
+            unset($this->image[$key]);
+        }
 
         return $this;
     }

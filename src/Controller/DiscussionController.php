@@ -17,17 +17,22 @@ use Symfony\Component\Routing\Attribute\Route;
 class DiscussionController extends AbstractController
 {
 
+    public function __construct(private readonly DiscussionRepository $discussionRepository,
+                                private readonly EntityManagerInterface $entityManager)
+    {
+    }
+
     #[Route('/{id}', name: 'index', requirements: ['id' => '\d+'])]
-    public function index(string $id, DiscussionRepository $discussionRepository): Response
+    public function index(string $id): Response
     {
         $user = $this->getUser();
-        $discussion = $discussionRepository->find($id);
+        $discussion = $this->discussionRepository->find($id);
 
         if (!$discussion) {
             throw $this->createNotFoundException('Discussion not found.');
         }
 
-        $discussions = $discussionRepository->findByUser($user);
+        $discussions = $this->discussionRepository->findByUser($user);
 
         return $this->render('discussion/index.html.twig', [
             'user' => $user,
@@ -37,7 +42,7 @@ class DiscussionController extends AbstractController
     }
 
     #[Route('/send', name: 'send', methods: ['POST'])]
-    public function send(Request $request, DiscussionRepository $discussionRepository, EntityManagerInterface $entityManager): Response
+    public function send(Request $request): Response
     {
         $user = $this->getUser();
 
@@ -49,7 +54,7 @@ class DiscussionController extends AbstractController
             return $this->redirectToRoute('app_home_index');
         }
 
-        $discussion = $discussionRepository->find($discussionId);
+        $discussion = $this->discussionRepository->find($discussionId);
         if (!$discussion) {
             throw $this->createNotFoundException('Discussion introuvable.');
         }
@@ -62,8 +67,8 @@ class DiscussionController extends AbstractController
 
         $discussion->setUpdateDate(new \DateTimeImmutable());
 
-        $entityManager->persist($message);
-        $entityManager->flush();
+        $this->entityManager->persist($message);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('app_discussion_index', ['id' => $discussionId]);
     }

@@ -17,13 +17,13 @@
             <div class="profile-container">
                 <div class="profile-header">
                     <div class="profile-avatar">
-                        {% if user.image %}
-                            {% if user.image starts with 'people_images/' %}
-                                <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}"/>
-                            {% elseif user.image starts with 'https' or user.image starts with 'http' %}
-                                <img src="{{ user.image }}" alt="{{ user.firstname }}"/>
+                        {% if user.image[0] %}
+                            {% if user.image[0] starts with 'people_images/' %}
+                                <img src="{{ asset(user.image[0]) }}" alt="{{ user.firstname }}"/>
+                            {% elseif user.image[0] starts with 'https' or user.image[0] starts with 'http' %}
+                                <img src="{{ user.image[0] }}" alt="{{ user.firstname }}"/>
                             {% else %}
-                                <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture">
+                                <img src="{{ asset('uploads/profile_images/' ~ user.image[0]) }}" alt="Profile Picture">
                             {% endif %}
                         {% endif %}
                     </div>

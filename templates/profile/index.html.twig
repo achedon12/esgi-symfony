@@ -16,13 +16,13 @@
                 </div>
             </header>
             <div class="user-profile">
-                {% if user.image %}
+                {% if user.image[0] %}
                     {% if user.image starts with 'people_images/' %}
-                        <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}" class="rounded-circle w-25"/>
-                    {% elseif user.image starts with 'https' or user.image starts with 'http' %}
-                        <img src="{{ user.image }}" alt="{{ user.firstname }}" class="rounded-circle w-25"/>
+                        <img src="{{ asset(user.image[0]) }}" alt="{{ user.firstname }}" class="rounded-circle w-25"/>
+                    {% elseif user.image[0] starts with 'https' or user.image[0] starts with 'http' %}
+                        <img src="{{ user.image[0] }}" alt="{{ user.firstname }}" class="rounded-circle w-25"/>
                     {% else %}
-                        <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture" class="rounded-circle w-25">
+                        <img src="{{ asset('uploads/profile_images/' ~ user.image[0]) }}" alt="Profile Picture" class="rounded-circle w-25">
                     {% endif %}
                 {% endif %}
                 <h1 class="text-justify w-50 mx-auto text-center">{{ user.firstname }} {{ user.lastname }}, {{ user.age }}</h1>
@@ -32,7 +32,7 @@
                         <i class="fas fa-cog fa-2x"></i>
                         <p>{{ 'profile.actions.settings'|trans }}</p>
                     </a>
-                    <a class="action" href="#">
+                    <a class="action" href="{{ path('app_profile_media') }}">
                         <div>
                             <i class="media fas fa-camera fa-2x"></i>
                             <i class="more fas fa-plus fa-2x"></i>
@@ -47,103 +47,22 @@
 
                 <p class="text-muted w-50 mx-auto mt-3 text-justify text-center text-break text-wrap text-truncate">{{ user.bio }}</p>
 
-                <div class="tinder-plus">
-                    <h2 class="h1">
-                        <i class="fas fa-bolt"></i>
-                        Get Matches Faster
-                    </h2>
-                    <p>Get unlimited likes with Tinder Plus</p>
-                    <p>Boost your profile once per month</p>
-                    <p>Control your profile visibility</p>
-                    <a href="#">
-                        Get tinder plus
-                    </a>
-                </div>
+                {% if user.offer.name == 'Basic' %}
+                    <div class="tinder-plus">
+                        <h2 class="h1">
+                            <i class="fas fa-bolt"></i>
+                            Get Matches Faster
+                        </h2>
+                        <p>Get unlimited likes with Tinder Plus</p>
+                        <p>Boost your profile once per month</p>
+                        <p>Control your profile visibility</p>
+                        <a href="#">
+                            Get tinder plus
+                        </a>
+                    </div>
+                {% endif %}
             </div>
-            {#<div class="profile-container">
-                <div class="profile-details">
-                    <div class="profile-image">
-                        {% if user.image %}
-                            {% if user.image starts with 'people_images/' %}
-                                <img src="{{ asset(user.image) }}" alt="{{ user.firstname }}"/>
-                            {% elseif user.image starts with 'https' or user.image starts with 'http' %}
-                                <img src="{{ user.image }}" alt="{{ user.firstname }}"/>
-                            {% else %}
-                                <img src="{{ asset('uploads/profile_images/' ~ user.image) }}" alt="Profile Picture">
-                            {% endif %}
-                        {% endif %}
-                    </div>
 
-                    <div class="profile-info">
-                        <p><strong>Email:</strong> {{ user.email }}</p>
-                        <p><strong>Gender:</strong> {{ user.gender }}</p>
-                        <p><strong>Birthdate:</strong> {{ user.birthdate|date('Y-m-d') }}</p>
-                        {% if user.interests is iterable %}
-                            <p><strong>Interests:</strong> {{ user.interests|join(', ') }}</p>
-                        {% else %}
-                            <p><strong>Interests:</strong> {{ user.interests }}</p>
-                        {% endif %}
-                        <p><strong>Bio:</strong> {{ user.bio }}</p>
-                        <p><strong>Location:</strong> {{ user.latitude }}, {{ user.longitude }}</p>
-                    </div>
-                </div>
-
-                <div class="profile-actions">
-                    <a href="{{ path('app_home_index') }}" class="btn btn-primary">{{ 'home'|trans }}</a>
-                    <a href="{{ path('app_profile_update') }}" class="btn btn-primary">{{ 'profile.updateAccount'|trans }}</a>
-                    <a href="{{ path('app_profile_update_password') }}" class="btn btn-secondary">{{ 'profile.changePassword'|trans }}</a>
-                    <a href="{{ path('app_logout') }}" class="btn btn-danger">{{ 'logout'|trans }}</a>
-                    <form action="{{ path('app_profile_update_language') }}" method="post">
-                        <label for="language">{{ 'profile.changeLanguage'|trans }}</label>
-                        <select name="language" id="language" class="form-control">
-                            {% for language in availableLanguages %}
-                                <option value="{{ language.value }}" {% if language == app.request.locale %}selected{% endif %}>{{ language.value }}</option>
-                            {% endfor %}
-                        </select>
-                        <button type="submit" class="btn btn-primary">{{ 'profile.changeLanguage'|trans }}</button>
-                    </form>
-                </div>
-            </div>#}
         </div>
     </section>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        /*.profile-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .profile-details {
-            display: flex;
-            align-items: center;
-        }
-        .profile-image img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            margin-right: 20px;
-        }
-        .profile-info p {
-            margin: 5px 0;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-top: 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }*/
-    </style>
 {% endblock %}

@@ -19,15 +19,23 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
+
+    public function __construct(private readonly UserRepository $userRepository,
+                                private readonly DiscussionRepository $discussionRepository,
+                                private readonly EntityManagerInterface $entityManager,
+                                private readonly LikeRepository $likeRepository)
+    {
+    }
+
     #[Route('/', name: 'index')]
-    public function index(UserRepository $userRepository, DiscussionRepository $discussionRepository): Response
+    public function index(): Response
     {
         $user = $this->getUser();
         if (!$user instanceof User) {
             throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
         }
-        $users = $userRepository->findAppropriatedUsers($user);
-        $discussions = $discussionRepository->findByUser($user);
+        $users = $this->userRepository->findAppropriatedUsers($user);
+        $discussions = $this->discussionRepository->findByUser($user);
 
         array_map(function($discussion) use ($user) {
             if($discussion->getUserOne() === $user) {
@@ -45,14 +53,14 @@ class HomeController extends AbstractController
     }
 
     #[Route('/refresh', name: 'refresh')]
-    public function refresh(UserRepository $userRepository, DiscussionRepository $discussionRepository): Response
+    public function refresh(): Response
     {
         $user = $this->getUser();
         if (!$user instanceof User) {
             throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
         }
-        $users = $userRepository->findAppropriatedUsers($user);
-        $discussions = $discussionRepository->findByUser($user);
+        $users = $this->userRepository->findAppropriatedUsers($user);
+        $discussions = $this->discussionRepository->findByUser($user);
 
         return $this->render('home/index.html.twig', [
             'users' => $users,
@@ -62,12 +70,12 @@ class HomeController extends AbstractController
     }
 
     #[Route('/slide', name: 'slide')]
-    public function slide(Request $request, EntityManagerInterface $entityManager, LikeRepository $likeRepository): Response
+    public function slide(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
         $direction = $data['direction'] ?? null;
         $slidedUserId = $data['slidedUserId'] ?? null;
-        $slidedUser = $entityManager->getRepository(User::class)->find($slidedUserId);
+        $slidedUser = $this->entityManager->getRepository(User::class)->find($slidedUserId);
 
         $user = $this->getUser();
         if (!$user instanceof User) {
@@ -78,24 +86,24 @@ class HomeController extends AbstractController
             $like->setUserLiker($user);
             $like->setUserLiked($slidedUser);
             $like->setCreationDate(new DateTimeImmutable());
-            $entityManager->persist($like);
-            $entityManager->flush();
+            $this->entityManager->persist($like);
+            $this->entityManager->flush();
             $slidedUser->setScore($slidedUser->getScore() + 1);
 
-            if($likeRepository->isMatch($user, $slidedUser)) {
+            if($this->likeRepository->isMatch($user, $slidedUser)) {
                 $discussion = new Discussion();
                 $discussion->setUserOne($user);
                 $discussion->setUserTwo($slidedUser);
                 $discussion->setCreationDate(new DateTimeImmutable());
-                $entityManager->persist($discussion);
-                $entityManager->flush();
+                $this->entityManager->persist($discussion);
+                $this->entityManager->flush();
                 return $this->json(['status' => 'match', 'discussionId' => $discussion->getId()]);
             }
 
             return $this->json(['status' => 'success', 'message' => 'User liked successfully']);
         } elseif ($direction === 'dislike') {
             $slidedUser->setScore($slidedUser->getScore() - 1);
-            $entityManager->flush();
+            $this->entityManager->flush();
             return $this->json(['status' => 'success', 'message' => 'User disliked successfully']);
         } else {
             return $this->json(['status' => 'error', 'message' => 'Direction not found'], 400);
@@ -103,13 +111,13 @@ class HomeController extends AbstractController
     }
 
     #[Route('/suggestion', name: 'suggestion')]
-    public function suggestion(UserRepository $userRepository): Response
+    public function suggestion(): Response
     {
         $user = $this->getUser();
         if (!$user instanceof User) {
             throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
         }
-        $suggestedUser = $userRepository->findSuggestedUsers($user);
+        $suggestedUser = $this->userRepository->findSuggestedUsers($user);
 
         return $this->render('home/suggestion/suggestion.html.twig', [
             'suggestedUser' => $suggestedUser,

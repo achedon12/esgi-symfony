@@ -126,13 +126,13 @@
                     </a>
 
                     <div class="profile-info">
-                        {% if discussion.userTwo.image %}
-                            {% if discussion.userTwo.image starts with 'people_images/' %}
-                                <img src="{{ asset(discussion.userTwo.image) }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
-                            {% elseif discussion.userTwo.image starts with 'https' or discussion.userTwo.image starts with 'http' %}
-                                <img src="{{ discussion.userTwo.image }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
+                        {% if discussion.userTwo.image[0] %}
+                            {% if discussion.userTwo.image[0] starts with 'people_images/' %}
+                                <img src="{{ asset(discussion.userTwo.image[0]) }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
+                            {% elseif discussion.userTwo.image[0] starts with 'https' or discussion.userTwo.image[0] starts with 'http' %}
+                                <img src="{{ discussion.userTwo.image[0] }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
                             {% else %}
-                                <img src="{{ asset('uploads/profile_images/' ~ discussion.userTwo.image) }}" alt="Profile Picture" class="rounded-5">
+                                <img src="{{ asset('uploads/profile_images/' ~ discussion.userTwo.image[0]) }}" alt="Profile Picture" class="rounded-5">
                             {% endif %}
                         {% endif %}
                         <div>

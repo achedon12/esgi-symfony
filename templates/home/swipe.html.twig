@@ -14,10 +14,10 @@
             {% for user in users %}
                 <div class="tinder--card">
                     {% if user.image %}
-                        {% if user.image starts with 'people_images/' %}
-                            <img src="{{ asset(user.image) }}" alt="user_image_{{ user.id }}"/>
+                        {% if user.image[0] starts with 'people_images/' %}
+                            <img src="{{ asset(user.image[0]) }}" alt="user_image_{{ user.id }}"/>
                         {% else %}
-                            <img src="{{ asset('uploads/profile_images/' ~ user.image) }}"
+                            <img src="{{ asset('uploads/profile_images/' ~ user.image[0]) }}"
                                  alt="user_image_{{ user.id }}">
                         {% endif %}
                     {% endif %}

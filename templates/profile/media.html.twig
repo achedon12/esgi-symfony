@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+    <section class="d-flex w-100 h-100">
+        <div class="w-25 h-100 sidebar-wrapper">
+            {% include 'home/sidebar.html.twig' %}
+        </div>
+        <div class="w-75 swipe-wrapper overflow-auto">
+            <header class="d-flex row align-content-end w-100">
+                <div class="col-12 d-flex justify-content-between align-items-center profile-header">
+                    <a href="{{ path('app_profile_index') }}"><i class="fas fa-arrow-left fa-xl"></i></a>
+                    <i class="fas fa-user fa-xl text-primary text-center"></i>
+                    <a href="{{ path('app_profile_offer') }}"><i class="fas fa-fire fa-xl"></i></a>
+                </div>
+            </header>
+            {% include 'profile/user.html.twig' with {user: app.user, canUpdate: true} %}
+        </div>
+    </section>
+{% endblock %}

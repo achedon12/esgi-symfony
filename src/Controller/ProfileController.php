@@ -129,6 +129,63 @@ class ProfileController extends AbstractController
         ]);
     }
 
+    #[Route('/media', name: 'media')]
+    public function media(Request $request): Response
+    {
+        $user = $this->getUser();
+
+        $discussions = $this->discussionRepository->findByUser($user);
+
+        array_map(function($discussion) use ($user) {
+            if($discussion->getUserOne() === $user) {
+                $discussion->setUserTwo($discussion->getUserTwo());
+            } else {
+                $discussion->setUserTwo($discussion->getUserOne());
+            }
+        }, $discussions);
+
+        return $this->render('profile/media.html.twig', [
+            'user' => $user,
+            'discussions' => $discussions,
+            'availableLanguages' => LanguageEnum::getAvailableLanguages(),
+        ]);
+    }
+
+    #[Route('/upload-image', name: 'upload_image', methods: ['POST'])]
+    public function uploadImage(Request $request): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        $imageFile = $request->files->get('profile_image');
+
+        if ($imageFile) {
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $this->slugger->slug($originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+            try {
+                $imageFile->move(
+                    $this->getParameter('profile_images_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {
+                $this->addFlash('error', 'An error occurred while uploading the image.');
+                return $this->redirectToRoute('app_profile_show');
+            }
+
+            $user->addImage($newFilename);
+            $this->entityManager->flush();
+        } else {
+            $this->addFlash('error', 'No image uploaded.');
+        }
+
+        return $this->redirectToRoute('app_profile_media');
+    }
+
     #[Route('/filters', name: 'filters')]
     public function filters(): Response
     {
