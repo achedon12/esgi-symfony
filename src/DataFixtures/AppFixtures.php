@@ -112,7 +112,7 @@ class AppFixtures extends Fixture
             ->setLastname($faker->lastName())
             ->setLongitude($faker->longitude())
             ->setLatitude($faker->latitude())
-            ->setImage("/people_images/male/admin.jpg")
+            ->setImage("people_images/male/admin.jpg")
             ->setRoles(['ROLE_ADMIN'])
             ->setBio($faker->sentence(10))
             ->setScore($faker->numberBetween(0, 100))
