@@ -44,6 +44,10 @@ Ce projet vise à recréer les principales fonctionnalités de Tinder tout en me
 ### **8. Gestion de tâches planifiées** ⏰
 - Cron permettant de supprimer les utilisateurs inactifs après un certain délai.
 
+### **9. Gestion de son offre** 💳
+- Possibilité de souscrire à un abonnement pour bénéficier de fonctionnalités supplémentaires.
+- Envoi d'un email lors de la souscription à un abonnement.
+
 ---
 
 ## **Technologies utilisées** 🛠️
