@@ -5,7 +5,12 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -17,7 +22,51 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+            ->add('email',TextType::class, [
+                'label' => 'Email',
+                'required' => true,
+            ])
+            ->add('firstname', TextType::class, [
+                'label' => 'First Name',
+                'required' => true,
+            ])
+            ->add('lastname', TextType::class, [
+                'label' => 'Last Name',
+                'required' => true,
+            ])
+            ->add('birthdate', DateType::class, [
+                'label' => 'Birthdate',
+                'required' => true,
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Image',
+                'required' => true,
+                'mapped' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 4096,
+                    ]),
+                ],
+                'attr' => ['accept' => 'image/*'],
+            ])
+            ->add('interests', CollectionType::class, [
+                'entry_type' => TextType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'Interests',
+                'required' => false,
+            ])
+            ->add('gender', ChoiceType::class, [
+                'choices' => [
+                    'Male' => 'male',
+                    'Female' => 'female',
+                    'Other' => 'other'
+                ],
+                'label' => 'Gender',
+                'required' => true,
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
@@ -25,6 +74,8 @@ class RegistrationFormType extends AbstractType
                         'message' => 'You should agree to our terms.',
                     ]),
                 ],
+                'label' => 'I agree to the terms',
+                'required' => true,
             ])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
@@ -39,6 +90,8 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+                'label' => 'Password',
+                'required' => true,
             ])
         ;
     }

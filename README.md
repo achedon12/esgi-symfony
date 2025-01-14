@@ -10,6 +10,7 @@ Ce projet vise à recréer les principales fonctionnalités de Tinder tout en me
 ## **Fonctionnalités** ✨
 ### **1. Authentification et gestion des utilisateurs** 🔐
 - Inscription avec validation des données utilisateur (email, mot de passe sécurisé, etc.).
+- Envoi d'un email de confirmation de creation de compte pour vérifier son compte
 - Connexion sécurisée avec gestion des sessions.
 - Réinitialisation de mot de passe via email.
 
@@ -77,3 +78,11 @@ Ce projet vise à recréer les principales fonctionnalités de Tinder tout en me
   >> mot de passe : `regular`
 
 > **Note :** L'administrateur peut se rendre sur la page /admin qui lui permet de gérer l'application.
+
+
+TODO: 
+
+- [ ] listener for user creation for mailing
+- [ ] listener for user offer change for mailing
+- [ ] code refactoring
+- [ ] language switcher

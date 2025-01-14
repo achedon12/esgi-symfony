@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Account Confirmation</title>
+</head>
+<body>
+    <h1>Welcome to Tindoo, {{ user.firstname }} {{ user.lastname }} !</h1>
+    <p>Thank you for creating an account with us. Please confirm your email address by clicking the link below:</p>
+    <p>
+        <a href="{{ url('app_account_confirmation', { 'token': user.verificationToken }) }}">
+            Confirm your account
+        </a>
+    </p>
+    <p>If you did not create an account, please ignore this email.</p>
+    <p>Best regards,<br>The Tindoo Team</p>
+</body>
+</html>

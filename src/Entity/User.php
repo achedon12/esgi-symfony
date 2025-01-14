@@ -92,6 +92,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Offer $offer = null;
 
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
+    private ?bool $verifiedAccount = null;
+
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $verificationToken = null;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
@@ -410,6 +416,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setOffer(?Offer $offer): static
     {
         $this->offer = $offer;
+
+        return $this;
+    }
+
+    public function getVerifiedAccount(): ?bool
+    {
+        return $this->verifiedAccount;
+    }
+
+    public function setVerifiedAccount(bool $verifiedAccount): static
+    {
+        $this->verifiedAccount = $verifiedAccount;
+
+        return $this;
+    }
+
+    public function getVerificationToken(): ?string
+    {
+        return $this->verificationToken;
+    }
+
+    public function setVerificationToken(?string $verificationToken): static
+    {
+        $this->verificationToken = $verificationToken;
 
         return $this;
     }
