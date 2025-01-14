@@ -32,6 +32,13 @@
                 <i class="fas fa-pencil-alt fa-2x"></i>
                 <p>{{ 'profile.actions.edit'|trans }}</p>
             </a>
+            {# if user is admin, link to admin dashboard #}
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="action" href="{{ path('admin') }}">
+                    <i class="fas fa-user-shield fa-2x"></i>
+                    <p>{{ 'profile.actions.admin'|trans }}</p>
+                </a>
+            {% endif %}
         </div>
 
         <p class="text-muted w-50 mx-auto mt-3 text-justify text-center text-break text-wrap text-truncate">{{ app.user.bio }}</p>

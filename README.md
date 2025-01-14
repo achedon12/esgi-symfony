@@ -78,10 +78,9 @@ Ce projet vise à recréer les principales fonctionnalités de Tinder tout en me
   >> compte utilisateur :
   >> email : `regular@gmail.com`
   >> mot de passe : `regular`
+  >
+  >> autres utilisateurs :
+  >> email : `email en base`
+  >> mot de passe : `password`
 
-> **Note :** L'administrateur peut se rendre sur la page /admin qui lui permet de gérer l'application.
-
-
-TODO: 
-
-- [ ] language switcher
+> **Note :** L'administrateur peut se rendre sur la page /admin qui lui permet de gérer l'application ou alors aller dans les paramètres de son compte et accéder au dashboard admin via le bouton prévu à cet effet.

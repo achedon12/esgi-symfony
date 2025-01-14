@@ -35,6 +35,7 @@ profile:
     settings: Paramètres
     edit: Modifier
     add: Ajouter un média
+    admin: Admin
 verifiedAccount: Félicitations! Votre compte a été vérifié avec succès. Vous pouvez maintenant vous connecter et profiter de toutes les fonctionnalités.
 errors:
   actions:
