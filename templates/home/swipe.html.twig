@@ -13,7 +13,7 @@
         <div class="tinder--cards">
             {% for user in users %}
                 <div class="tinder--card">
-                    {% if user.image %}
+                    {% if user.image[0] %}
                         {% if user.image[0] starts with 'people_images/' %}
                             <img src="{{ asset(user.image[0]) }}" alt="user_image_{{ user.id }}"/>
                         {% else %}

@@ -89,8 +89,8 @@
         <header class="d-flex align-items-center flex-row position-relative">
             <a href="{{ path('app_profile_index') }}">
                 <div class="profile-image">
-                    {% if user.image %}
-                        {% if user.image starts with 'people_images/' %}
+                    {% if user.image[0] %}
+                        {% if user.image[0] starts with 'people_images/' %}
                             <img src="{{ asset(user.image[0]) }}" alt="{{ user.firstname }}"/>
                         {% elseif user.image[0] starts with 'https' or user.image[0] starts with 'http' %}
                             <img src="{{ user.image[0] }}" alt="{{ user.firstname }}"/>
