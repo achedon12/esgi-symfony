@@ -89,12 +89,12 @@ class DiscussionController extends AbstractController
 
         if ($action === 1) {
             $this->approveDiscussion($discussion, $this->getUser());
+            return $this->redirectToRoute('app_discussion_index', ['id' => $discussionId]);
         } else {
             $this->entityManager->remove($discussion);
             $this->entityManager->flush();
+            return $this->redirectToRoute('app_home_index');
         }
-
-        return $this->redirectToRoute('app_home_index');
     }
 
     private function isUserPartOfDiscussion($user, $discussion): bool

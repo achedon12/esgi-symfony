@@ -22,14 +22,16 @@ Ce projet vise à recréer les principales fonctionnalités de Tinder tout en me
 ### **3. Système de "swipe"** 👈👉
 - Découverte aléatoire des profils d'autres utilisateurs.
 - Fonctionnalités "Like" et "Dislike" pour exprimer son intérêt ou non (gestion de score).
+- Fonctionnalité "Super Like" pour lancer directement une conversation en mode "non approuvé"
 
 ### **4. Matching et messagerie** 💬
 - Création d'un "match" lorsque deux utilisateurs se "likent".
 - Système de messagerie simple pour échanger entre utilisateurs.
 - Historique des conversations.
+- Gestion de discussions approuvées et non approuvées pour pouvoir décliner des super likes
 
-### **5. Recherche avancée** 🔍
-- Filtres pour rechercher des profils selon :
+### **5. Recherche suggérée** 🔍
+- Route pour trouver un seul profil suggéré selon :
     - Âge.
     - Localisation.
     - Centres d'intérêt.
@@ -82,7 +84,4 @@ Ce projet vise à recréer les principales fonctionnalités de Tinder tout en me
 
 TODO: 
 
-- [ ] listener for user creation for mailing
-- [ ] listener for user offer change for mailing
-- [ ] code refactoring
 - [ ] language switcher

@@ -516,6 +516,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getDiscussions(): array
     {
-        return array_merge($this->discussionsAsUserOne->toArray(), $this->discussionsAsUserTwo->toArray());
+        $discussions = array_merge($this->discussionsAsUserOne->toArray(), $this->discussionsAsUserTwo->toArray());
+        array_map(function ($discussion) {
+            if ($discussion->getUserOne() === $this) {
+                $discussion->setUserTwo($discussion->getUserTwo());
+            } else {
+                $discussion->setUserTwo($discussion->getUserOne());
+            }
+        }, $discussions);
+
+        return $discussions;
     }
 }
