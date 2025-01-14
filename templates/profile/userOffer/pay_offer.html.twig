@@ -20,10 +20,10 @@
         </div>
     </div>
     <div class="d-flex justify-content-center mt-5">
-        <a href="{{ path('app_offer_index') }}" class="btn btn-outline-info fs-4 mx-5">Retour</a>
+        <a href="{{ path('app_offer_index') }}" class="btn btn-outline-info fs-4 mx-5">{{ 'goBack'|trans }}</a>
         <form action="{{ path('app_offer_change') }}" method="POST" class="d-inline">
             <input type="hidden" name="offer_id" value="{{ offer_id }}">
-            <button type="submit" class="btn btn-warning fs-4 mx-5">Payer</button>
+            <button type="submit" class="btn btn-warning fs-4 mx-5">{{ 'pay'|trans }}</button>
         </form>
     </div>
 {% endblock %}

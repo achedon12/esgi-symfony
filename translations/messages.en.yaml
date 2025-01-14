@@ -1,6 +1,7 @@
 goBack: Go back
 logout: Logout
 home: Home
+pay: Pay
 discussion:
   title: Discussions
   goBack: Home
@@ -97,3 +98,25 @@ swipe:
     title: No more users to show
     message: You have seen all the users in the database. Please come back later.
   reachLimit: You have reached your daily limit of
+offers:
+  actions:
+      choose: Choose
+  free: Free
+  amount: $ / month
+  choose: Choose your offer
+  unlimitedLike: Unlimited likes
+  likePerDay: likes / day
+  directMessage: direct messages / day
+  buy:
+    title: Get matches faster
+    paragraphs:
+      1: Get unlimited likes to match with more people.
+      2: Control who can see you.
+      3: Get more visibility.
+    obtain: Get Tindoo Gold
+register:
+  title: Register
+  login: Already have an account? Login
+verify:
+  title: Verify your account
+  login: Go to login

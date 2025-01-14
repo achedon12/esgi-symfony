@@ -1,6 +1,7 @@
 goBack: Retour
 logout: Déconnexion
 home: Accueil
+pay: Payer
 discussion:
   title: Discussions
   goBack: Accueil
@@ -97,3 +98,25 @@ swipe:
     title: Pas d'autres utilisateurs
     message: Il n'y a plus d'utilisateurs à afficher pour le moment. Réessayez plus tard.
   reachLimit: Vous avez atteint votre limite quotidienne de
+offers:
+  actions:
+    choose: Choisir
+  free: Gratuit
+  amount: € / mois
+  choose: Choisissez votre offre
+  unlimitedLike: Likes illimités
+  likePerDay: likes / jour
+  directMessage: messages direct / jour
+  buy:
+    title: Obtenir des matches plus rapidement
+    paragraphs:
+        1: Obtenez des likes illimités pour matcher avec plus de personnes.
+        2: Boostez votre profil pour être vu par plus de personnes.
+        3: Controlez qui peut vous voir.
+    obtain: Obtenir Tindoo Plus
+register:
+  title: Créer un compte
+  login: Déjà un compte? Connectez-vous
+verify:
+  title: Vérification de compte
+  login: Connectez-vous

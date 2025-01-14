@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}{{ 'register.title'|trans }}{% endblock %}
 
 {% block body %}
 
     <div class="register-form-container">
-        <h1 class="m-5">Register</h1>
+        <h1 class="m-5">{{ 'register.title'|trans }}</h1>
         <div class="login-form">
             {{ form_errors(registrationForm) }}
             {{ form_start(registrationForm, {'attr': {'class': 'needs-validation'}}) }}
@@ -28,11 +28,11 @@
                 {{ form_errors(registrationForm.agreeTerms) }}
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Register</button>
+            <button type="submit" class="btn btn-primary w-100">{{ 'register.title'|trans }}</button>
             {{ form_end(registrationForm) }}
         </div>
         <div class="text-center mt-3">
-            <a href="{{ path('app_login') }}" class="text-decoration-none">Already have an account? Login</a>
+            <a href="{{ path('app_login') }}" class="text-decoration-none">{{ 'register.login'|trans }}</a>
         </div>
     </div>
 {% endblock %}

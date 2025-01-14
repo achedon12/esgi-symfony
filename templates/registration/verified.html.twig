@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Account Verified{% endblock %}
+{% block title %}{{ 'verify.title'|trans }}{% endblock %}
 
 {% block body %}
     <div class="verified-container">
         <div class="icon-success">
             <i class="fas fa-check-circle"></i>
         </div>
-        <h1>Account Verified</h1>
+        <h1>{{ 'verify.title'|trans }}</h1>
         <p>{{ 'verifiedAccount'|trans }}</p>
-        <a href="{{ path('app_login') }}" class="btn">Go to Login</a>
+        <a href="{{ path('app_login') }}" class="btn">{{ 'verify.login'|trans }}</a>
     </div>
 {% endblock %}

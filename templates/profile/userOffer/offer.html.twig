@@ -3,17 +3,17 @@
 {% block title %}Offres{% endblock %}
 
 {% block section %}
-    <h1 class="text-primary text-center offer-title">Choisissez votre offre !</h1>
+    <h1 class="text-primary text-center offer-title">{{ 'offers.choose'|trans }} !</h1>
     <div class="row mt-5 mx-auto offer-grid w-100">
         {% for offer in offers %}
             <div class="col">
                 <h2 class="text-center">{{ offer.name }}</h2>
                 <div class="info">
-                    <p>{{ offer.likeNumber == -1 ? '✅ Like illimité' : '➕ ' ~ offer.likeNumber ~ ' likes / jour' }} </p>
+                    <p>{{ offer.likeNumber == -1 ? '✅ ' ~ 'offers.unlimitedLike'|trans : '➕ ' ~ offer.likeNumber ~ ' ' ~ 'offers.likePerDay'|trans }} </p>
                     {% if offer.directMessageNumber != 0 %}
-                    <p>{{ offer.directMessageNumber == -1 ? '✅ Messages direct illimité' : '➕ ' ~ offer.directMessageNumber ~ ' messages direct / jour' }} </p>
+                    <p>{{ offer.directMessageNumber == -1 ? '✅ Messages direct illimité' : '➕ ' ~ offer.directMessageNumber ~ ' ' ~ 'offers.directMessage'|trans }} </p>
                     {% endif %}
-                    <p>💰 {{ offer.price == 0 ? 'FREE' : offer.price ~ '€ / mois' }} </p>
+                    <p>💰 {{ offer.price == 0 ? 'offers.free'|trans : offer.price ~ 'offers.amount'|trans }} </p>
                 </div>
                 {% if app.user.offer.name == offer.name %}
                     <div class="d-flex justify-content-center mt-5">
@@ -26,7 +26,7 @@
                         <div class="check-succes">
                             <form action="{{ path('app_offer_pay') }}" method="POST" class="d-inline">
                                 <input type="hidden" name="offer_id" value="{{ loop.index }}">
-                                <button type="submit" class="btn btn-outline-info fs-4">Choisir</button>
+                                <button type="submit" class="btn btn-outline-info fs-4">{{ 'offers.actions.choose'|trans }}</button>
                             </form>
                         </div>
                     </div>
