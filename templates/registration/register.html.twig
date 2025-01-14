@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <div class="form-container">
+    <div class="register-form-container">
         <h1 class="m-5">Register</h1>
         <div class="login-form">
             {{ form_errors(registrationForm) }}
@@ -35,33 +35,4 @@
             <a href="{{ path('app_login') }}" class="text-decoration-none">Already have an account? Login</a>
         </div>
     </div>
-{% endblock %}
-
-
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        .form-container {
-            padding: 20px;
-        }
-
-        .btn-primary {
-            background-color: #4CAF50;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #45a049;
-        }
-
-        .form-label {
-            font-weight: bold;
-        }
-
-        .form-control:focus {
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(72, 239, 128, 0.5);
-        }
-
-    </style>
 {% endblock %}

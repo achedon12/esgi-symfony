@@ -10,7 +10,7 @@
         <div class="w-75 swipe-wrapper overflow-auto">
             <header class="d-flex row align-content-end w-100">
                 <div class="col-12 d-flex justify-content-between align-items-center profile-header">
-                    <a href="{{ app.request.attributes.get('_route') == 'app_profile_index' ? path('app_home_index') : path('app_profile_index') }}"><i class="fas fa-arrow-left fa-xl"></i></a>
+                    <a href="{{ app.request.attributes.get('_route') == 'app_profile_index' ? path('app_home_index') : path('app_profile_index') }}"><i class="fas fa-xl {{ app.request.attributes.get('_route') == 'app_profile_index' ? 'fa-home' : 'fa-arrow-left' }}"></i></a>
                     <i class="fas fa-user fa-xl text-primary text-center"></i>
                     <a href="{{ path('app_offer_index') }}"><i class="fas fa-fire fa-xl"></i></a>
                 </div>

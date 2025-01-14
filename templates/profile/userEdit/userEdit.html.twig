@@ -3,135 +3,138 @@
 {% block title %}Edit profile{% endblock %}
 
 {% block section %}
-    <div class="w-auto mx-auto text-center">
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success mt-4">
-                {{ message }}
-            </div>
-        {% endfor %}
+    <div class="edit-user">
+        <div class="w-auto mx-auto text-center">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success mt-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
 
-        {% for message in app.flashes('error') %}
-            <div class="alert alert-danger mt-4">
-                {{ message }}
-            </div>
-        {% endfor %}
-    </div>
-
-    <div class="p-4 h-auto">
-        {{ form_start(updateForm, { 'attr': {'class': 'row g-3'} }) }}
-
-        <div class="col-md-6">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                {{ form_widget(updateForm.firstname, {
-                    'attr': {'class': 'form-control'}
-                }) }}
-            </div>
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger mt-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
         </div>
 
-        <div class="col-md-6">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                {{ form_widget(updateForm.lastname, {
-                    'attr': {'class': 'form-control'}
-                }) }}
+        <div class="p-4 h-auto">
+            {{ form_start(updateForm, { 'attr': {'class': 'row g-3'} }) }}
+
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    {{ form_widget(updateForm.firstname, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
-                {{ form_widget(updateForm.gender, {
-                    'attr': {'class': 'form-control'}
-                }) }}
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    {{ form_widget(updateForm.lastname, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-6">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                {{ form_widget(updateForm.birthdate, {
-                    'attr': {'class': 'form-control'}
-                }) }}
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                    {{ form_widget(updateForm.gender, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
             </div>
-        </div>
 
-        {{ form_widget(updateForm.longitude, {
-            'attr': {'class': 'form-control'}
-        }) }}
-
-        {{ form_widget(updateForm.latitude, {
-            'attr': {'class': 'form-control'}
-        }) }}
-
-        <div class="col-md-12">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-image"></i></span>
-                {{ form_widget(updateForm.image, {
-                    'attr': {'class': 'form-control'}
-                }) }}
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                    {{ form_widget(updateForm.birthdate, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
             </div>
-        </div>
 
-        <div class="col-md-12">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                {{ form_widget(updateForm.bio, {
-                    'attr': {'class': 'form-control', 'rows': 3}
-                }) }}
+            {{ form_widget(updateForm.longitude, {
+                'attr': {'class': 'form-control'}
+            }) }}
+
+            {{ form_widget(updateForm.latitude, {
+                'attr': {'class': 'form-control'}
+            }) }}
+
+            <div class="col-md-12">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-image"></i></span>
+                    {{ form_widget(updateForm.image, {
+                        'attr': {'class': 'form-control'}
+                    }) }}
+                </div>
             </div>
-        </div>
 
-        <input type="hidden" id="user_latitude" name="update_user_form[latitude]" value="">
-        <input type="hidden" id="user_longitude" name="update_user_form[longitude]" value="">
-
-        <div class="col-md-12">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-heart"></i></span>
-                <label for="user_interests">Interests</label>
+            <div class="col-md-12">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                    {{ form_widget(updateForm.bio, {
+                        'attr': {'class': 'form-control', 'rows': 3}
+                    }) }}
+                </div>
             </div>
-            <div id="interests-container">
-                {% for interest in updateForm.interests %}
-                    <div class="input-group mb-2">
-                        {{ form_widget(interest, {'attr': {'class': 'form-control'}}) }}
-                        <button class="btn btn-danger" type="button" onclick="this.closest('.input-group').remove();">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                {% endfor %}
+
+            <input type="hidden" id="user_latitude" name="update_user_form[latitude]" value="">
+            <input type="hidden" id="user_longitude" name="update_user_form[longitude]" value="">
+
+            <div class="col-md-12">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-heart"></i></span>
+                    <label for="user_interests">Interests</label>
+                </div>
+                <div id="interests-container">
+                    {% for interest in updateForm.interests %}
+                        <div class="input-group mb-2">
+                            {{ form_widget(interest, {'attr': {'class': 'form-control'}}) }}
+                            <button class="btn btn-danger" type="button"
+                                    onclick="this.closest('.input-group').remove();">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="btn btn-success mt-2" type="button" id="add-interest">
+                    <i class="fas fa-plus"></i> Add Interest
+                </button>
             </div>
-            <button class="btn btn-success mt-2" type="button" id="add-interest">
-                <i class="fas fa-plus"></i> Add Interest
-            </button>
-        </div>
 
-        <div class="col-md-12 text-center">
-            <button class="btn btn-primary px-4">
-                <i class="fas fa-save"></i> Update
-            </button>
-            <a href="{{ path('app_profile_index') }}" class="btn btn-secondary px-4">
-                <i class="fas fa-arrow-left"></i> {{ 'goBack'|trans }}
-            </a>
-        </div>
+            <div class="col-md-12 text-center">
+                <button class="btn btn-primary px-4">
+                    <i class="fas fa-save"></i> Update
+                </button>
+                <a href="{{ path('app_profile_index') }}" class="btn btn-secondary px-4">
+                    <i class="fas fa-arrow-left"></i> {{ 'goBack'|trans }}
+                </a>
+            </div>
 
-        {{ form_end(updateForm) }}
+            {{ form_end(updateForm) }}
+        </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             function requestGeolocation() {
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
                         const userLat = position.coords.latitude;
                         const userLng = position.coords.longitude;
 
                         document.getElementById('user_latitude').value = userLat;
                         document.getElementById('user_longitude').value = userLng;
                         console.log(`Latitude: ${userLat}, Longitude: ${userLng}`);
-                    }, function(error) {
+                    }, function (error) {
                         if (error.code === error.PERMISSION_DENIED) {
                             alert("Please enable location access to update your position.");
                             requestGeolocation();
@@ -147,7 +150,7 @@
             const addInterestButton = document.getElementById('add-interest');
             const interestContainer = document.getElementById('interests-container');
 
-            addInterestButton.addEventListener('click', function() {
+            addInterestButton.addEventListener('click', function () {
                 const index = interestContainer.children.length;
                 const newInterest = document.createElement('div');
                 newInterest.classList.add('input-group', 'mb-2');
@@ -161,42 +164,4 @@
             });
         });
     </script>
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        .profile-image img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            margin-right: 20px;
-        }
-        .profile-info p {
-            margin: 5px 0;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-top: 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        .input-group-text {
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-        }
-        .input-group .form-control {
-            border-left: none;
-        }
-    </style>
 {% endblock %}
