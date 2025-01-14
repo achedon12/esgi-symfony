@@ -29,7 +29,10 @@ class OfferController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(): Response
     {
-        return $this->render('profile/userOffer/offer.html.twig');
+        $offers = $this->entityManager->getRepository(Offer::class)->findAll();
+        return $this->render('profile/userOffer/offer.html.twig', [
+            'offers' => $offers
+        ]);
     }
 
     #[Route('/pay_offer', name: 'pay')]
