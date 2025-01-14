@@ -27,7 +27,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      APP_ENV: ${APP_ENV}
+      APP_ENV: dev
       DATABASE_URL: ${DATABASE_URL}
     networks:
       - cours_sql

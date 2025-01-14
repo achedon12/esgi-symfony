@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
 
-  nginx:
+  tindoo_nginx:
     container_name: tindoo_nginx
     image: nginx:1.21
     restart: unless-stopped
     ports:
-      - "8081:80"
+      - "1081:80"
       - "444:443"
     volumes:
       - ./:/var/www/html
@@ -33,7 +33,6 @@ services:
       DATABASE_URL: ${DATABASE_URL}
     ports:
       - "9000:9000"
-    user: '1000'
     networks:
       - nginx-proxy
 
