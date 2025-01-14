@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/profile', name: 'app_profile_')]
 class ProfileController extends AbstractController
@@ -22,6 +23,7 @@ class ProfileController extends AbstractController
         private readonly EntityManagerInterface      $entityManager,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly SluggerInterface            $slugger,
+        private readonly TranslatorInterface         $translator
     )
     {
     }
@@ -47,7 +49,7 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->handleImageUpload($form, $this->getUser());
-            $this->addFlash('success', 'Profile updated successfully!');
+            $this->addFlash('success', $this->translator->trans('flash.account.updated'));
             $this->entityManager->flush();
         }
 
@@ -74,7 +76,7 @@ class ProfileController extends AbstractController
             $this->handleImageUpload($imageFile, $this->getUser());
             $this->entityManager->flush();
         } else {
-            $this->addFlash('error', 'No image uploaded.');
+            $this->addFlash('error', $this->translator->trans('flash.account.image.errorEmpty'));
         }
 
         return $this->redirectToRoute('app_profile_media');
@@ -90,7 +92,7 @@ class ProfileController extends AbstractController
             $this->getUser()->setPassword(
                 $this->userPasswordHasher->hashPassword($this->getUser(), $form->get('newPassword')->getData())
             );
-            $this->addFlash('success', 'Password updated successfully!');
+            $this->addFlash('success', $this->translator->trans('flash.account.updatedPassword'));
             $this->entityManager->flush();
         }
 
@@ -127,7 +129,7 @@ class ProfileController extends AbstractController
 
             $user->addImage($newFilename);
         } catch (FileException $e) {
-            $this->addFlash('error', 'An error occurred while uploading the image.');
+            $this->addFlash('error', $this->translator->trans('flash.account.image.errorUpload'));
         }
     }
 }

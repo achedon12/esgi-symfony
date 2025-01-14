@@ -14,6 +14,7 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/offer', name: 'app_offer_')]
 class OfferController extends AbstractController
@@ -21,7 +22,8 @@ class OfferController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly MailerInterface        $mailer,
-        private readonly EventDispatcherInterface $eventDispatcher
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly TranslatorInterface      $translator
     )
     {
     }
@@ -58,7 +60,7 @@ class OfferController extends AbstractController
             $this->eventDispatcher->dispatch($event, UserOfferChangedEvent::NAME);
 
             $this->entityManager->flush();
-            $this->addFlash('success', 'Offer changed successfully!');
+            $this->addFlash('success', $this->translator->trans('flash.offer.changed'));
         }
 
         return $this->redirectToRoute('app_offer_index');

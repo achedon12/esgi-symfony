@@ -16,9 +16,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationFormType extends AbstractType
 {
+
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -60,9 +66,9 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('gender', ChoiceType::class, [
                 'choices' => [
-                    'Male' => 'male',
-                    'Female' => 'female',
-                    'Other' => 'other'
+                    $this->translator->trans('user.gender.male') => 'male',
+                    $this->translator->trans('user.gender.female') => 'female',
+                    $this->translator->trans('user.gender.other') => 'other'
                 ],
                 'label' => 'Gender',
                 'required' => true,

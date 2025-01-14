@@ -16,6 +16,10 @@ user:
   addInterest: Ajouter un intérêt
   enableLocation: Veuillez activer l'accès à la localisation pour mettre à jour votre position
   notSupported: Votre navigateur ne prend pas en charge la géolocalisation
+  gender:
+    male: Homme
+    female: Femme
+    other: Autre
 profile:
   interests: Interêts
   years: ans
@@ -130,3 +134,15 @@ pages:
   profile: Profil
   profile_settings: Paramètres du profil
   update_password: Mettre à jour le mot de passe
+flash:
+  offer:
+    changed: L'offre a été modifiée avec succès
+  discussion:
+    invalid: Le message ou la discussion est invalide
+  account:
+    updated: Le compte a été mis à jour avec succès
+    verified: Le compte a été vérifié avec succès
+    updatedPassword: Le mot de passe a été mis à jour avec succès
+    image:
+      errorEmpty: L'image ne peut pas être vide
+      errorUpload: Une erreur s'est produite lors du téléchargement de l'image

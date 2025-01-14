@@ -16,6 +16,10 @@ user:
   addInterest: Add interest
   enableLocation: Please enable location access to update your position
   notSupported: Your browser does not support geolocation
+  gender:
+    male: Male
+    female: Female
+    other: Other
 profile:
   interests: Interests
   years: years
@@ -130,3 +134,15 @@ pages:
   profile: Profile
   profile_settings: Profile settings
   update_password: Update password
+flash:
+  offer:
+    changed: The offer has been successfully changed
+  discussion:
+    invalid: Message or discussion is invalid
+  account:
+    updated: The account has been successfully updated
+    verified: The account has been successfully verified
+    updatedPassword: The password has been successfully updated
+    image:
+      errorEmpty: The image cannot be empty
+      errorUpload: An error occurred while uploading the image

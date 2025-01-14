@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/discussion', name: 'app_discussion_')]
 class DiscussionController extends AbstractController
@@ -21,6 +22,7 @@ class DiscussionController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly DiscussionRepository   $discussionRepository,
         private readonly LikeRepository         $likeRepository,
+        private readonly TranslatorInterface    $translator
     )
     {
     }
@@ -53,7 +55,7 @@ class DiscussionController extends AbstractController
         $discussionId = $request->request->get('discussion_id');
 
         if (empty($content) || empty($discussionId)) {
-            $this->addFlash('error', 'Le message ou la discussion est invalide.');
+            $this->addFlash('error', $this->translator->trans('flash.discussion.invalid'));
             return $this->redirectToRoute('app_home_index');
         }
 

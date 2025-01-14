@@ -11,9 +11,15 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UpdateUserFormType extends AbstractType
 {
+
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -58,9 +64,9 @@ class UpdateUserFormType extends AbstractType
 
             ->add('gender', ChoiceType::class, [
                 'choices' => [
-                    'Male' => 'male',
-                    'Female' => 'female',
-                    'Other' => 'other'
+                    $this->translator->trans('user.gender.male') => 'male',
+                    $this->translator->trans('user.gender.female') => 'female',
+                    $this->translator->trans('user.gender.other') => 'other'
                 ],
                 'label' => 'Gender',
             ]);

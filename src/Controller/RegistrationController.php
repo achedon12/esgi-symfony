@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -25,7 +26,8 @@ class RegistrationController extends AbstractController
                                 private readonly Security $security,
                                 private readonly UserPasswordHasherInterface $userPasswordHasher,
                                 private readonly OfferRepository $offerRepository,
-                                private readonly EventDispatcherInterface $eventDispatcher
+                                private readonly EventDispatcherInterface $eventDispatcher,
+                                private readonly TranslatorInterface $translator
                 )
     {
     }
@@ -81,7 +83,7 @@ class RegistrationController extends AbstractController
 
             $this->entityManager->flush();
 
-            $this->addFlash('success', 'Your account has been verified. You can now log in.');
+            $this->addFlash('success', $this->translator->trans('flash.account.verified'));
 
             return $this->render('registration/verified.html.twig');
         }
