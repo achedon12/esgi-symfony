@@ -125,16 +125,9 @@ class ProfileController extends AbstractController
                 $newFilename
             );
 
-            if ($user->getImage()) {
-                $existingImagePath = $this->getParameter('profile_images_directory') . '/' . $user->getImage();
-                if (file_exists($existingImagePath)) {
-                    unlink($existingImagePath);
-                }
-            }
+            $user->addImage($newFilename);
         } catch (FileException $e) {
             $this->addFlash('error', 'An error occurred while uploading the image.');
         }
-
-        $user->setImage($newFilename);
     }
 }

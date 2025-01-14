@@ -1,55 +1,55 @@
-{% block userCard %}
-    <div class="user">
-        <div class="user-header">
-            <div class="user-image">
-                {% if user.image and user.image[0] %}
-                    {% if user.image[0] starts with 'people_images/' %}
-                        <img src="{{ asset(user.image[0]) }}" alt="{{ user.firstname }}"/>
-                    {% elseif user.image[0] starts with 'https' or user.image[0] starts with 'http' %}
-                        <img src="{{ user.image[0] }}" alt="{{ user.firstname }}"/>
-                    {% else %}
-                        <img src="{{ asset('uploads/profile_images/' ~ user.image[0]) }}" alt="Profile Picture">
-                    {% endif %}
-                {% endif %}
-                <h1>{{ user.firstname }} {{ user.lastname }}, {{ user.age }} {{ 'profile.years'|trans }}</h1>
-            </div>
-            <p class="user-bio">
-                {{ user.bio }}
-            </p>
-            <p class="user-interests">
-                {{ 'profile.interests'|trans }}:
+<div class="user">
+    <div class="user--card">
+        {% if user.image and user.image[0] %}
+            {% if user.image[0] starts with 'people_images/' %}
+                <img src="{{ asset(user.image[0]) }}" alt="user_image_{{ user.id }}"/>
+            {% else %}
+                <img src="{{ asset('uploads/profile_images/' ~ user.image[0]) }}" alt="user_image_{{ user.id }}">
+            {% endif %}
+        {% endif %}
+        <div class="d-flex flex-column p-4">
+            <h3>{{ user.firstname }}, {{ user.age }} {{ 'profile.years'|trans }}</h3>
+            <p><strong>{{ 'user.bio'|trans }} : </strong>{{ user.bio }}</p>
+            <p><strong>{{ 'user.birthdate'|trans }} : </strong>{{ user.birthdate|date('d m Y') }}</p>
+            <p><strong>{{ 'user.interests'|trans }}: </strong>
                 {% for interest in user.interests %}
                     <span class="badge bg-primary">{{ interest }}</span>
                 {% endfor %}
             </p>
         </div>
-        {% if canUpdate %}
-            <form action="{{ path('app_profile_upload_image') }}" method="post" enctype="multipart/form-data" class="user-images">
-        {% else  %}
-            <div class="user-images">
-        {% endif %}
-
-            {% for image in user.image %}
-                {% if image starts with 'people_images/' %}
-                    <img src="{{ asset(image) }}" alt="{{ user.firstname }}"/>
-                {% elseif image starts with 'https' or image starts with 'http' %}
-                    <img src="{{ image }}" alt="{{ user.firstname }}"/>
-                {% else %}
-                    <img src="{{ asset('uploads/profile_images/' ~ image) }}" alt="Profile Picture">
-                {% endif %}
-            {% endfor %}
-
-            {% if canUpdate %}
-                <input type="file" name="profile_image" accept="image/*" required onchange="this.form.submit()">
-            </form>
-            {% else %}
-            </div>
-            {% endif %}
     </div>
 
-    <script>
-        document.getElementById('imageInput').addEventListener('change', function() {
-            document.getElementById('uploadForm').submit();
-        });
-    </script>
-{% endblock %}
+    {% if canUpdate %}
+    <h2 class="mt-5 mx-4">Images</h2>
+    <form action="{{ path('app_profile_upload_image') }}" method="post" enctype="multipart/form-data"
+          class="user-images p-4">
+        {% else %}
+        <div class="user-images">
+            {% endif %}
+            <div>
+                {% for image in user.image %}
+                    {% if image starts with 'people_images/' %}
+                        <img src="{{ asset(image) }}" alt="{{ user.firstname }}"/>
+                    {% elseif image starts with 'https' or image starts with 'http' %}
+                        <img src="{{ image }}" alt="{{ user.firstname }}"/>
+                    {% else %}
+                        <img src="{{ asset('uploads/profile_images/' ~ image) }}" alt="Profile Picture">
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {% if canUpdate %}
+            <div>
+                <input type="file" name="profile_image" accept="image/*" required onchange="this.form.submit()">
+            </div>
+    </form>
+    {% else %}
+</div>
+{% endif %}
+</div>
+
+<script>
+    document.getElementById('imageInput').addEventListener('change', function () {
+        document.getElementById('uploadForm').submit();
+    });
+</script>
