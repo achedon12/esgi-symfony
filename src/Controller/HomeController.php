@@ -10,32 +10,27 @@ use App\Repository\LikeRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/home', name: 'app_home_')]
-class HomeController extends AbstractController
+class HomeController extends AbstractBaseController
 {
     public function __construct(
-        private readonly UserRepository         $userRepository,
-        private readonly DiscussionRepository   $discussionRepository,
+        DiscussionRepository $discussionRepository,
+        private readonly UserRepository $userRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LikeRepository         $likeRepository
-    )
-    {
+        private readonly LikeRepository $likeRepository
+    ) {
+        parent::__construct($discussionRepository);
     }
 
     #[Route('/', name: 'index')]
     public function index(): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
-
+        [$user, $discussions] = $this->initializeUserAndDescription();
         $users = $this->userRepository->findAppropriatedUsers($user);
-        $discussions = $this->discussionRepository->findByUser($user);
-        $this->setDiscussionUser($discussions, $user);
 
         return $this->render('home/index.html.twig', [
             'users' => $users,
@@ -47,13 +42,12 @@ class HomeController extends AbstractController
     #[Route('/slide', name: 'slide')]
     public function slide(Request $request): Response
     {
+        [$user] = $this->initializeUser();
+
         $data = json_decode($request->getContent(), true);
         $direction = $data['direction'] ?? null;
         $slidedUserId = $data['slidedUserId'] ?? null;
         $slidedUser = $this->entityManager->getRepository(User::class)->find($slidedUserId);
-
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
 
         if ($direction === 'like') {
             return $this->handleLike($user, $slidedUser);
@@ -67,12 +61,11 @@ class HomeController extends AbstractController
     #[Route('/forceDiscussion', name: 'forceDiscussion')]
     public function forceDiscussion(Request $request): Response
     {
+        [$user] = $this->initializeUser();
+
         $data = json_decode($request->getContent(), true);
         $slidedUserId = $data['slidedUserId'] ?? null;
         $slidedUser = $this->entityManager->getRepository(User::class)->find($slidedUserId);
-
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
 
         $this->createLike($user, $slidedUser);
         $discussion = $this->createDiscussion($user, $slidedUser, false);
@@ -83,8 +76,7 @@ class HomeController extends AbstractController
     #[Route('/suggestion', name: 'suggestion')]
     public function suggestion(): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
+        [$user] = $this->initializeUser();
 
         $suggestedUser = $this->userRepository->findSuggestedUsers($user);
         $distance = $this->calculateDistance($user->getLatitude(), $user->getLongitude(), $suggestedUser->getLatitude(), $suggestedUser->getLongitude());
@@ -93,24 +85,6 @@ class HomeController extends AbstractController
             'suggestedUser' => $suggestedUser,
             'distance' => $distance,
         ]);
-    }
-
-    private function ensureUserIsValid($user): void
-    {
-        if (!$user instanceof User) {
-            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
-        }
-    }
-
-    private function setDiscussionUser(array &$discussions, $user): void
-    {
-        array_map(function ($discussion) use ($user) {
-            if ($discussion->getUserOne() === $user) {
-                $discussion->setUserTwo($discussion->getUserTwo());
-            } else {
-                $discussion->setUserTwo($discussion->getUserOne());
-            }
-        }, $discussions);
     }
 
     private function handleLike($user, $slidedUser): Response

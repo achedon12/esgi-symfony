@@ -8,15 +8,13 @@ use App\Repository\DiscussionRepository;
 use App\Repository\LikeRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/discussion', name: 'app_discussion_')]
-class DiscussionController extends AbstractController
+class DiscussionController extends AbstractBaseController
 {
-    private DiscussionRepository $discussionRepository;
     private LikeRepository $likeRepository;
     private EntityManagerInterface $entityManager;
 
@@ -24,9 +22,8 @@ class DiscussionController extends AbstractController
         DiscussionRepository   $discussionRepository,
         LikeRepository         $likeRepository,
         EntityManagerInterface $entityManager
-    )
-    {
-        $this->discussionRepository = $discussionRepository;
+    ) {
+        parent::__construct($discussionRepository);
         $this->likeRepository = $likeRepository;
         $this->entityManager = $entityManager;
     }
@@ -34,7 +31,7 @@ class DiscussionController extends AbstractController
     #[Route('/{id}', name: 'index', requirements: ['id' => '\d+'])]
     public function index(string $id): Response
     {
-        $user = $this->getUser();
+        [$user, $discussions] = $this->initializeUserAndDescription();
         $discussion = $this->discussionRepository->find($id);
 
         if (!$discussion) {
@@ -44,9 +41,6 @@ class DiscussionController extends AbstractController
         if (!$this->isUserPartOfDiscussion($user, $discussion)) {
             throw $this->createAccessDeniedException('You are not allowed to access this discussion.');
         }
-
-        $discussions = $this->discussionRepository->findByUser($user);
-        $this->setDiscussionUser($discussions, $user);
 
         $isCurrentUserDemanding = $this->isCurrentUserDemanding($user, $discussion);
 
@@ -61,7 +55,7 @@ class DiscussionController extends AbstractController
     #[Route('/send', name: 'send', methods: ['POST'])]
     public function send(Request $request): Response
     {
-        $user = $this->getUser();
+        [$user] = $this->initializeUser();
         $content = $request->request->get('message');
         $discussionId = $request->request->get('discussion_id');
 
@@ -92,7 +86,7 @@ class DiscussionController extends AbstractController
     #[Route('/manage', name: 'manage', methods: ['POST'])]
     public function manage(Request $request): Response
     {
-        $user = $this->getUser();
+        [$user] = $this->initializeUser();
         $action = (int)$request->request->get('action');
         $discussionId = $request->request->get('discussion_id');
 
@@ -114,17 +108,6 @@ class DiscussionController extends AbstractController
     private function isUserPartOfDiscussion($user, $discussion): bool
     {
         return $discussion->getUserOne() === $user || $discussion->getUserTwo() === $user;
-    }
-
-    private function setDiscussionUser(array &$discussions, $user): void
-    {
-        array_map(function ($discussion) use ($user) {
-            if ($discussion->getUserOne() === $user) {
-                $discussion->setUserTwo($discussion->getUserTwo());
-            } else {
-                $discussion->setUserTwo($discussion->getUserOne());
-            }
-        }, $discussions);
     }
 
     private function isCurrentUserDemanding($user, $discussion): bool

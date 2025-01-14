@@ -9,7 +9,6 @@ use App\Form\ChangePasswordFormType;
 use App\Form\UpdateUserFormType;
 use App\Repository\DiscussionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,22 +20,22 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/profile', name: 'app_profile_')]
-class ProfileController extends AbstractController
+class ProfileController extends AbstractBaseController
 {
     public function __construct(
-        private readonly DiscussionRepository $discussionRepository,
+        DiscussionRepository $discussionRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly SluggerInterface $slugger,
         private readonly MailerInterface $mailer
-    ) {}
+    ) {
+        parent::__construct($discussionRepository);
+    }
 
     #[Route('/', name: 'index')]
     public function index(): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
-        $discussions = $this->getDiscussionsForUser($user);
+        [$user, $discussions] = $this->initializeUserAndDescription();
 
         return $this->render('profile/index.html.twig', [
             'user' => $user,
@@ -47,9 +46,7 @@ class ProfileController extends AbstractController
     #[Route('/settings', name: 'settings')]
     public function settings(): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
-        $discussions = $this->getDiscussionsForUser($user);
+        [$user, $discussions] = $this->initializeUserAndDescription();
 
         return $this->render('profile/settings.html.twig', [
             'user' => $user,
@@ -61,9 +58,7 @@ class ProfileController extends AbstractController
     #[Route('/edit', name: 'edit')]
     public function edit(Request $request): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
-        $discussions = $this->getDiscussionsForUser($user);
+        [$user, $discussions] = $this->initializeUserAndDescription();
 
         $form = $this->createForm(UpdateUserFormType::class, $user);
         $form->handleRequest($request);
@@ -84,9 +79,7 @@ class ProfileController extends AbstractController
     #[Route('/media', name: 'media')]
     public function media(): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
-        $discussions = $this->getDiscussionsForUser($user);
+        [$user, $discussions] = $this->initializeUserAndDescription();
 
         return $this->render('profile/media.html.twig', [
             'user' => $user,
@@ -98,8 +91,7 @@ class ProfileController extends AbstractController
     #[Route('/upload-image', name: 'upload_image', methods: ['POST'])]
     public function uploadImage(Request $request): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
+        [$user] = $this->initializeUser();
         $imageFile = $request->files->get('profile_image');
 
         if ($imageFile) {
@@ -115,8 +107,7 @@ class ProfileController extends AbstractController
     #[Route('/update-password', name: 'update_password')]
     public function updatePassword(Request $request): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
+        [$user] = $this->initializeUser();
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
 
@@ -137,8 +128,7 @@ class ProfileController extends AbstractController
     #[Route('/updateLanguage', name: 'update_language', methods: ['POST'])]
     public function updateLanguage(Request $request): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
+        [$user] = $this->initializeUser();
         $language = $request->request->get('language');
         $user->setLanguage($language);
         $this->entityManager->flush();
@@ -153,9 +143,7 @@ class ProfileController extends AbstractController
     #[Route('/offer', name: 'offer')]
     public function offer(): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
-        $discussions = $this->getDiscussionsForUser($user);
+        [$user, $discussions] = $this->initializeUser();
 
         return $this->render('profile/offer.html.twig', [
             'user' => $user,
@@ -166,9 +154,7 @@ class ProfileController extends AbstractController
     #[Route('/pay_offer', name: 'offer_pay')]
     public function payOffer(Request $request): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
-        $discussions = $this->getDiscussionsForUser($user);
+        [$user, $discussions] = $this->initializeUser();
         $offerId = (int) $request->request->get('offer_id');
 
         return $this->render('profile/pay_offer.html.twig', [
@@ -181,9 +167,7 @@ class ProfileController extends AbstractController
     #[Route('/change_offer', name: 'offer_change')]
     public function changeOffer(Request $request): Response
     {
-        $user = $this->getUser();
-        $this->ensureUserIsValid($user);
-        $discussions = $this->getDiscussionsForUser($user);
+        [$user, $discussions] = $this->initializeUser();
         $offerId = (int) $request->request->get('offer_id');
 
         if ($offerId !== 0) {
@@ -209,28 +193,6 @@ class ProfileController extends AbstractController
             'user' => $user,
             'discussions' => $discussions,
         ]);
-    }
-
-    private function ensureUserIsValid($user): void
-    {
-        if (!$user instanceof User) {
-            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
-        }
-    }
-
-    private function getDiscussionsForUser(User $user): array
-    {
-        $discussions = $this->discussionRepository->findByUser($user);
-
-        array_map(function($discussion) use ($user) {
-            if ($discussion->getUserOne() === $user) {
-                $discussion->setUserTwo($discussion->getUserTwo());
-            } else {
-                $discussion->setUserTwo($discussion->getUserOne());
-            }
-        }, $discussions);
-
-        return $discussions;
     }
 
     private function handleImageUpload($imageFile, User $user): void
