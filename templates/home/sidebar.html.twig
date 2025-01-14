@@ -77,9 +77,9 @@
     </style>
     <aside class="h-100">
         <header class="d-flex align-items-center flex-row position-relative">
-            <a href="{{ path('app_profile_index') }}">
+            <a href="{{ path('app_profile_index') }}" class="d-flex align-items-center flex-row position-relative">
                 <div class="profile-image">
-                    {% if app.user.image[0] %}
+                    {% if app.user.image and app.user.image[0] %}
                         {% if app.user.image[0] starts with 'people_images/' %}
                             <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}"/>
                         {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
@@ -89,8 +89,8 @@
                         {% endif %}
                     {% endif %}
                 </div>
+                <h5 class="text-white m-0">{{ app.user.firstname }} {{ app.user.lastname }}</h5>
             </a>
-            <h5 class="text-white m-0">{{ app.user.firstname }} {{ app.user.lastname }}</h5>
         </header>
         <div class="discussions">
             <h5 class="text-white px-2 pt-2">{{ 'discussion.title'|trans }}</h5>
@@ -98,7 +98,7 @@
                 {% set lastMessage = d.messages.last %}
                 <a href="{{ path('app_discussion_index', {id: d.id}) }}" class="d-flex align-items-center flex-row p-4 d-flex flex-column text-decoration-none {% if discussion is defined and discussion == d %}active{% endif %} {% if d.isApproved == false %}toApprove{% endif %}">
                     <div class="d-flex flex-row w-100 align-items-center">
-                        {% if d.userTwo.image[0] %}
+                        {% if d.userTwo.image and d.userTwo.image[0] %}
                             {% if d.userTwo.image[0] starts with 'people_images/' %}
                                 <img src="{{ asset(d.userTwo.image[0]) }}" alt="{{ d.userTwo.firstname }}"/>
                             {% elseif d.userTwo.image[0] starts with 'https' or d.userTwo.image[0] starts with 'http' %}

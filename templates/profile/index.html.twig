@@ -4,7 +4,7 @@
 
 {% block section %}
     <div class="user-profile">
-        {% if app.user.image[0] %}
+        {% if app.user.image and app.user.image[0] %}
             {% if app.user.image[0] starts with 'people_images/' %}
                 <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}" class="rounded-circle w-25"/>
             {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}

@@ -11,7 +11,7 @@
         <div class="tinder--cards">
             {% for user in users %}
                 <div class="tinder--card">
-                    {% if user.image[0] %}
+                    {% if user.image and user.image[0] %}
                         {% if user.image[0] starts with 'people_images/' %}
                             <img src="{{ asset(user.image[0]) }}" alt="user_image_{{ user.id }}"/>
                         {% else %}
@@ -284,7 +284,6 @@
                 .then(response => response.json())
                 .then(data => {
                     if(data.status === 'success') {
-                        console.log('Discussion forced');
                         window.location.href = '/discussion/' + data.discussionId;
                     }
                 })

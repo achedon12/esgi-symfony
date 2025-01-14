@@ -6,7 +6,7 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-avatar">
-                {% if app.user.image[0] %}
+                {% if app.user.image and app.user.image[0] %}
                     {% if app.user.image[0] starts with 'people_images/' %}
                         <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}"/>
                     {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
