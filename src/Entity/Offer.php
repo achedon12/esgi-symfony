@@ -33,7 +33,7 @@ class Offer
     /**
      * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'userOffer')]
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'offer')]
     private Collection $users;
 
     public function __construct()

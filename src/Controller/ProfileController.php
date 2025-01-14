@@ -118,7 +118,7 @@ class ProfileController extends AbstractController
         return $this->redirectToRoute('app_profile_settings');
     }
 
-    #[Route('/userOffer', name: 'offer')]
+    #[Route('/offer', name: 'offer')]
     public function offer(): Response
     {
         return $this->render('profile/offer.html.twig');
@@ -190,7 +190,7 @@ class ProfileController extends AbstractController
             ->subject('Offer changed')
             ->html($this->renderView('emails/payment_confirmation.html.twig', [
                 'user' => $user,
-                'userOffer' => $offer,
+                'offer' => $offer,
                 'transaction_id' => uniqid(),
                 'amount' => $offer->getPrice(),
                 'currency' => 'EUR'
