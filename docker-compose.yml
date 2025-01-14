@@ -34,8 +34,6 @@ services:
     ports:
       - "9000:9000"
     user: '1000'
-    depends_on:
-      - composer
     networks:
       - nginx-proxy
 
