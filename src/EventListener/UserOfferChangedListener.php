@@ -2,30 +2,44 @@
 
 namespace App\EventListener;
 
+use App\Event\UserOfferChangedEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
+use Exception;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Twig\Environment;
 
-#[AsEventListener(event: KernelEvents::CONTROLLER, method: 'onKernelRequest')]
+#[AsEventListener(event: UserOfferChangedEvent::NAME, method: 'onOfferChanged')]
 class UserOfferChangedListener
 {
 
-    public function __construct(private EntityManagerInterface $entityManager,
-                                private LoggerInterface        $logger)
+    public function __construct(private readonly EntityManagerInterface   $entityManager,
+                                private readonly MailerInterface $mailer,
+                                private readonly Environment $twig)
     {
     }
 
-    public function onKernelRequest(ControllerEvent $event): void
+    public function onOfferChanged(UserOfferChangedEvent $event): void
     {
-        $request = $event->getRequest();
+        $user = $event->getUser();
+        $offer = $event->getOffer();
 
-        $offerId = (int)$request->request->get('offer_id');
+        try {
+            $email = (new Email())
+                ->from('no-reply@tindoo.com')
+                ->to($user->getEmail())
+                ->subject('Offer changed')
+                ->html($this->twig->render('emails/payment_confirmation.html.twig', [
+                    'user' => $user,
+                    'transaction_id' => uniqid(),
+                    'amount' => $offer->getPrice(),
+                    'currency' => 'EUR'
+                ]));
 
-        if ($offerId !== 0) {
-            $this->logger->info('---------------------[UserOfferChanged]---------------------');
-
+            $this->mailer->send($email);
+        } catch (Exception $e) {
         }
 
     }

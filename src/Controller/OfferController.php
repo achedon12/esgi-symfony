@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Offer;
 use App\Entity\User;
+use App\Event\UserOfferChangedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -19,6 +21,7 @@ class OfferController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly MailerInterface        $mailer,
+        private readonly EventDispatcherInterface $eventDispatcher
     )
     {
     }
@@ -48,12 +51,8 @@ class OfferController extends AbstractController
             $this->getUser()->setOffer($offer);
             $offer->addUser($this->getUser());
 
-            try {
-                $this->sendOfferChangeEmail($this->getUser(), $offer);
-            } catch (TransportExceptionInterface $e) {
-                $this->addFlash('error', 'An error occurred while sending the email.');
-                return $this->redirectToRoute('app_offer_index');
-            }
+            $event = new UserOfferChangedEvent($this->getUser(), $offer);
+            $this->eventDispatcher->dispatch($event, UserOfferChangedEvent::NAME);
 
             $this->entityManager->flush();
             $this->addFlash('success', 'Offer changed successfully!');

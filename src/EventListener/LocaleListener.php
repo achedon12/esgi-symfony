@@ -11,7 +11,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsEventListener(event: KernelEvents::CONTROLLER, method: 'onKernelRequest', priority: -10)]
 class LocaleListener
 {
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 

@@ -8,15 +8,13 @@ use App\Form\RegistrationFormType;
 use App\Repository\OfferRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
+use Random\RandomException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -26,9 +24,7 @@ class RegistrationController extends AbstractController
     public function __construct(private readonly EntityManagerInterface $entityManager,
                                 private readonly Security $security,
                                 private readonly UserPasswordHasherInterface $userPasswordHasher,
-                                private readonly MailerInterface $mailer,
                                 private readonly OfferRepository $offerRepository,
-                                private readonly LoggerInterface $logger,
                                 private readonly EventDispatcherInterface $eventDispatcher
                 )
     {
@@ -37,8 +33,7 @@ class RegistrationController extends AbstractController
     /**
      * @param Request $request
      * @return Response
-     * @throws TransportExceptionInterface
-     * @throws \Random\RandomException
+     * @throws RandomException
      */
     #[Route('/register', name: 'app_register')]
     public function register(Request $request): Response
