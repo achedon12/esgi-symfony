@@ -120,3 +120,13 @@ register:
 verify:
   title: Verify your account
   login: Go to login
+pages:
+  discussion: Discussion
+  suggestion: Suggestion
+  home: Home
+  userEdit: Edit user
+  offers: Offers
+  offer_payment: Payment
+  profile: Profile
+  profile_settings: Profile settings
+  update_password: Update password

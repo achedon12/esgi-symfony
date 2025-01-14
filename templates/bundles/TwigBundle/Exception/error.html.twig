@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Erreur{% endblock %}
+{% block title %}{{ 'errors.general.title'|trans }}{% endblock %}
 
 {% block body %}
 
     <div class="error-container">
-        <h1>{{ 'errors.general'|trans }} {{ status_code }}</h1>
+        <h1>{{ 'errors.general.title'|trans }} {{ status_code }}</h1>
         <p>{{ status_text }}</p>
         <a href="{{ path('app_profile_index') }}" class="go-back">{{ 'errors.actions.home'|trans }}</a>
     </div>
