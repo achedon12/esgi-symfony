@@ -90,7 +90,7 @@
         }
 
         function fetchMoreUsers() {
-            fetch('/home/refresh')
+            fetch('/home')
                 .then(response => response.text())
                 .then(html => {
                     let tempDiv = document.createElement('div');

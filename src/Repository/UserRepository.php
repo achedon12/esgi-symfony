@@ -39,11 +39,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $maxScore = $user->getScore() + 20;
 
         return $this->createQueryBuilder('u')
+            ->andWhere('u.id != :id')
+            ->setParameter('id', $user->getId())
             ->andWhere('u.score BETWEEN :minScore AND :maxScore')
             ->setParameter('minScore', $minScore)
             ->setParameter('maxScore', $maxScore)
-            ->andWhere('u.id != :id')
-            ->setParameter('id', $user->getId())
             ->andWhere('u.gender = :sexualOrientation')
             ->setParameter('sexualOrientation', $user->getSexualOrientation())
             ->andWhere('u.id NOT IN (

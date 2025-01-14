@@ -16,14 +16,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/home', name: 'app_home_')]
-
 class HomeController extends AbstractController
 {
-
-    public function __construct(private readonly UserRepository $userRepository,
-                                private readonly DiscussionRepository $discussionRepository,
-                                private readonly EntityManagerInterface $entityManager,
-                                private readonly LikeRepository $likeRepository)
+    public function __construct(
+        private readonly UserRepository         $userRepository,
+        private readonly DiscussionRepository   $discussionRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly LikeRepository         $likeRepository
+    )
     {
     }
 
@@ -31,36 +31,11 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         $user = $this->getUser();
-        if (!$user instanceof User) {
-            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
-        }
+        $this->ensureUserIsValid($user);
+
         $users = $this->userRepository->findAppropriatedUsers($user);
         $discussions = $this->discussionRepository->findByUser($user);
-
-        array_map(function($discussion) use ($user) {
-            if($discussion->getUserOne() === $user) {
-                $discussion->setUserTwo($discussion->getUserTwo());
-            } else {
-                $discussion->setUserTwo($discussion->getUserOne());
-            }
-        }, $discussions);
-
-        return $this->render('home/index.html.twig', [
-            'users' => $users,
-            'user' => $user,
-            'discussions' => $discussions
-        ]);
-    }
-
-    #[Route('/refresh', name: 'refresh')]
-    public function refresh(): Response
-    {
-        $user = $this->getUser();
-        if (!$user instanceof User) {
-            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
-        }
-        $users = $this->userRepository->findAppropriatedUsers($user);
-        $discussions = $this->discussionRepository->findByUser($user);
+        $this->setDiscussionUser($discussions, $user);
 
         return $this->render('home/index.html.twig', [
             'users' => $users,
@@ -78,66 +53,29 @@ class HomeController extends AbstractController
         $slidedUser = $this->entityManager->getRepository(User::class)->find($slidedUserId);
 
         $user = $this->getUser();
-        if (!$user instanceof User) {
-            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
-        }
+        $this->ensureUserIsValid($user);
+
         if ($direction === 'like') {
-            $like = new Like();
-            $like->setUserLiker($user);
-            $like->setUserLiked($slidedUser);
-            $like->setCreationDate(new DateTimeImmutable());
-            $this->entityManager->persist($like);
-            $this->entityManager->flush();
-            $slidedUser->setScore($slidedUser->getScore() + 1);
-
-            if($this->likeRepository->isMatch($user, $slidedUser)) {
-                $discussion = new Discussion();
-                $discussion->setUserOne($user);
-                $discussion->setUserTwo($slidedUser);
-                $discussion->setCreationDate(new DateTimeImmutable());
-                $discussion->setApproved(true);
-                $this->entityManager->persist($discussion);
-                $this->entityManager->flush();
-                return $this->json(['status' => 'match', 'discussionId' => $discussion->getId()]);
-            }
-
-            return $this->json(['status' => 'success', 'message' => 'User liked successfully']);
+            return $this->handleLike($user, $slidedUser);
         } elseif ($direction === 'dislike') {
-            $slidedUser->setScore($slidedUser->getScore() - 1);
-            $this->entityManager->flush();
-            return $this->json(['status' => 'success', 'message' => 'User disliked successfully']);
+            return $this->handleDislike($slidedUser);
         } else {
             return $this->json(['status' => 'error', 'message' => 'Direction not found'], 400);
         }
     }
 
     #[Route('/forceDiscussion', name: 'forceDiscussion')]
-    public function forceDiscussion(Request $request, EntityManagerInterface $entityManager): Response
+    public function forceDiscussion(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
         $slidedUserId = $data['slidedUserId'] ?? null;
-        $slidedUser = $entityManager->getRepository(User::class)->find($slidedUserId);
+        $slidedUser = $this->entityManager->getRepository(User::class)->find($slidedUserId);
 
         $user = $this->getUser();
-        if (!$user instanceof User) {
-            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
-        }
+        $this->ensureUserIsValid($user);
 
-        $like = new Like();
-        $like->setUserLiker($user);
-        $like->setUserLiked($slidedUser);
-        $like->setCreationDate(new DateTimeImmutable());
-        $entityManager->persist($like);
-        $entityManager->flush();
-        $slidedUser->setScore($slidedUser->getScore() + 1);
-
-        $discussion = new Discussion();
-        $discussion->setUserOne($user);
-        $discussion->setUserTwo($slidedUser);
-        $discussion->setCreationDate(new DateTimeImmutable());
-        $discussion->setApproved(false);
-        $entityManager->persist($discussion);
-        $entityManager->flush();
+        $this->createLike($user, $slidedUser);
+        $discussion = $this->createDiscussion($user, $slidedUser, false);
 
         return $this->json(['status' => 'success', 'discussionId' => $discussion->getId()]);
     }
@@ -146,9 +84,8 @@ class HomeController extends AbstractController
     public function suggestion(): Response
     {
         $user = $this->getUser();
-        if (!$user instanceof User) {
-            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
-        }
+        $this->ensureUserIsValid($user);
+
         $suggestedUser = $this->userRepository->findSuggestedUsers($user);
         $distance = $this->calculateDistance($user->getLatitude(), $user->getLongitude(), $suggestedUser->getLatitude(), $suggestedUser->getLongitude());
 
@@ -158,9 +95,70 @@ class HomeController extends AbstractController
         ]);
     }
 
+    private function ensureUserIsValid($user): void
+    {
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('User not found or not an instance of App\Entity\User');
+        }
+    }
+
+    private function setDiscussionUser(array &$discussions, $user): void
+    {
+        array_map(function ($discussion) use ($user) {
+            if ($discussion->getUserOne() === $user) {
+                $discussion->setUserTwo($discussion->getUserTwo());
+            } else {
+                $discussion->setUserTwo($discussion->getUserOne());
+            }
+        }, $discussions);
+    }
+
+    private function handleLike($user, $slidedUser): Response
+    {
+        $this->createLike($user, $slidedUser);
+        $slidedUser->setScore($slidedUser->getScore() + 1);
+
+        if ($this->likeRepository->isMatch($user, $slidedUser)) {
+            $discussion = $this->createDiscussion($user, $slidedUser, true);
+            return $this->json(['status' => 'match', 'discussionId' => $discussion->getId()]);
+        }
+
+        return $this->json(['status' => 'success', 'message' => 'User liked successfully']);
+    }
+
+    private function handleDislike($slidedUser): Response
+    {
+        $slidedUser->setScore($slidedUser->getScore() - 1);
+        $this->entityManager->flush();
+        return $this->json(['status' => 'success', 'message' => 'User disliked successfully']);
+    }
+
+    private function createLike($user, $slidedUser): void
+    {
+        $like = new Like();
+        $like->setUserLiker($user);
+        $like->setUserLiked($slidedUser);
+        $like->setCreationDate(new DateTimeImmutable());
+        $this->entityManager->persist($like);
+        $this->entityManager->flush();
+    }
+
+    private function createDiscussion($user, $slidedUser, bool $approved): Discussion
+    {
+        $discussion = new Discussion();
+        $discussion->setUserOne($user);
+        $discussion->setUserTwo($slidedUser);
+        $discussion->setCreationDate(new DateTimeImmutable());
+        $discussion->setApproved($approved);
+        $this->entityManager->persist($discussion);
+        $this->entityManager->flush();
+
+        return $discussion;
+    }
+
     private function calculateDistance($lat1, $lon1, $lat2, $lon2): float|int
     {
-        $earthRadius = 6371; // Rayon de la Terre en kilomètres
+        $earthRadius = 6371; // Radius of the Earth in kilometers
 
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
