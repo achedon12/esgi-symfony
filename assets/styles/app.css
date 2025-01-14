@@ -1038,3 +1038,73 @@ input:focus {
     }
 }
 
+.sidebar {
+    overflow: hidden;
+
+    header {
+        border-bottom: 1px solid #e9ecef;
+        padding: 1rem;
+    }
+
+    img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    header a, .discussions > a {
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .discussions {
+        overflow-y: auto;
+        height: 100%;
+    }
+
+    .discussions a:not(.active) h6 {
+        color: white;
+    }
+
+    .discussions a:not(.active) hr {
+        color: white;
+    }
+
+    .discussions a.active {
+        background-color: #f8f9fa;
+        border-left: 4px solid #007bff;
+        color: #007bff;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        padding-left: calc(1rem - 4px);
+    }
+
+    .discussions a.toApprove {
+        border-left: 4px solid #f7ff07;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        padding-left: calc(1rem - 4px);
+    }
+
+    .discussions a.active hr {
+        display: none;
+    }
+
+    .discussions a.active:hover {
+        background-color: #e2e6ea;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    header a:first-child:hover, .discussions > a:not(.active):hover {
+        transform: scale(1.1);
+    }
+
+    header img::before {
+        content: "";
+        display: block;
+        border: 1px solid #e9ecef;
+    }
+}
