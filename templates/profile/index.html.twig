@@ -3,5 +3,52 @@
 {% block title %}Profile{% endblock %}
 
 {% block section %}
-    {% include 'profile/userInfos/userInfos.html.twig' %}
+    <div class="user-profile">
+        {% if app.user.image[0] %}
+            {% if app.user.image[0] starts with 'people_images/' %}
+                <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}" class="rounded-circle w-25"/>
+            {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
+                <img src="{{ app.user.image[0] }}" alt="{{ app.user.firstname }}" class="rounded-circle w-25"/>
+            {% else %}
+                <img src="{{ asset('uploads/profile_images/' ~ app.user.image[0]) }}" alt="Profile Picture"
+                     class="rounded-circle w-25">
+            {% endif %}
+        {% endif %}
+        <h1 class="text-justify w-50 mx-auto text-center">{{ app.user.firstname }} {{ app.user.lastname }}, {{ app.user.age }}</h1>
+
+        <div class="actions">
+            <a class="action" href="{{ path('app_profile_settings') }}">
+                <i class="fas fa-cog fa-2x"></i>
+                <p>{{ 'profile.actions.settings'|trans }}</p>
+            </a>
+            <a class="action" href="{{ path('app_profile_media') }}">
+                <div>
+                    <i class="media fas fa-camera fa-2x"></i>
+                    <i class="more fas fa-plus fa-2x"></i>
+                </div>
+                <p>{{ 'profile.actions.add'|trans }}</p>
+            </a>
+            <a class="action" href="{{ path('app_profile_edit') }}">
+                <i class="fas fa-pencil-alt fa-2x"></i>
+                <p>{{ 'profile.actions.edit'|trans }}</p>
+            </a>
+        </div>
+
+        <p class="text-muted w-50 mx-auto mt-3 text-justify text-center text-break text-wrap text-truncate">{{ app.user.bio }}</p>
+
+        {% if app.user.offer.name == 'Basic' %}
+            <div class="tinder-plus">
+                <h2 class="h1">
+                    <i class="fas fa-bolt"></i>
+                    Get Matches Faster
+                </h2>
+                <p>Get unlimited likes with Tinder Plus</p>
+                <p>Boost your profile once per month</p>
+                <p>Control your profile visibility</p>
+                <a href="{{ path('app_offer_index') }}">
+                    Get tinder plus
+                </a>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

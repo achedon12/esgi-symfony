@@ -1,0 +1,5 @@
+{% extends 'profile/profileBase.html.twig' %}
+
+{% block section %}
+            {% include 'profile/userMedia/user.html.twig' with {user: app.user, canUpdate: true} %}
+{% endblock %}

@@ -1,67 +1,54 @@
-{% extends 'base.html.twig' %}
+{% extends 'profile/profileBase.html.twig' %}
 
 {% block title %}Profile Settings{% endblock %}
 
-{% block body %}
-    <section class="d-flex w-100 h-100">
-        <div class="w-25 h-100 sidebar-wrapper">
-            {% include 'home/sidebar.html.twig' %}
-        </div>
-        <div class="w-75 swipe-wrapper overflow-auto">
-            <header class="d-flex row align-content-end w-100">
-                <div class="col-12 d-flex justify-content-between align-items-center">
-                    <a href="{{ path('app_profile_index') }}" class="btn btn-link"><i class="fas fa-arrow-left fa-lg"></i> Back</a>
-                    <h2 class="text-primary">Profile Settings</h2>
-                </div>
-            </header>
-            <div class="profile-container">
-                <div class="profile-header">
-                    <div class="profile-avatar">
-                        {% if app.user.image[0] %}
-                            {% if app.user.image[0] starts with 'people_images/' %}
-                                <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}"/>
-                            {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
-                                <img src="{{ app.user.image[0] }}" alt="{{ app.user.firstname }}"/>
-                            {% else %}
-                                <img src="{{ asset('uploads/profile_images/' ~ app.user.image[0]) }}" alt="Profile Picture">
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                    <div class="profile-info">
-                        <h3>{{ app.user.firstname }} {{ app.user.lastname }}</h3>
-                        <p>{{ app.user.email }}</p>
-                    </div>
-                </div>
-
-                <div class="profile-actions">
-                    <h4>{{ 'profile.account.settings'|trans }}</h4>
-                    <div class="action-buttons">
-                        <a href="{{ path('app_profile_update_password') }}" class="btn btn-outline-primary">
-                            <i class="fas fa-lock"></i> {{ 'profile.changePassword'|trans }}
-                        </a>
-                        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">
-                            <i class="fas fa-sign-out-alt"></i> {{ 'logout'|trans }}
-                        </a>
-                    </div>
-                </div>
-
-                <div class="language-settings">
-                    <h4>{{ 'profile.account.language'|trans }}</h4>
-                    <form action="{{ path('app_profile_update_language') }}" method="post" class="form-inline">
-                        <label for="language" class="mr-2"></label>
-                        <select name="language" id="language" class="form-control mr-2">
-                            {% for language in availableLanguages %}
-                                <option value="{{ language.value }}" {% if language.value == app.user.language %}selected{% endif %}>{{ language.value }}</option>
-                            {% endfor %}
-                        </select>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-language"></i> {{'profile.changeLanguage'|trans }}
-                        </button>
-                    </form>
-                </div>
+{% block section %}
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {% if app.user.image[0] %}
+                    {% if app.user.image[0] starts with 'people_images/' %}
+                        <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}"/>
+                    {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
+                        <img src="{{ app.user.image[0] }}" alt="{{ app.user.firstname }}"/>
+                    {% else %}
+                        <img src="{{ asset('uploads/profile_images/' ~ app.user.image[0]) }}" alt="Profile Picture">
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="profile-info">
+                <h3>{{ app.user.firstname }} {{ app.user.lastname }}</h3>
+                <p>{{ app.user.email }}</p>
             </div>
         </div>
-    </section>
+
+        <div class="profile-actions">
+            <h4>{{ 'profile.account.settings'|trans }}</h4>
+            <div class="action-buttons">
+                <a href="{{ path('app_profile_update_password') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-lock"></i> {{ 'profile.changePassword'|trans }}
+                </a>
+                <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt"></i> {{ 'logout'|trans }}
+                </a>
+            </div>
+        </div>
+
+        <div class="language-settings">
+            <h4>{{ 'profile.account.language'|trans }}</h4>
+            <form action="{{ path('app_profile_update_language') }}" method="post" class="form-inline">
+                <label for="language" class="mr-2"></label>
+                <select name="language" id="language" class="form-control mr-2">
+                    {% for language in availableLanguages %}
+                        <option value="{{ language.value }}" {% if language.value == app.user.language %}selected{% endif %}>{{ language.value }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-language"></i> {{'profile.changeLanguage'|trans }}
+                </button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block stylesheets %}

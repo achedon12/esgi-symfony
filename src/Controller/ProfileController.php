@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Offer;
 use App\Entity\User;
 use App\Enum\LanguageEnum;
 use App\Form\ChangePasswordFormType;
@@ -12,9 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -26,7 +22,6 @@ class ProfileController extends AbstractController
         private readonly EntityManagerInterface      $entityManager,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly SluggerInterface            $slugger,
-        private readonly MailerInterface             $mailer
     )
     {
     }
@@ -56,7 +51,7 @@ class ProfileController extends AbstractController
             $this->entityManager->flush();
         }
 
-        return $this->render('profile/edit.html.twig', [
+        return $this->render('profile/userEdit/userEdit.html.twig', [
             'availableLanguages' => LanguageEnum::getAvailableLanguages(),
             'updateForm' => $form->createView(),
         ]);
@@ -65,7 +60,7 @@ class ProfileController extends AbstractController
     #[Route('/media', name: 'media')]
     public function media(): Response
     {
-        return $this->render('profile/media.html.twig', [
+        return $this->render('profile/userMedia/media.html.twig', [
             'availableLanguages' => LanguageEnum::getAvailableLanguages(),
         ]);
     }
@@ -118,45 +113,6 @@ class ProfileController extends AbstractController
         return $this->redirectToRoute('app_profile_settings');
     }
 
-    #[Route('/offer', name: 'offer')]
-    public function offer(): Response
-    {
-        return $this->render('profile/offer.html.twig');
-    }
-
-    #[Route('/pay_offer', name: 'offer_pay')]
-    public function payOffer(Request $request): Response
-    {
-        $offerId = (int)$request->request->get('offer_id');
-        return $this->render('profile/pay_offer.html.twig', [
-            'offer_id' => $offerId
-        ]);
-    }
-
-    #[Route('/change_offer', name: 'offer_change')]
-    public function changeOffer(Request $request): Response
-    {
-        $offerId = (int)$request->request->get('offer_id');
-
-        if ($offerId !== 0) {
-            $offer = $this->entityManager->getRepository(Offer::class)->find($offerId);
-            $this->getUser()->setOffer($offer);
-            $offer->addUser($this->getUser());
-
-            try {
-                $this->sendOfferChangeEmail($this->getUser(), $offer);
-            } catch (TransportExceptionInterface $e) {
-                $this->addFlash('error', 'An error occurred while sending the email.');
-                return $this->redirectToRoute('app_profile_offer');
-            }
-
-            $this->entityManager->flush();
-            $this->addFlash('success', 'Offer changed successfully!');
-        }
-
-        return $this->redirectToRoute('app_profile_offer');
-    }
-
     private function handleImageUpload($imageFile, User $user): void
     {
         $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -180,22 +136,5 @@ class ProfileController extends AbstractController
         }
 
         $user->setImage($newFilename);
-    }
-
-    private function sendOfferChangeEmail(User $user, Offer $offer): void
-    {
-        $email = (new Email())
-            ->from('no-reply@tindoo.com')
-            ->to($user->getEmail())
-            ->subject('Offer changed')
-            ->html($this->renderView('emails/payment_confirmation.html.twig', [
-                'user' => $user,
-                'offer' => $offer,
-                'transaction_id' => uniqid(),
-                'amount' => $offer->getPrice(),
-                'currency' => 'EUR'
-            ]));
-
-        $this->mailer->send($email);
     }
 }

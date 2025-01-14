@@ -2,23 +2,23 @@
     <div class="user">
         <div class="user-header">
             <div class="user-image">
-                {% if app.user.image[0] %}
-                    {% if app.user.image[0] starts with 'people_images/' %}
-                        <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}"/>
-                    {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
-                        <img src="{{ app.user.image[0] }}" alt="{{ app.user.firstname }}"/>
+                {% if user.image[0] %}
+                    {% if user.image[0] starts with 'people_images/' %}
+                        <img src="{{ asset(user.image[0]) }}" alt="{{ user.firstname }}"/>
+                    {% elseif user.image[0] starts with 'https' or user.image[0] starts with 'http' %}
+                        <img src="{{ user.image[0] }}" alt="{{ user.firstname }}"/>
                     {% else %}
-                        <img src="{{ asset('uploads/profile_images/' ~ app.user.image[0]) }}" alt="Profile Picture">
+                        <img src="{{ asset('uploads/profile_images/' ~ user.image[0]) }}" alt="Profile Picture">
                     {% endif %}
                 {% endif %}
-                <h1>{{ app.user.firstname }} {{ app.user.lastname }}, {{ app.user.age }} {{ 'profile.years'|trans }}</h1>
+                <h1>{{ user.firstname }} {{ user.lastname }}, {{ user.age }} {{ 'profile.years'|trans }}</h1>
             </div>
             <p class="user-bio">
-                {{ app.user.bio }}
+                {{ user.bio }}
             </p>
             <p class="user-interests">
                 {{ 'profile.interests'|trans }}:
-                {% for interest in app.user.interests %}
+                {% for interest in user.interests %}
                     <span class="badge bg-primary">{{ interest }}</span>
                 {% endfor %}
             </p>
@@ -29,11 +29,11 @@
             <div class="user-images">
         {% endif %}
 
-            {% for image in app.user.image %}
+            {% for image in user.image %}
                 {% if image starts with 'people_images/' %}
-                    <img src="{{ asset(image) }}" alt="{{ app.user.firstname }}"/>
+                    <img src="{{ asset(image) }}" alt="{{ user.firstname }}"/>
                 {% elseif image starts with 'https' or image starts with 'http' %}
-                    <img src="{{ image }}" alt="{{ app.user.firstname }}"/>
+                    <img src="{{ image }}" alt="{{ user.firstname }}"/>
                 {% else %}
                     <img src="{{ asset('uploads/profile_images/' ~ image) }}" alt="Profile Picture">
                 {% endif %}

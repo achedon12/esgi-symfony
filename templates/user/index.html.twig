@@ -12,10 +12,10 @@
                 <div class="col-12 d-flex justify-content-between align-items-center profile-header">
                     <a href="{{ redirect_url starts with '/' ? redirect_url : path('app_profile_index') }}"><i class="fas fa-arrow-left fa-xl"></i></a>
                     <i class="fas fa-user fa-xl text-primary text-center"></i>
-                    <a href="{{ path('app_profile_offer') }}"><i class="fas fa-fire fa-xl"></i></a>
+                    <a href="{{ path('app_offer_index') }}"><i class="fas fa-fire fa-xl"></i></a>
                 </div>
             </header>
-            {% include 'profile/user.html.twig' with {user: target, canUpdate: false} %}
+            {% include 'profile/userMedia/user.html.twig' with {user: target, canUpdate: false} %}
         </div>
     </section>
 {% endblock %}

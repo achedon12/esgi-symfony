@@ -1,0 +1,29 @@
+{% extends 'profile/profileBase.html.twig' %}
+
+{% block title %}Offres{% endblock %}
+
+{% block section %}
+    <h1 class="text-primary text-center mb-4 mt-3">Paiement</h1>
+    <div class="cb-card">
+        <div class="cb-card-front z-index">
+            <form id="payment-form" action="{{ path('app_offer_change') }}" method="POST" class="d-inline">
+                <input type="hidden" name="offer_id" value="{{ offer_id }}">
+                <div class="input-card-number">
+                    <input id="card-number" class="card-input" type="text" maxlength="26" placeholder="4587 XXXX XXXX XXXX" size="19" required>
+                    <input id="card-cvc" type="text" class="card-input" size="4" placeholder="2XX" required>
+                </div>
+                <div class="input-card-info">
+                    <input id="card-name" type="text" class="card-input" placeholder="John Smith" size="20" required>
+                    <input id="card-expiry" type="text" class="card-input" placeholder="12/2023" size="7" required>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-5">
+        <a href="{{ path('app_offer_index') }}" class="btn btn-outline-info fs-4 mx-5">Retour</a>
+        <form action="{{ path('app_offer_change') }}" method="POST" class="d-inline">
+            <input type="hidden" name="offer_id" value="{{ offer_id }}">
+            <button type="submit" class="btn btn-warning fs-4 mx-5">Payer</button>
+        </form>
+    </div>
+{% endblock %}
