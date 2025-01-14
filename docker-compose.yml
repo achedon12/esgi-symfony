@@ -3,6 +3,7 @@ version: '3.8'
 services:
 
   nginx:
+    container_name: tindoo_nginx
     image: nginx:1.21
     restart: unless-stopped
     ports:
@@ -37,19 +38,6 @@ services:
       - composer
     networks:
       - nginx-proxy
-
-  composer:
-    image: composer:latest
-    command: install --ignore-platform-reqs --no-scripts
-    volumes:
-      - .:/app
-
-  node:
-    image: node:latest
-    volumes:
-      - .:/app
-    working_dir: /app
-
 
 networks:
   nginx-proxy:

@@ -51,11 +51,16 @@ Ce projet vise à recréer les principales fonctionnalités de Tinder tout en me
 - Possibilité de souscrire à un abonnement pour bénéficier de fonctionnalités supplémentaires.
 - Envoi d'un email lors de la souscription à un abonnement.
 
+### **10. Dockerisation** 🐳
+- Mise en place d'un environnement de développement avec Docker.
+- Mise en place d'un environnement de production avec Docker.
+
+
 ---
 
 ## **Technologies utilisées** 🛠️
-- **Backend** : Symfony
-- **Frontend** : Twig, Bootstrap
+- **Backend** : Symfony, Docker
+- **Frontend** : Twig, Bootstrap, NPM, NODEJS
 - **Base de données** : MySQL (ou autre SGBD compatible avec Doctrine)
 
 ---
@@ -64,6 +69,12 @@ Ce projet vise à recréer les principales fonctionnalités de Tinder tout en me
 
 - **Léo Deroin** - [achedon12](https://github.com/achedon12)
 - **Mathys Farineau** - [IPandragonI](https://github.com/IPandragonI)
+
+## Lancer le projet avec Docker
+
+```bash
+  ./docker-run.sh
+```
 
 ## Une fois le projet lancé...
 
