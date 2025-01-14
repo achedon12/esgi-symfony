@@ -9,8 +9,10 @@
             <div class="col">
                 <h2 class="text-center">{{ offer.name }}</h2>
                 <div class="info">
-                    <p>➕ {{ offer.likeNumber == -1 ? 'Like illimité' : offer.likeNumber ~ ' likes / jour' }} </p>
-                    <p>➕ {{ offer.directMessageNumber == -1 ? 'Messages direct illimité' : offer.directMessageNumber ~ ' messages direct / jour' }} </p>
+                    <p>{{ offer.likeNumber == -1 ? '✅ Like illimité' : '➕ ' ~ offer.likeNumber ~ ' likes / jour' }} </p>
+                    {% if offer.directMessageNumber != 0 %}
+                    <p>{{ offer.directMessageNumber == -1 ? '✅ Messages direct illimité' : '➕ ' ~ offer.directMessageNumber ~ ' messages direct / jour' }} </p>
+                    {% endif %}
                     <p>💰 {{ offer.price == 0 ? 'FREE' : offer.price ~ '€ / mois' }} </p>
                 </div>
                 {% if app.user.offer.name == offer.name %}
