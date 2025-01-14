@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Profile{% endblock %}
+
 {% block body %}
     <section class="d-flex w-100 h-100">
         <div class="w-25 h-100 sidebar-wrapper">
@@ -13,7 +15,7 @@
                     <a href="{{ path('app_profile_offer') }}"><i class="fas fa-fire fa-xl"></i></a>
                 </div>
             </header>
-            {% include 'profile/user.html.twig' with {user: app.user, canUpdate: true} %}
+            {% block section %}{% endblock %}
         </div>
     </section>
 {% endblock %}

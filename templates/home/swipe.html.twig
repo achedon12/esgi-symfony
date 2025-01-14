@@ -36,7 +36,7 @@
     {% if users|length > 0 %}
         <div class="tinder--buttons">
             <button id="nope"><i class="fa fa-remove"></i></button>
-            {% if user.offer.id != 1 %}
+            {% if app.user.offer.id != 1 %}
             <button id="star"><i class="fa fa-star"></i></button>
             {% endif %}
             <button id="love"><i class="fa fa-heart"></i></button>
@@ -56,8 +56,8 @@
         let storedDate = localStorage.getItem('storedDate');
 
         if (storedDate !== today) {
-            likeNumber = {{ user.offer.likeNumber }};
-            directMessageNumber = {{ user.offer.directMessageNumber }};
+            likeNumber = {{ app.user.offer.likeNumber }};
+            directMessageNumber = {{ app.user.offer.directMessageNumber }};
             localStorage.setItem('likeNumber', likeNumber);
             localStorage.setItem('directMessageNumber', directMessageNumber);
             localStorage.setItem('storedDate', today);

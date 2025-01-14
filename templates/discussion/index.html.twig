@@ -186,20 +186,20 @@
             {% endif %}
             <div class="messages {% if discussion.isApproved == false and isCurrentUserDemanding == false %}toApproveMessages{% endif %}">
                 {% for message in discussion.messages %}
-                    <div class="d-flex {% if message.author == user %}justify-content-end{% else %}justify-content-start{% endif %} mb-3">
-                        <div class="message p-3 {% if message.author == user %}user-message{% else %}other-message{% endif %} position-relative">
+                    <div class="d-flex {% if message.author == app.user %}justify-content-end{% else %}justify-content-start{% endif %} mb-3">
+                        <div class="message p-3 {% if message.author == app.user %}user-message{% else %}other-message{% endif %} position-relative">
                             <div class="message-content mb-2">
                                 {{ message.content }}
                             </div>
-                            <div class="message-date small fw-bold {% if message.author == user %} text-white{% else %} text-muted {% endif %}">
+                            <div class="message-date small fw-bold {% if message.author == app.user %} text-white{% else %} text-muted {% endif %}">
                                 {{ message.getCreationDate|date('Y-m-d H:i') }}
                             </div>
-                            {% if message.author.image %}
-                                {% if message.author.image starts with 'people_images/' %}
-                                    <img src="{{ asset(message.author.image) }}" alt="{{ message.author.firstname }}" class="rounded-circle position-absolute"
+                            {% if message.author.image[0] %}
+                                {% if message.author.image[0] starts with 'people_images/' %}
+                                    <img src="{{ asset(message.author.image[0]) }}" alt="{{ message.author.firstname }}" class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;"/>
-                                {% elseif message.author.image starts with 'https' or message.author.image starts with 'http' %}
-                                    <img src="{{ message.author.image }}" alt="Author's profile picture"
+                                {% elseif message.author.image[0] starts with 'https' or message.author.image[0] starts with 'http' %}
+                                    <img src="{{ message.author.image[0] }}" alt="Author's profile picture"
                                          class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;">
                                 {% else %}

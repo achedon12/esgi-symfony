@@ -17,13 +17,13 @@
             <div class="profile-container">
                 <div class="profile-header">
                     <div class="profile-avatar">
-                        {% if user.image[0] %}
-                            {% if user.image[0] starts with 'people_images/' %}
-                                <img src="{{ asset(user.image[0]) }}" alt="{{ user.firstname }}"/>
-                            {% elseif user.image[0] starts with 'https' or user.image[0] starts with 'http' %}
-                                <img src="{{ user.image[0] }}" alt="{{ user.firstname }}"/>
+                        {% if app.user.image[0] %}
+                            {% if app.user.image[0] starts with 'people_images/' %}
+                                <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}"/>
+                            {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
+                                <img src="{{ app.user.image[0] }}" alt="{{ app.user.firstname }}"/>
                             {% else %}
-                                <img src="{{ asset('uploads/profile_images/' ~ user.image[0]) }}" alt="Profile Picture">
+                                <img src="{{ asset('uploads/profile_images/' ~ app.user.image[0]) }}" alt="Profile Picture">
                             {% endif %}
                         {% endif %}
                     </div>
@@ -51,7 +51,7 @@
                         <label for="language" class="mr-2"></label>
                         <select name="language" id="language" class="form-control mr-2">
                             {% for language in availableLanguages %}
-                                <option value="{{ language.value }}" {% if language.value == user.language %}selected{% endif %}>{{ language.value }}</option>
+                                <option value="{{ language.value }}" {% if language.value == app.user.language %}selected{% endif %}>{{ language.value }}</option>
                             {% endfor %}
                         </select>
                         <button type="submit" class="btn btn-primary">

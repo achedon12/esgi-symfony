@@ -1,0 +1,115 @@
+{% block userEdit %}
+    <div class="w-auto mx-auto text-center">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success mt-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger mt-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="p-4 h-auto">
+        {{ form_start(updateForm, { 'attr': {'class': 'row g-3'} }) }}
+
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                {{ form_widget(updateForm.firstname, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                {{ form_widget(updateForm.lastname, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                {{ form_widget(updateForm.gender, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                {{ form_widget(updateForm.birthdate, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+        </div>
+
+        {{ form_widget(updateForm.longitude, {
+            'attr': {'class': 'form-control'}
+        }) }}
+
+        {{ form_widget(updateForm.latitude, {
+            'attr': {'class': 'form-control'}
+        }) }}
+
+        <div class="col-md-12">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-image"></i></span>
+                {{ form_widget(updateForm.image, {
+                    'attr': {'class': 'form-control'}
+                }) }}
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                {{ form_widget(updateForm.bio, {
+                    'attr': {'class': 'form-control', 'rows': 3}
+                }) }}
+            </div>
+        </div>
+
+        <input type="hidden" id="user_latitude" name="update_user_form[latitude]" value="">
+        <input type="hidden" id="user_longitude" name="update_user_form[longitude]" value="">
+
+        <div class="col-md-12">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-heart"></i></span>
+                <label for="user_interests">Interests</label>
+            </div>
+            <div id="interests-container">
+                {% for interest in updateForm.interests %}
+                    <div class="input-group mb-2">
+                        {{ form_widget(interest, {'attr': {'class': 'form-control'}}) }}
+                        <button class="btn btn-danger" type="button" onclick="this.closest('.input-group').remove();">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="btn btn-success mt-2" type="button" id="add-interest">
+                <i class="fas fa-plus"></i> Add Interest
+            </button>
+        </div>
+
+        <div class="col-md-12 text-center">
+            <button class="btn btn-primary px-4">
+                <i class="fas fa-save"></i> Update
+            </button>
+            <a href="{{ path('app_profile_index') }}" class="btn btn-secondary px-4">
+                <i class="fas fa-arrow-left"></i> {{ 'goBack'|trans }}
+            </a>
+        </div>
+
+        {{ form_end(updateForm) }}
+    </div>
+{% endblock %}

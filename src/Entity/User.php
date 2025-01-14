@@ -92,6 +92,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Offer $offer = null;
 
+    /**
+     * @var Collection<int, Discussion>
+     */
+    #[ORM\OneToMany(targetEntity: Discussion::class, mappedBy: 'userOne')]
+    private Collection $discussionsAsUserOne;
+
+    #[ORM\OneToMany(targetEntity: Discussion::class, mappedBy: 'userTwo')]
+    private Collection $discussionsAsUserTwo;
+
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     private ?bool $verifiedAccount = null;
 
@@ -101,6 +110,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->likes = new ArrayCollection();
+        $this->discussionsAsUserOne = new ArrayCollection();
+        $this->discussionsAsUserTwo = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -442,5 +453,69 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->verificationToken = $verificationToken;
 
         return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Discussion>
+     */
+    public function getDiscussionsAsUserOne(): Collection
+    {
+        return $this->discussionsAsUserOne;
+    }
+
+    public function addDiscussionAsUserOne(Discussion $discussion): static
+    {
+        if (!$this->discussionsAsUserOne->contains($discussion)) {
+            $this->discussionsAsUserOne->add($discussion);
+            $discussion->setUserOne($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDiscussionAsUserOne(Discussion $discussion): static
+    {
+        if ($this->discussionsAsUserOne->removeElement($discussion)) {
+            if ($discussion->getUserOne() === $this) {
+                $discussion->setUserOne(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Discussion>
+     */
+    public function getDiscussionsAsUserTwo(): Collection
+    {
+        return $this->discussionsAsUserTwo;
+    }
+
+    public function addDiscussionAsUserTwo(Discussion $discussion): static
+    {
+        if (!$this->discussionsAsUserTwo->contains($discussion)) {
+            $this->discussionsAsUserTwo->add($discussion);
+            $discussion->setUserTwo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDiscussionAsUserTwo(Discussion $discussion): static
+    {
+        if ($this->discussionsAsUserTwo->removeElement($discussion)) {
+            if ($discussion->getUserTwo() === $this) {
+                $discussion->setUserTwo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDiscussions(): array
+    {
+        return array_merge($this->discussionsAsUserOne->toArray(), $this->discussionsAsUserTwo->toArray());
     }
 }

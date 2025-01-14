@@ -74,37 +74,27 @@
             display: block;
             border: 1px solid #e9ecef;
         }
-
-        .settings-icon {
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .settings-icon i {
-            font-size: 1.5rem;
-        }
     </style>
     <aside class="h-100">
         <header class="d-flex align-items-center flex-row position-relative">
             <a href="{{ path('app_profile_index') }}">
                 <div class="profile-image">
-                    {% if user.image[0] %}
-                        {% if user.image[0] starts with 'people_images/' %}
-                            <img src="{{ asset(user.image[0]) }}" alt="{{ user.firstname }}"/>
-                        {% elseif user.image[0] starts with 'https' or user.image[0] starts with 'http' %}
-                            <img src="{{ user.image[0] }}" alt="{{ user.firstname }}"/>
+                    {% if app.user.image[0] %}
+                        {% if app.user.image[0] starts with 'people_images/' %}
+                            <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}"/>
+                        {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
+                            <img src="{{ app.user.image[0] }}" alt="{{ app.user.firstname }}"/>
                         {% else %}
-                            <img src="{{ asset('uploads/profile_images/' ~ user.image[0]) }}" alt="Profile Picture">
+                            <img src="{{ asset('uploads/profile_images/' ~ app.user.image[0]) }}" alt="Profile Picture">
                         {% endif %}
                     {% endif %}
                 </div>
             </a>
-            <h5 class="text-white m-0">{{ user.firstname }} {{ user.lastname }}</h5>
+            <h5 class="text-white m-0">{{ app.user.firstname }} {{ app.user.lastname }}</h5>
         </header>
         <div class="discussions">
             <h5 class="text-white px-2 pt-2">{{ 'discussion.title'|trans }}</h5>
-            {% for d in discussions %}
+            {% for d in app.user.discussions %}
                 {% set lastMessage = d.messages.last %}
                 <a href="{{ path('app_discussion_index', {id: d.id}) }}" class="d-flex align-items-center flex-row p-4 d-flex flex-column text-decoration-none {% if discussion is defined and discussion == d %}active{% endif %} {% if d.isApproved == false %}toApprove{% endif %}">
                     <div class="d-flex flex-row w-100 align-items-center">

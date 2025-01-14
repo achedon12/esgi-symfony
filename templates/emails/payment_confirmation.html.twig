@@ -46,7 +46,7 @@
     <div class="container">
         <div class="content">
             <h1>Payment Confirmation</h1>
-            <p>Dear {{ user.firstname }} {{ user.lastname }},</p>
+            <p>Dear {{ app.user.firstname }} {{ app.user.lastname }},</p>
             <p>Thank you for your payment. Your transaction has been successfully completed.</p>
             <p><strong>Transaction ID:</strong> {{ transaction_id }}</p>
             <p><strong>Amount:</strong> {{ amount }} {{ currency }}</p>

@@ -7,8 +7,8 @@ use App\Entity\User;
 use App\Enum\LanguageEnum;
 use App\Form\ChangePasswordFormType;
 use App\Form\UpdateUserFormType;
-use App\Repository\DiscussionRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,37 +20,27 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/profile', name: 'app_profile_')]
-class ProfileController extends AbstractBaseController
+class ProfileController extends AbstractController
 {
     public function __construct(
-        DiscussionRepository $discussionRepository,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface      $entityManager,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
-        private readonly SluggerInterface $slugger,
-        private readonly MailerInterface $mailer
-    ) {
-        parent::__construct($discussionRepository);
+        private readonly SluggerInterface            $slugger,
+        private readonly MailerInterface             $mailer
+    )
+    {
     }
 
     #[Route('/', name: 'index')]
     public function index(): Response
     {
-        [$user, $discussions] = $this->initializeUserAndDescription();
-
-        return $this->render('profile/index.html.twig', [
-            'user' => $user,
-            'discussions' => $discussions
-        ]);
+        return $this->render('profile/index.html.twig');
     }
 
     #[Route('/settings', name: 'settings')]
     public function settings(): Response
     {
-        [$user, $discussions] = $this->initializeUserAndDescription();
-
         return $this->render('profile/settings.html.twig', [
-            'user' => $user,
-            'discussions' => $discussions,
             'availableLanguages' => LanguageEnum::getAvailableLanguages(),
         ]);
     }
@@ -58,19 +48,15 @@ class ProfileController extends AbstractBaseController
     #[Route('/edit', name: 'edit')]
     public function edit(Request $request): Response
     {
-        [$user, $discussions] = $this->initializeUserAndDescription();
-
-        $form = $this->createForm(UpdateUserFormType::class, $user);
+        $form = $this->createForm(UpdateUserFormType::class, $this->getUser());
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->handleImageUpload($form, $user);
+            $this->handleImageUpload($form, $this->getUser());
             $this->addFlash('success', 'Profile updated successfully!');
             $this->entityManager->flush();
         }
 
         return $this->render('profile/edit.html.twig', [
-            'user' => $user,
-            'discussions' => $discussions,
             'availableLanguages' => LanguageEnum::getAvailableLanguages(),
             'updateForm' => $form->createView(),
         ]);
@@ -79,11 +65,7 @@ class ProfileController extends AbstractBaseController
     #[Route('/media', name: 'media')]
     public function media(): Response
     {
-        [$user, $discussions] = $this->initializeUserAndDescription();
-
         return $this->render('profile/media.html.twig', [
-            'user' => $user,
-            'discussions' => $discussions,
             'availableLanguages' => LanguageEnum::getAvailableLanguages(),
         ]);
     }
@@ -91,11 +73,10 @@ class ProfileController extends AbstractBaseController
     #[Route('/upload-image', name: 'upload_image', methods: ['POST'])]
     public function uploadImage(Request $request): Response
     {
-        [$user] = $this->initializeUser();
         $imageFile = $request->files->get('profile_image');
 
         if ($imageFile) {
-            $this->handleImageUpload($imageFile, $user);
+            $this->handleImageUpload($imageFile, $this->getUser());
             $this->entityManager->flush();
         } else {
             $this->addFlash('error', 'No image uploaded.');
@@ -107,30 +88,27 @@ class ProfileController extends AbstractBaseController
     #[Route('/update-password', name: 'update_password')]
     public function updatePassword(Request $request): Response
     {
-        [$user] = $this->initializeUser();
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(
-                $this->userPasswordHasher->hashPassword($user, $form->get('newPassword')->getData())
+            $this->getUser()->setPassword(
+                $this->userPasswordHasher->hashPassword($this->getUser(), $form->get('newPassword')->getData())
             );
             $this->addFlash('success', 'Password updated successfully!');
             $this->entityManager->flush();
         }
 
         return $this->render('profile/update_password.html.twig', [
-            'updatePasswordForm' => $form->createView(),
-            'user' => $user
+            'updatePasswordForm' => $form->createView()
         ]);
     }
 
     #[Route('/updateLanguage', name: 'update_language', methods: ['POST'])]
     public function updateLanguage(Request $request): Response
     {
-        [$user] = $this->initializeUser();
         $language = $request->request->get('language');
-        $user->setLanguage($language);
+        $this->getUser()->setLanguage($language);
         $this->entityManager->flush();
         $request->setLocale($language);
         $request->setDefaultLocale($language);
@@ -140,26 +118,17 @@ class ProfileController extends AbstractBaseController
         return $this->redirectToRoute('app_profile_settings');
     }
 
-    #[Route('/offer', name: 'offer')]
+    #[Route('/userOffer', name: 'offer')]
     public function offer(): Response
     {
-        [$user, $discussions] = $this->initializeUser();
-
-        return $this->render('profile/offer.html.twig', [
-            'user' => $user,
-            'discussions' => $discussions,
-        ]);
+        return $this->render('profile/offer.html.twig');
     }
 
     #[Route('/pay_offer', name: 'offer_pay')]
     public function payOffer(Request $request): Response
     {
-        [$user, $discussions] = $this->initializeUser();
-        $offerId = (int) $request->request->get('offer_id');
-
+        $offerId = (int)$request->request->get('offer_id');
         return $this->render('profile/pay_offer.html.twig', [
-            'user' => $user,
-            'discussions' => $discussions,
             'offer_id' => $offerId
         ]);
     }
@@ -167,32 +136,25 @@ class ProfileController extends AbstractBaseController
     #[Route('/change_offer', name: 'offer_change')]
     public function changeOffer(Request $request): Response
     {
-        [$user, $discussions] = $this->initializeUser();
-        $offerId = (int) $request->request->get('offer_id');
+        $offerId = (int)$request->request->get('offer_id');
 
         if ($offerId !== 0) {
             $offer = $this->entityManager->getRepository(Offer::class)->find($offerId);
-            $user->setOffer($offer);
-            $offer->addUser($user);
+            $this->getUser()->setOffer($offer);
+            $offer->addUser($this->getUser());
 
             try {
-                $this->sendOfferChangeEmail($user, $offer);
+                $this->sendOfferChangeEmail($this->getUser(), $offer);
             } catch (TransportExceptionInterface $e) {
                 $this->addFlash('error', 'An error occurred while sending the email.');
-                return $this->redirectToRoute('app_profile_offer', [
-                    'user' => $user,
-                    'discussions' => $discussions,
-                ]);
+                return $this->redirectToRoute('app_profile_offer');
             }
 
             $this->entityManager->flush();
             $this->addFlash('success', 'Offer changed successfully!');
         }
 
-        return $this->redirectToRoute('app_profile_offer', [
-            'user' => $user,
-            'discussions' => $discussions,
-        ]);
+        return $this->redirectToRoute('app_profile_offer');
     }
 
     private function handleImageUpload($imageFile, User $user): void
@@ -228,7 +190,7 @@ class ProfileController extends AbstractBaseController
             ->subject('Offer changed')
             ->html($this->renderView('emails/payment_confirmation.html.twig', [
                 'user' => $user,
-                'offer' => $offer,
+                'userOffer' => $offer,
                 'transaction_id' => uniqid(),
                 'amount' => $offer->getPrice(),
                 'currency' => 'EUR'

@@ -8,46 +8,40 @@ use App\Repository\DiscussionRepository;
 use App\Repository\LikeRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/discussion', name: 'app_discussion_')]
-class DiscussionController extends AbstractBaseController
+class DiscussionController extends AbstractController
 {
-    private LikeRepository $likeRepository;
-    private EntityManagerInterface $entityManager;
 
     public function __construct(
-        DiscussionRepository   $discussionRepository,
-        LikeRepository         $likeRepository,
-        EntityManagerInterface $entityManager
-    ) {
-        parent::__construct($discussionRepository);
-        $this->likeRepository = $likeRepository;
-        $this->entityManager = $entityManager;
+        private readonly EntityManagerInterface $entityManager,
+        private readonly DiscussionRepository   $discussionRepository,
+        private readonly LikeRepository         $likeRepository,
+    )
+    {
     }
 
     #[Route('/{id}', name: 'index', requirements: ['id' => '\d+'])]
     public function index(string $id): Response
     {
-        [$user, $discussions] = $this->initializeUserAndDescription();
         $discussion = $this->discussionRepository->find($id);
 
         if (!$discussion) {
             throw $this->createNotFoundException('Discussion not found.');
         }
 
-        if (!$this->isUserPartOfDiscussion($user, $discussion)) {
+        if (!$this->isUserPartOfDiscussion($this->getUser(), $discussion)) {
             throw $this->createAccessDeniedException('You are not allowed to access this discussion.');
         }
 
-        $isCurrentUserDemanding = $this->isCurrentUserDemanding($user, $discussion);
+        $isCurrentUserDemanding = $this->isCurrentUserDemanding($this->getUser(), $discussion);
 
         return $this->render('discussion/index.html.twig', [
-            'user' => $user,
             'discussion' => $discussion,
-            'discussions' => $discussions,
             'isCurrentUserDemanding' => $isCurrentUserDemanding
         ]);
     }
@@ -55,7 +49,6 @@ class DiscussionController extends AbstractBaseController
     #[Route('/send', name: 'send', methods: ['POST'])]
     public function send(Request $request): Response
     {
-        [$user] = $this->initializeUser();
         $content = $request->request->get('message');
         $discussionId = $request->request->get('discussion_id');
 
@@ -70,7 +63,7 @@ class DiscussionController extends AbstractBaseController
         }
 
         $message = new Message();
-        $message->setAuthor($user)
+        $message->setAuthor($this->getUser())
             ->setContent($content)
             ->setDiscussion($discussion)
             ->setCreationDate(new DateTimeImmutable());
@@ -86,7 +79,6 @@ class DiscussionController extends AbstractBaseController
     #[Route('/manage', name: 'manage', methods: ['POST'])]
     public function manage(Request $request): Response
     {
-        [$user] = $this->initializeUser();
         $action = (int)$request->request->get('action');
         $discussionId = $request->request->get('discussion_id');
 
@@ -96,7 +88,7 @@ class DiscussionController extends AbstractBaseController
         }
 
         if ($action === 1) {
-            $this->approveDiscussion($discussion, $user);
+            $this->approveDiscussion($discussion, $this->getUser());
         } else {
             $this->entityManager->remove($discussion);
             $this->entityManager->flush();

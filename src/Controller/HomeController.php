@@ -5,52 +5,46 @@ namespace App\Controller;
 use App\Entity\Discussion;
 use App\Entity\Like;
 use App\Entity\User;
-use App\Repository\DiscussionRepository;
 use App\Repository\LikeRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/home', name: 'app_home_')]
-class HomeController extends AbstractBaseController
+class HomeController extends AbstractController
 {
+
     public function __construct(
-        DiscussionRepository $discussionRepository,
-        private readonly UserRepository $userRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly LikeRepository $likeRepository
+        private readonly UserRepository         $userRepository,
+        private readonly LikeRepository         $likeRepository,
     ) {
-        parent::__construct($discussionRepository);
     }
 
     #[Route('/', name: 'index')]
     public function index(): Response
     {
-        [$user, $discussions] = $this->initializeUserAndDescription();
-        $users = $this->userRepository->findAppropriatedUsers($user);
+        $users = $this->userRepository->findAppropriatedUsers($this->getUser());
 
         return $this->render('home/index.html.twig', [
             'users' => $users,
-            'user' => $user,
-            'discussions' => $discussions
         ]);
     }
 
     #[Route('/slide', name: 'slide')]
     public function slide(Request $request): Response
     {
-        [$user] = $this->initializeUser();
-
         $data = json_decode($request->getContent(), true);
         $direction = $data['direction'] ?? null;
         $slidedUserId = $data['slidedUserId'] ?? null;
         $slidedUser = $this->entityManager->getRepository(User::class)->find($slidedUserId);
 
         if ($direction === 'like') {
-            return $this->handleLike($user, $slidedUser);
+            return $this->handleLike($this->getUser(), $slidedUser);
         } elseif ($direction === 'dislike') {
             return $this->handleDislike($slidedUser);
         } else {
@@ -61,14 +55,12 @@ class HomeController extends AbstractBaseController
     #[Route('/forceDiscussion', name: 'forceDiscussion')]
     public function forceDiscussion(Request $request): Response
     {
-        [$user] = $this->initializeUser();
-
         $data = json_decode($request->getContent(), true);
         $slidedUserId = $data['slidedUserId'] ?? null;
         $slidedUser = $this->entityManager->getRepository(User::class)->find($slidedUserId);
 
-        $this->createLike($user, $slidedUser);
-        $discussion = $this->createDiscussion($user, $slidedUser, false);
+        $this->createLike($this->getUser(), $slidedUser);
+        $discussion = $this->createDiscussion($this->getUser(), $slidedUser, false);
 
         return $this->json(['status' => 'success', 'discussionId' => $discussion->getId()]);
     }
@@ -76,10 +68,8 @@ class HomeController extends AbstractBaseController
     #[Route('/suggestion', name: 'suggestion')]
     public function suggestion(): Response
     {
-        [$user] = $this->initializeUser();
-
-        $suggestedUser = $this->userRepository->findSuggestedUsers($user);
-        $distance = $this->calculateDistance($user->getLatitude(), $user->getLongitude(), $suggestedUser->getLatitude(), $suggestedUser->getLongitude());
+        $suggestedUser = $this->userRepository->findSuggestedUsers($this->getUser());
+        $distance = $this->calculateDistance($this->getUser()->getLatitude(), $this->getUser()->getLongitude(), $suggestedUser->getLatitude(), $suggestedUser->getLongitude());
 
         return $this->render('home/suggestion/suggestion.html.twig', [
             'suggestedUser' => $suggestedUser,
