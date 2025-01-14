@@ -1,5 +1,5 @@
 <a href="{{ path('app_home_suggestion') }}" class="position-absolute end-0 m-4 z-3">
-    <button class="btn btn-info">Find suggested user</button>
+    <button class="btn btn-info">{{ 'suggestedUser.button'|trans }}</button>
 </a>
 
 <div class="tinder">
@@ -26,8 +26,8 @@
         </div>
     {% else %}
         <div class="d-flex flex-column align-items-center justify-content-center h-100">
-            <h1>No more users to show</h1>
-            <p>You have seen all the users in the database. Please come back later.</p>
+            <h1>{{ 'swipe.noMore.title'|trans }}</h1>
+            <p>{{ 'swipe.noMore.message'|trans }}</p>
         </div>
     {% endif %}
 
@@ -302,7 +302,7 @@
         popup.innerHTML = `
         <div class="popup-content">
             <h1>IT'S A MATCH!</h1>
-            <button type="button" class="btn btn-danger" onclick="window.location.href='/discussion/${discussionId}'">Go to chat</button>
+            <button type="button" class="btn btn-danger" onclick="window.location.href='/discussion/${discussionId}'">{{ 'swipe.actions.goChat'|trans }}</button>
         </div>
     `;
         document.body.appendChild(popup);
@@ -331,7 +331,7 @@
         popup.className = 'popup';
         popup.innerHTML = `
     <div class="popup-content">
-        <h1>You have reached your daily limit of ${type}s</h1>
+        <h1>{{ 'swipe.reachLimit'|trans }} ${type}s</h1>
     </div>`;
         document.body.appendChild(popup);
 

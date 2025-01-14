@@ -4,8 +4,8 @@
 
 {% block body %}
     <div class="error-container">
-        <h1>403 - Access Denied</h1>
-        <p>You do not have permission to access this page.</p>
-        <a href="{{ path('app_profile_index') }}" class="go-back">Return to Homepage</a>
+        <h1>{{ 'errors.403.title'|trans }}</h1>
+        <p>{{ 'errors.403.message'|trans }}</p>
+        <a href="{{ path('app_profile_index') }}" class="go-back">{{ 'errors.actions.home'|trans }}</a>
     </div>
 {% endblock %}

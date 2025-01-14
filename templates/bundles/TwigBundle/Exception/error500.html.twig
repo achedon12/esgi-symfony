@@ -5,8 +5,8 @@
 {% block body %}
 
     <div class="error-container">
-        <h1>500 - Internal Server Error</h1>
-        <p>Something went wrong on our end. Please try again later.</p>
-        <a href="{{ path('app_profile_index') }}" class="go-back">Return to Homepage</a>
+        <h1>{{ 'errors.500.title'|trans }}</h1>
+        <p>{{ 'errors.500.message'|trans }}</p>
+        <a href="{{ path('app_profile_index') }}" class="go-back">{{ 'errors.actions.home'|trans }}</a>
     </div>
 {% endblock %}

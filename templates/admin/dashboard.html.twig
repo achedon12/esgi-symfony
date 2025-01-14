@@ -2,22 +2,21 @@
 
 {% block content %}
     <div class="admin-home container mt-5">
-        <h1 class="text-center mb-4">Bienvenue sur le tableau de bord</h1>
+        <h1 class="text-center mb-4">{{ 'admin.dashboard.title'|trans }}</h1>
         <p class="welcome-message text-center text-muted">
-            Utilisez ce tableau de bord pour gérer les différentes fonctionnalités de votre application.
-            Vous trouverez ci-dessous des accès rapides vers les principales sections.
+            {{ 'admin.dashboard.paragraph'|trans }}
         </p>
 
         <div class="row mt-4 align-items-center justify-content-center">
             <div class="col-md-4">
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">👤 Gestion des utilisateurs</h5>
+                        <h5 class="card-title">👤 {{ 'admin.dashboard.sections.users.title'|trans }}</h5>
                         <p class="card-text text-muted">
-                            Consultez, ajoutez ou modifiez les utilisateurs de votre application.
+                            {{ 'admin.dashboard.sections.users.paragraph'|trans }}
                         </p>
                         <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\UserCrudController&entityFqcn=App\Entity\User" class="btn btn-primary">
-                            Accéder
+                            {{ 'admin.dashboard.sections.actions.go'|trans }}
                         </a>
                     </div>
                 </div>
@@ -25,12 +24,12 @@
             <div class="col-md-4">
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">💬 Gestion des discussions</h5>
+                        <h5 class="card-title">💬 {{ 'admin.dashboard.sections.discussions.title'|trans }}</h5>
                         <p class="card-text text-muted">
-                            Consultez, ajoutez ou modifiez les discussions de votre application.
+                            {{ 'admin.dashboard.sections.discussions.paragraph'|trans }}
                         </p>
                         <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\DiscussionCrudController&entityFqcn=App\Entity\Discussion" class="btn btn-primary">
-                            Accéder
+                            {{ 'admin.dashboard.sections.actions.go'|trans }}
                         </a>
                     </div>
                 </div>
@@ -38,12 +37,12 @@
             <div class="col-md-4">
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">📧 Gestion des messages</h5>
+                        <h5 class="card-title">📧 {{ 'admin.dashboard.sections.messages.title'|trans }}</h5>
                         <p class="card-text text-muted">
-                            Consultez, ajoutez ou modifiez les messages de votre application.
+                            {{ 'admin.dashboard.sections.messages.paragraph'|trans }}
                         </p>
                         <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\MessageCrudController&entityFqcn=App\Entity\Message" class="btn btn-primary">
-                            Accéder
+                            {{ 'admin.dashboard.sections.actions.go'|trans }}
                         </a>
                     </div>
                 </div>
@@ -51,38 +50,12 @@
             <div class="col-md-4 mt-4">
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">❤️ Gestion des likes</h5>
+                        <h5 class="card-title">❤️ {{ 'admin.dashboard.sections.likes.title'|trans }}</h5>
                         <p class="card-text text-muted">
-                            Consultez, ajoutez ou modifiez les likes de votre application.
+                            {{ 'admin.dashboard.sections.likes.paragraph'|trans }}
                         </p>
                         <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\LikeCrudController&entityFqcn=App\Entity\Like" class="btn btn-primary">
-                            Accéder
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {#<div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">🚫 Types de blacklist</h5>
-                        <p class="card-text text-muted">
-                            Gérez les différents types de blacklist disponibles.
-                        </p>
-                        <a href="{{ path('blacklist_index') }}" class="btn btn-primary">
-                            Accéder
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">💼 Offres</h5>
-                        <p class="card-text text-muted">
-                            Consultez et gérez les offres disponibles dans l'application.
-                        </p>
-                        <a href="{{ path('offer_index') }}" class="btn btn-primary">
-                            Accéder
+                            {{ 'admin.dashboard.sections.actions.go'|trans }}
                         </a>
                     </div>
                 </div>
@@ -90,16 +63,16 @@
             <div class="col-md-4 mt-4">
                 <div class="card text-center shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">📜 Logs</h5>
+                        <h5 class="card-title">🛒 {{ 'admin.dashboard.sections.offers.title'|trans }}</h5>
                         <p class="card-text text-muted">
-                            Visualisez les logs pour suivre les activités et diagnostics.
+                            {{ 'admin.dashboard.sections.offers.paragraph'|trans }}
                         </p>
-                        <a href="{{ path('log_index') }}" class="btn btn-primary">
-                            Accéder
+                        <a href="{{ path('admin') }}?crudAction=index&crudControllerFqcn=App\Controller\Admin\OfferCrudController&entityFqcn=App\Entity\Offer" class="btn btn-primary">
+                            {{ 'admin.dashboard.sections.actions.go'|trans }}
                         </a>
                     </div>
                 </div>
-            </div>#}
+            </div>
         </div>
     </div>
 {% endblock %}

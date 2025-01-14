@@ -5,6 +5,16 @@ discussion:
   title: Discussions
   goBack: Accueil
   online: En ligne
+  notApproved: La discussion n'est pas encore approuvée
+  approved: Approuver
+  decline: Refuser
+  send: Envoyer
+  noMessage: Aucun message
+user:
+  edit: Modifier
+  addInterest: Ajouter un intérêt
+  enableLocation: Veuillez activer l'accès à la localisation pour mettre à jour votre position
+  notSupported: Votre navigateur ne prend pas en charge la géolocalisation
 profile:
   interests: Interêts
   years: ans
@@ -21,3 +31,69 @@ profile:
     edit: Modifier
     add: Ajouter un média
 verifiedAccount: Félicitations! Votre compte a été vérifié avec succès. Vous pouvez maintenant vous connecter et profiter de toutes les fonctionnalités.
+errors:
+  actions:
+    home: retourner à la page d'accueil
+  404:
+    title: 404 - Page non trouvée
+    message: La page que vous recherchez n'existe pas.
+  403:
+    title: 403 - Accès refusé
+    message: Vous n'êtes pas autorisé à accéder à cette page.
+  500:
+    title: 500 - Erreur interne du serveur
+    message: Quelque chose s'est mal passé de notre côté. Veuillez réessayer plus tard.
+  general:
+    title: Une erreur s'est produite
+admin:
+  dashboard:
+    title: Bienvenue sur le tableau de bord
+    paragraph: Utilisez ce tableau de bord pour gérer les différentes fonctionnalités de votre application. Vous trouverez ci-dessous des accès rapides vers les principales sections.
+    sections:
+      actions:
+        go: Accéder
+      users:
+        title: Gestion des utilisateurs
+        paragraph: Consultez, ajoutez ou modifiez les utilisateurs de votre application.
+      discussions:
+        title: Gestion des discussions
+        paragraph: Consultez, ajoutez ou modifiez les discussions de votre application.
+      messages:
+        title: Gestion des messages
+        paragraph: Consultez, ajoutez ou modifiez les messages de votre application.
+      likes:
+        title: Gestion des likes
+        paragraph: Consultez, ajoutez ou modifiez les likes de votre application.
+      offers:
+        title: Gestion des offres
+        paragraph: Consultez, ajoutez ou modifiez les offres de votre application.
+emails:
+  payment_confirmation:
+    title: Confirmation de paiement
+    dear: Cher(e)
+    message: Merci pour votre paiement. Votre transaction a été effectuée avec succès.
+    transaction: Identifiant de transaction
+    amount: Montant
+    questions: Si vous avez des questions, n'hésitez pas à nous contacter.
+    rights: Tous droits réservés.
+  registration:
+    title: Confirmation de compte
+    welcome: Bienvenue sur
+    message: Pour confirmer votre compte, veuillez cliquer sur le bouton ci-dessous.
+    confirm: Confirmer le compte
+    skip: Si vous n'avez pas créé de compte, aucune action supplémentaire n'est requise.
+    regards: Cordialement
+    team: L'équipe Tindoo
+suggestedUser:
+  button: Trouver un utilisateur suggeré
+  bio: Bio
+  distance: Distance
+  birthdate: Date de naissance
+  interests: Intérêts
+swipe:
+  actions:
+    goChat: Aller à la discussion
+  noMore:
+    title: Pas d'autres utilisateurs
+    message: Il n'y a plus d'utilisateurs à afficher pour le moment. Réessayez plus tard.
+  reachLimit: Vous avez atteint votre limite quotidienne de

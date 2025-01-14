@@ -5,6 +5,16 @@ discussion:
   title: Discussions
   goBack: Home
   online: Online
+  notApproved: Discussion is not approved yet
+  approved: Approve
+  decline: Decline
+  send: Send
+  noMessage: No messages
+user:
+  edit: Edit
+  addInterest: Add interest
+  enableLocation: Please enable location access to update your position
+  notSupported: Your browser does not support geolocation
 profile:
   interests: Interests
   years: years
@@ -21,3 +31,69 @@ profile:
     edit: Edit
     add: Add media
 verifiedAccount: Congratulations! Your account has been successfully verified. You can now log in and enjoy all the features.
+errors:
+  actions:
+    home: go back to the home page
+  404:
+    title: 404 - Page not found
+    message: The page you are looking for does not exist.
+  403:
+    title: 403 - Access Denied
+    message: You are not authorized to access this page.
+  500:
+    title: 500 - Internal server error
+    message: Something went wrong on our end. Please try again later.
+  general:
+    title: An error occurred
+admin:
+  dashboard:
+    title: Welcome to the dashboard
+    paragraph: Use this dashboard to manage the various features of your application. Below, you'll find quick access to the main sections.
+    sections:
+      actions:
+        go: Go to
+      users:
+        title: User Management
+        paragraph: View, add, or modify the users of your application.
+      discussions:
+        title: Discussion Management
+        paragraph: View, add, or modify the discussions of your application.
+      messages:
+        title: Message Management
+        paragraph: View, add, or modify the messages of your application.
+      likes:
+        title: Like Management
+        paragraph: View, add, or modify the likes of your application.
+      offers:
+        title: Offer Management
+        paragraph: View, add, or modify the offers of your application.
+emails:
+  payment_confirmation:
+    title: Payment confirmation
+    dear: Dear
+    message: Thank you for your payment. Your transaction has been successfully completed.
+    transaction: Transaction ID
+    amount: Amount
+    questions: If you have any questions, feel free to contact us.
+    rights: All rights reserved.
+  registration:
+    title: Account Confirmation
+    welcome: Welcome to
+    message: Thank you for creating an account with us. Please confirm your email address by clicking the link below
+    confirm: Confirm your account
+    skip: If you did not create an account, no further action is required.
+    regards: Best regards
+    team: The Tindoo team
+suggestedUser:
+  button: Find a suggested user
+  bio: Bio
+  distance: Distance
+  birthdate: Birthdate
+  interests: Interests
+swipe:
+  actions:
+    goChat: go to the discussion
+  noMore:
+    title: No more users to show
+    message: You have seen all the users in the database. Please come back later.
+  reachLimit: You have reached your daily limit of

@@ -5,8 +5,8 @@
 {% block body %}
 
     <div class="error-container">
-        <h1>Erreur {{ status_code }}</h1>
+        <h1>{{ 'errors.general'|trans }} {{ status_code }}</h1>
         <p>{{ status_text }}</p>
-        <a href="{{ path('app_profile_index') }}" class="go-back">Retour à l'accueil</a>
+        <a href="{{ path('app_profile_index') }}" class="go-back">{{ 'errors.actions.home'|trans }}</a>
     </div>
 {% endblock %}

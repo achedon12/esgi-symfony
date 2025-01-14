@@ -39,17 +39,17 @@
 
             {% if discussion.isApproved == false and isCurrentUserDemanding == false %}
                 <div class="alert alert-warning d-flex justify-content-between align-items-center">
-                    <p class="mb-0">Discussion is not approved yet</p>
+                    <p class="mb-0">{{ 'discussion.notApproved'|trans }}</p>
                     <div>
                         <form action="{{ path('app_discussion_manage') }}" method="POST" class="d-inline">
                             <input type="hidden" name="action" value="{{ 1 }}">
                             <input type="hidden" name="discussion_id" value="{{ discussion.id }}">
-                            <button type="submit" class="btn btn-outline-warning">Approve</button>
+                            <button type="submit" class="btn btn-outline-warning">{{ 'discussion.approve'|trans }}</button>
                         </form>
                         <form action="{{ path('app_discussion_manage') }}" method="POST" class="d-inline">
                             <input type="hidden" name="action" value="{{ 0 }}">
                             <input type="hidden" name="discussion_id" value="{{ discussion.id }}">
-                            <button type="submit" class="btn btn-danger">Decline</button>
+                            <button type="submit" class="btn btn-danger">{{ 'discussion.decline'|trans }}</button>
                         </form>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                             <div class="message-date small fw-bold {% if message.author == app.user %} text-white{% else %} text-muted {% endif %}">
                                 {{ message.getCreationDate|date('Y-m-d H:i') }}
                             </div>
-                            {% if message.author.image[0] %}
+                            {% if message.author.image and message.author.image[0] %}
                                 {% if message.author.image[0] starts with 'people_images/' %}
                                     <img src="{{ asset(message.author.image[0]) }}" alt="{{ message.author.firstname }}" class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;"/>
@@ -87,7 +87,7 @@
                 <form action="{{ path('app_discussion_send') }}" method="post" class="d-flex gap-2">
                     <input type="hidden" name="discussion_id" value="{{ discussion.id }}">
                     <input type="text" name="message" class="form-control" placeholder="Type a message" {% if discussion.isApproved == false and isCurrentUserDemanding == false %}disabled{% endif %}>
-                    <button type="submit" class="btn btn-primary">Send</button>
+                    <button type="submit" class="btn btn-primary">{{ 'discussion.send'|trans }}</button>
                 </form>
             </div>
         </div>

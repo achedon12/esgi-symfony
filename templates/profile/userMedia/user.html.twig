@@ -2,7 +2,7 @@
     <div class="user">
         <div class="user-header">
             <div class="user-image">
-                {% if user.image[0] %}
+                {% if user.image and user.image[0] %}
                     {% if user.image[0] starts with 'people_images/' %}
                         <img src="{{ asset(user.image[0]) }}" alt="{{ user.firstname }}"/>
                     {% elseif user.image[0] starts with 'https' or user.image[0] starts with 'http' %}

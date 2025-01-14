@@ -5,10 +5,10 @@
 {% block body %}
 
     <div class="error-container">
-        <h1>404 - Page Not Found</h1>
+        <h1>{{ 'errors.404.title'|trans }}</h1>
         {{ dump(exception) }}
         <p style="color:red;">{{ exception.message }}</p>
-        <p>The page you are looking for does not exist.</p>
-        <a href="{{ path('app_profile_index') }}" class="go-back">Return to Homepage</a>
+        <p>{{ 'errors.404.message'|trans }}</p>
+        <a href="{{ path('app_profile_index') }}" class="go-back">{{ 'errors.actions.home'|trans }}</a>
     </div>
 {% endblock %}

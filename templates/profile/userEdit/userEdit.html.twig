@@ -103,13 +103,13 @@
                     {% endfor %}
                 </div>
                 <button class="btn btn-success mt-2" type="button" id="add-interest">
-                    <i class="fas fa-plus"></i> Add Interest
+                    <i class="fas fa-plus"></i> {{ 'user.addInterest'|trans }}
                 </button>
             </div>
 
             <div class="col-md-12 text-center">
                 <button class="btn btn-primary px-4">
-                    <i class="fas fa-save"></i> Update
+                    <i class="fas fa-save"></i> {{ 'user.edit'|trans }}
                 </button>
                 <a href="{{ path('app_profile_index') }}" class="btn btn-secondary px-4">
                     <i class="fas fa-arrow-left"></i> {{ 'goBack'|trans }}
@@ -136,12 +136,12 @@
                         console.log(`Latitude: ${userLat}, Longitude: ${userLng}`);
                     }, function (error) {
                         if (error.code === error.PERMISSION_DENIED) {
-                            alert("Please enable location access to update your position.");
+                            alert("{{ 'user.enableLocation'|trans }}");
                             requestGeolocation();
                         }
                     });
                 } else {
-                    alert("Geolocation is not supported by this browser.");
+                    alert("{{ 'user.notSupported'|trans }}");
                 }
             }
 

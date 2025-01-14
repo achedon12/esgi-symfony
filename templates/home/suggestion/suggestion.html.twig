@@ -4,7 +4,7 @@
 
 {% block body %}
     <a href="{{ path('app_home_index') }}" class="position-absolute m-4 z-3">
-        <button class="btn btn-info">Back</button>
+        <button class="btn btn-info">{{ 'goBack'|trans }}</button>
     </a>
     {% if suggestedUser %}
         <div class="suggest--card">
@@ -18,10 +18,10 @@
             {% endif %}
             <div class="d-flex flex-column p-4">
                 <h3>{{ suggestedUser.firstname }}, {{ suggestedUser.age }} {{ 'profile.years'|trans }}</h3>
-                <p><strong>Biography : </strong>{{ suggestedUser.bio }}</p>
-                <p><strong>Distance : </strong>{{ distance }} kms</p>
-                <p><strong>Birthdate : </strong>{{ suggestedUser.birthdate|date('d m Y') }}</p>
-                <p><strong>Interests: </strong>
+                <p><strong>{{ 'suggestedUser.bio'|trans }} : </strong>{{ suggestedUser.bio }}</p>
+                <p><strong>{{ 'suggestedUser.distance'|trans }} : </strong>{{ distance }} kms</p>
+                <p><strong>{{ 'suggestedUser.birthdate'|trans }} : </strong>{{ suggestedUser.birthdate|date('d m Y') }}</p>
+                <p><strong>{{ 'suggestedUser.interests'|trans }}: </strong>
                     {% for interest in suggestedUser.interests %}
                         <span class="badge bg-primary">{{ interest }}</span>
                     {% endfor %}

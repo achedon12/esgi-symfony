@@ -35,7 +35,7 @@
                     <div class="w-100">
                         <h6>{{ d.userTwo.firstname }} {{ d.userTwo.lastname }}</h6>
                         <p class="m-0 text-truncate text-muted w-50">
-                            {{ lastMessage.content|default('No messages') }}
+                            {{ lastMessage.content|default('discussion.noMessage'|trans) }}
                         </p>
                     </div>
                 </div>
