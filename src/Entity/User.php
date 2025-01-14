@@ -58,8 +58,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
 
-    #[ORM\Column]
-    private array $image = [];
+    #[ORM\Column(length: 255)]
+    private ?string $profilePicture = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 20, scale: 16, nullable: true)]
     private ?string $longitude = null;
@@ -106,6 +106,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $verificationToken = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $additiveImages = null;
 
     public function __construct()
     {
@@ -213,34 +216,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getImage(): array
+    public function getProfilePicture(): string
     {
-        return $this->image;
+        return $this->profilePicture;
     }
 
-    public function addImage(string $image): static
+    public function setProfilePicture(string $image): static
     {
-        $this->image[] = $image;
-
+        $this->profilePicture = $image;
         return $this;
     }
 
-    public function setImage(string|array $image): static
-    {
-        is_array($image) ? $this->image = $image : $this->image[] = $image;
-
-        return $this;
-    }
-
-    public function removeImage(string $image): static
-    {
-        $key = array_search($image, $this->image);
-        if ($key !== false) {
-            unset($this->image[$key]);
-        }
-
-        return $this;
-    }
 
     public function getLongitude(): ?string
     {
@@ -526,5 +512,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }, $discussions);
 
         return $discussions;
+    }
+
+    public function getAdditiveImages(): ?array
+    {
+        return $this->additiveImages;
+    }
+
+    public function setAdditiveImages(?array $additiveImages): static
+    {
+        $this->additiveImages = $additiveImages;
+
+        return $this;
+    }
+
+    public function addAdditiveImage(string $additiveImage): static
+    {
+        $this->additiveImages[] = $additiveImage;
+
+        return $this;
+    }
+
+    public function removeAdditiveImage(string $additiveImage): static
+    {
+        $key = array_search($additiveImage, $this->additiveImages);
+        if ($key !== false) {
+            unset($this->additiveImages[$key]);
+        }
+
+        return $this;
     }
 }

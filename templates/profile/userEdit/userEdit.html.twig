@@ -18,6 +18,24 @@
             {% endfor %}
         </div>
 
+        <div class="col-md-12 text-center">
+            <div class="profile-image-container position-relative">
+                {% if app.user.profilePicture %}
+                    {% if app.user.profilePicture starts with 'people_images/' %}
+                        <img src="{{ asset(app.user.profilePicture) }}" class="w-25"
+                             alt="user_image_{{ app.user.id }}"/>
+                    {% else %}
+                        <img src="{{ asset('uploads/profile_images/' ~ app.user.profilePicture) }}" class="w-25"
+                             alt="user_image_{{ app.user.id }}">
+                    {% endif %}
+                {% endif %}
+                <form action="{{ path('app_profile_upload_image') }}" method="post" enctype="multipart/form-data">
+                    <input type="file" name="profile_image" class="profilePictureInput" accept="image/*" required onchange="this.form.submit()">
+                    <input type="hidden" name="isAdditiveImage" value="false">
+                </form>
+            </div>
+        </div>
+
         <div class="p-4 h-auto">
             {{ form_start(updateForm, { 'attr': {'class': 'row g-3'} }) }}
 
@@ -89,7 +107,7 @@
             <div class="col-md-12">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-heart"></i></span>
-                    <label for="user_interests">Interests</label>
+                    <label for="user_interests" class="p-2">Interests</label>
                 </div>
                 <div id="interests-container">
                     {% for interest in updateForm.interests %}
@@ -133,7 +151,6 @@
 
                         document.getElementById('user_latitude').value = userLat;
                         document.getElementById('user_longitude').value = userLng;
-                        console.log(`Latitude: ${userLat}, Longitude: ${userLng}`);
                     }, function (error) {
                         if (error.code === error.PERMISSION_DENIED) {
                             alert("{{ 'user.enableLocation'|trans }}");
@@ -155,11 +172,10 @@
                 const newInterest = document.createElement('div');
                 newInterest.classList.add('input-group', 'mb-2');
                 newInterest.innerHTML = `
-            <input type="text" name="update_user_form[interests][${index}]" class="form-control">
-            <button class="btn btn-danger" type="button" onclick="this.closest('.input-group').remove();">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-        `;
+                    <input type="text" name="update_user_form[interests][${index}]" class="form-control">
+                    <button class="btn btn-danger" type="button" onclick="this.closest('.input-group').remove();">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>`;
                 interestContainer.appendChild(newInterest);
             });
         });

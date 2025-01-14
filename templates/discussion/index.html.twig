@@ -16,14 +16,14 @@
                     </a>
 
                     <div class="profile-info">
-                        {% if discussion.userTwo.image[0] %}
+                        {% if discussion.userTwo.profilePicture %}
                             <a href="{{ path('app_user_show', {id: discussion.userTwo.id, redirect_url: path('app_discussion_index', {id: discussion.id})}) }}">
-                                {% if discussion.userTwo.image[0] starts with 'people_images/' %}
-                                    <img src="{{ asset(discussion.userTwo.image[0]) }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
-                                {% elseif discussion.userTwo.image[0] starts with 'https' or discussion.userTwo.image[0] starts with 'http' %}
-                                    <img src="{{ discussion.userTwo.image[0] }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
+                                {% if discussion.userTwo.profilePicture starts with 'people_images/' %}
+                                    <img src="{{ asset(discussion.userTwo.profilePicture) }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
+                                {% elseif discussion.userTwo.profilePicture starts with 'https' or discussion.userTwo.profilePicture starts with 'http' %}
+                                    <img src="{{ discussion.userTwo.profilePicture }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
                                 {% else %}
-                                    <img src="{{ asset('uploads/profile_images/' ~ discussion.userTwo.image[0]) }}" alt="Profile Picture" class="rounded-5">
+                                    <img src="{{ asset('uploads/profile_images/' ~ discussion.userTwo.profilePicture) }}" alt="Profile Picture" class="rounded-5">
                                 {% endif %}
                             </a>
                         {% endif %}
@@ -64,16 +64,16 @@
                             <div class="message-date small fw-bold {% if message.author == app.user %} text-white{% else %} text-muted {% endif %}">
                                 {{ message.getCreationDate|date('Y-m-d H:i') }}
                             </div>
-                            {% if message.author.image and message.author.image[0] %}
-                                {% if message.author.image[0] starts with 'people_images/' %}
-                                    <img src="{{ asset(message.author.image[0]) }}" alt="{{ message.author.firstname }}" class="rounded-circle position-absolute"
+                            {% if message.author.profilePicture and message.author.profilePicture %}
+                                {% if message.author.profilePicture starts with 'people_images/' %}
+                                    <img src="{{ asset(message.author.profilePicture) }}" alt="{{ message.author.firstname }}" class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;"/>
-                                {% elseif message.author.image[0] starts with 'https' or message.author.image[0] starts with 'http' %}
-                                    <img src="{{ message.author.image[0] }}" alt="Author's profile picture"
+                                {% elseif message.author.profilePicture starts with 'https' or message.author.profilePicture starts with 'http' %}
+                                    <img src="{{ message.author.profilePicture }}" alt="Author's profile picture"
                                          class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;">
                                 {% else %}
-                                    <img src="{{ asset('uploads/profile_images/' ~ message.author.image[0]) }}" alt="Profile Picture" class="rounded-circle position-absolute"
+                                    <img src="{{ asset('uploads/profile_images/' ~ message.author.profilePicture) }}" alt="Profile Picture" class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;">
                                 {% endif %}
                             {% endif %}

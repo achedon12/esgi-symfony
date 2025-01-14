@@ -11,11 +11,11 @@
         <div class="tinder--cards">
             {% for user in users %}
                 <div class="tinder--card">
-                    {% if user.image and user.image[0] %}
-                        {% if user.image[0] starts with 'people_images/' %}
-                            <img src="{{ asset(user.image[0]) }}" alt="user_image_{{ user.id }}"/>
+                    {% if user.profilePicture and user.profilePicture %}
+                        {% if user.profilePicture starts with 'people_images/' %}
+                            <img src="{{ asset(user.profilePicture) }}" alt="user_image_{{ user.id }}"/>
                         {% else %}
-                            <img src="{{ asset('uploads/profile_images/' ~ user.image[0]) }}"
+                            <img src="{{ asset('uploads/profile_images/' ~ user.profilePicture) }}"
                                  alt="user_image_{{ user.id }}">
                         {% endif %}
                     {% endif %}
@@ -265,6 +265,8 @@
                 .then(data => {
                     if (data.status === 'match') {
                         showMatchPopup(data.discussionId);
+                    } else if (data.status === 'error' && data.type === 'like') {
+                        showLimitPopup(data.message);
                     }
                 })
                 .catch(error => console.error('Error sending swipe request:', error));

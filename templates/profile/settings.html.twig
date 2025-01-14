@@ -6,13 +6,13 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-avatar">
-                {% if app.user.image and app.user.image[0] %}
-                    {% if app.user.image[0] starts with 'people_images/' %}
-                        <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}"/>
-                    {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
-                        <img src="{{ app.user.image[0] }}" alt="{{ app.user.firstname }}"/>
+                {% if app.user.profilePicture %}
+                    {% if app.user.profilePicture starts with 'people_images/' %}
+                        <img src="{{ asset(app.user.profilePicture) }}" alt="{{ app.user.firstname }}"/>
+                    {% elseif app.user.profilePicture starts with 'https' or app.user.profilePicture starts with 'http' %}
+                        <img src="{{ app.user.profilePicture }}" alt="{{ app.user.firstname }}"/>
                     {% else %}
-                        <img src="{{ asset('uploads/profile_images/' ~ app.user.image[0]) }}" alt="Profile Picture">
+                        <img src="{{ asset('uploads/profile_images/' ~ app.user.profilePicture) }}" alt="Profile Picture">
                     {% endif %}
                 {% endif %}
             </div>
@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <div class="language-settings">
+        <div class="language-settings mt-4">
             <h4>{{ 'profile.account.language'|trans }}</h4>
             <form action="{{ path('app_profile_update_language') }}" method="post" class="form-inline">
                 <label for="language" class="mr-2"></label>

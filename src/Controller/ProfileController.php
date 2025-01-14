@@ -48,7 +48,6 @@ class ProfileController extends AbstractController
         $form = $this->createForm(UpdateUserFormType::class, $this->getUser());
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->handleImageUpload($form, $this->getUser());
             $this->addFlash('success', $this->translator->trans('flash.account.updated'));
             $this->entityManager->flush();
         }
@@ -71,15 +70,31 @@ class ProfileController extends AbstractController
     public function uploadImage(Request $request): Response
     {
         $imageFile = $request->files->get('profile_image');
+        $isAdditiveImage = $request->request->get('isAdditiveImage');
 
         if ($imageFile) {
-            $this->handleImageUpload($imageFile, $this->getUser());
+            $this->handleImageUpload($imageFile, $this->getUser(), $isAdditiveImage === 'true');
             $this->entityManager->flush();
         } else {
             $this->addFlash('error', $this->translator->trans('flash.account.image.errorEmpty'));
         }
 
-        return $this->redirectToRoute('app_profile_media');
+        if ($isAdditiveImage === 'true') {
+            return $this->redirectToRoute('app_profile_index');
+        } else {
+            return $this->redirectToRoute('app_profile_edit');
+        }
+    }
+
+    #[Route('/delete-image', name: 'delete_image', methods: ['POST'])]
+    public function deleteImage(Request $request): Response
+    {
+        $imageToDelete = $request->request->get('image');
+        $this->getUser()->removeAdditiveImage($imageToDelete);
+
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_profile_index');
     }
 
     #[Route('/update-password', name: 'update_password')]
@@ -115,7 +130,7 @@ class ProfileController extends AbstractController
         return $this->redirectToRoute('app_profile_settings');
     }
 
-    private function handleImageUpload($imageFile, User $user): void
+    private function handleImageUpload($imageFile, User $user, bool $isAdditive): void
     {
         $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
@@ -127,7 +142,11 @@ class ProfileController extends AbstractController
                 $newFilename
             );
 
-            $user->addImage($newFilename);
+            if ($isAdditive) {
+                $user->addAdditiveImage($newFilename);
+            } else {
+                $user->setProfilePicture($newFilename);
+            }
         } catch (FileException $e) {
             $this->addFlash('error', $this->translator->trans('flash.account.image.errorUpload'));
         }

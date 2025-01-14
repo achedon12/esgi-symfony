@@ -60,7 +60,7 @@ class HomeController extends AbstractController
                 $session->set('likeNumber', $session->get('likeNumber') - 1);
                 return $this->handleLike($this->getUser(), $slidedUser);
             } else {
-                return $this->json(['status' => 'error', 'message' => 'Daily like limit reached'], 400);
+                return $this->json(['status' => 'error', 'message' => 'Daily like limit reached', 'type' => 'like'], 400);
             }
         } elseif ($direction === 'dislike') {
             return $this->handleDislike($slidedUser);
@@ -84,7 +84,7 @@ class HomeController extends AbstractController
 
             return $this->json(['status' => 'success', 'discussionId' => $discussion->getId()]);
         } else {
-            return $this->json(['status' => 'error', 'message' => 'Daily direct message limit reached'], 400);
+            return $this->json(['status' => 'error', 'message' => 'Daily direct message limit reached', 'type' => 'direct message'], 400);
         }
     }
 

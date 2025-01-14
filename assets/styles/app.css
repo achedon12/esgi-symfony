@@ -287,13 +287,11 @@ a {
     background: var(--gray-400);
 
     .actions {
-        position: relative;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin-top: 2rem;
-        width: 70%;
+        width: 20%;
 
         .action {
             position: relative;
@@ -526,6 +524,14 @@ input:focus {
     input {
         font-size: 1rem;
     }
+
+    i {
+        &:hover {
+            color: var(--primary-color);
+            transition: .2s ease-in-out;
+            cursor: pointer;
+        }
+    }
 }
 
 .verified-container {
@@ -653,7 +659,6 @@ input:focus {
         width: 120px;
         height: 120px;
         object-fit: cover;
-        border: 3px solid #007bff;
         margin-right: 20px;
     }
 
@@ -1040,4 +1045,8 @@ input:focus {
         display: block;
         border: 1px solid #e9ecef;
     }
+}
+
+.profile-image-container input[type="file"] {
+    font-size: 1rem;
 }

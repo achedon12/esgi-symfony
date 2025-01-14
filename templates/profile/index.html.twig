@@ -4,29 +4,24 @@
 
 {% block section %}
     <div class="user-profile">
-        {% if app.user.image and app.user.image[0] %}
-            {% if app.user.image[0] starts with 'people_images/' %}
-                <img src="{{ asset(app.user.image[0]) }}" alt="{{ app.user.firstname }}" class="rounded-circle w-25"/>
-            {% elseif app.user.image[0] starts with 'https' or app.user.image[0] starts with 'http' %}
-                <img src="{{ app.user.image[0] }}" alt="{{ app.user.firstname }}" class="rounded-circle w-25"/>
+        {% if app.user.profilePicture %}
+            {% if app.user.profilePicture starts with 'people_images/' %}
+                <img src="{{ asset(app.user.profilePicture) }}" alt="{{ app.user.firstname }}"
+                     class="rounded-circle w-25"/>
+            {% elseif app.user.profilePicture starts with 'https' or app.user.profilePicture starts with 'http' %}
+                <img src="{{ app.user.profilePicture }}" alt="{{ app.user.firstname }}" class="rounded-circle w-25"/>
             {% else %}
-                <img src="{{ asset('uploads/profile_images/' ~ app.user.image[0]) }}" alt="Profile Picture"
+                <img src="{{ asset('uploads/profile_images/' ~ app.user.profilePicture) }}" alt="Profile Picture"
                      class="rounded-circle w-25">
             {% endif %}
         {% endif %}
-        <h1 class="text-justify w-50 mx-auto text-center">{{ app.user.firstname }} {{ app.user.lastname }}, {{ app.user.age }}</h1>
+        <h1 class="text-justify w-50 mx-auto my-3 text-center">{{ app.user.firstname }} {{ app.user.lastname }}
+            , {{ app.user.age }}</h1>
 
         <div class="actions">
             <a class="action" href="{{ path('app_profile_settings') }}">
                 <i class="fas fa-cog fa-2x"></i>
                 <p>{{ 'profile.actions.settings'|trans }}</p>
-            </a>
-            <a class="action" href="{{ path('app_profile_media') }}">
-                <div>
-                    <i class="media fas fa-camera fa-2x"></i>
-                    <i class="more fas fa-plus fa-2x"></i>
-                </div>
-                <p>{{ 'profile.actions.add'|trans }}</p>
             </a>
             <a class="action" href="{{ path('app_profile_edit') }}">
                 <i class="fas fa-pencil-alt fa-2x"></i>
@@ -43,10 +38,36 @@
 
         <p class="text-muted w-50 mx-auto mt-3 text-justify text-center text-break text-wrap text-truncate">{{ app.user.bio }}</p>
 
+        <form action="{{ path('app_profile_upload_image') }}" method="post" enctype="multipart/form-data"
+              class="user-images p-5 d-flex flex-column w-100">
+            <div class="d-flex mb-4">
+                <h2 class="">Images</h2>
+                <input type="file" name="profile_image" accept="image/*" required onchange="this.form.submit()">
+                <input type="hidden" name="isAdditiveImage" value="true">
+            </div>
+            <div class="user-images">
+                <div>
+                    {% for image in app.user.additiveImages %}
+                        {% if image starts with 'people_images/' %}
+                            <img src="{{ asset(image) }}" alt="{{ user.firstname }}"/>
+                        {% elseif image starts with 'https' or image starts with 'http' %}
+                            <img src="{{ image }}" alt="{{ user.firstname }}"/>
+                        {% else %}
+                            <img src="{{ asset('uploads/profile_images/' ~ image) }}" alt="Profile Picture">
+                        {% endif %}
+                        <form action="{{ path('app_profile_delete_image') }}" method="post" class="delete-image-form">
+                            <input type="hidden" name="image" value="{{ image }}">
+                            <i class="fa-solid fa-trash" onclick="this.closest('form').submit();"></i>
+                        </form>
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+
         {% if app.user.offer.name == 'Basic' %}
             <div class="tinder-plus">
                 <h2 class="h1">
-                    <i class="fas fa-bolt"></i>
+                    <i class="fas fa-bolt mx-2"></i>
                     {{ 'offers.buy.title'|trans }}
                 </h2>
                 <p>{{ 'offers.buy.paragraphs.1'|trans }}</p>

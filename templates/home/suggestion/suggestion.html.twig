@@ -8,11 +8,11 @@
     </a>
     {% if suggestedUser %}
         <div class="suggest--card">
-            {% if suggestedUser.image and suggestedUser.image[0] %}
-                {% if suggestedUser.image[0] starts with 'people_images/' %}
-                    <img src="{{ asset(suggestedUser.image[0]) }}" alt="user_image_{{ suggestedUser.id }}"/>
+            {% if suggestedUser.image and suggestedUser.image %}
+                {% if suggestedUser.image starts with 'people_images/' %}
+                    <img src="{{ asset(suggestedUser.image) }}" alt="user_image_{{ suggestedUser.id }}"/>
                 {% else %}
-                    <img src="{{ asset('uploads/profile_images/' ~ suggestedUser.image[0]) }}"
+                    <img src="{{ asset('uploads/profile_images/' ~ suggestedUser.image) }}"
                          alt="user_image_{{ suggestedUser.id }}">
                 {% endif %}
             {% endif %}
