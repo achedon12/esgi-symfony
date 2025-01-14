@@ -284,6 +284,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if(data.status === 'success') {
+                        console.log('Discussion forced');
                         window.location.href = '/discussion/' + data.discussionId;
                     }
                 })

@@ -12,12 +12,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/home', name: 'app_home_')]
 class HomeController extends AbstractController
 {
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository         $userRepository,
@@ -26,25 +25,43 @@ class HomeController extends AbstractController
     }
 
     #[Route('/', name: 'index')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $users = $this->userRepository->findAppropriatedUsers($this->getUser());
+        $session = $request->getSession();
+        $user = $this->getUser();
+
+        if (!$session->has('likeNumber')) {
+            $session->set('likeNumber', $user->getOffer()->getLikeNumber());
+        }
+        if (!$session->has('directMessageNumber')) {
+            $session->set('directMessageNumber', $user->getOffer()->getDirectMessageNumber());
+        }
+
+        $users = $this->userRepository->findAppropriatedUsers($user);
 
         return $this->render('home/index.html.twig', [
             'users' => $users,
+            'likeNumber' => $session->get('likeNumber'),
+            'directMessageNumber' => $session->get('directMessageNumber'),
         ]);
     }
 
     #[Route('/slide', name: 'slide')]
     public function slide(Request $request): Response
     {
+        $session = $request->getSession();
         $data = json_decode($request->getContent(), true);
         $direction = $data['direction'] ?? null;
         $slidedUserId = $data['slidedUserId'] ?? null;
         $slidedUser = $this->entityManager->getRepository(User::class)->find($slidedUserId);
 
         if ($direction === 'like') {
-            return $this->handleLike($this->getUser(), $slidedUser);
+            if ($session->get('likeNumber') != 0) {
+                $session->set('likeNumber', $session->get('likeNumber') - 1);
+                return $this->handleLike($this->getUser(), $slidedUser);
+            } else {
+                return $this->json(['status' => 'error', 'message' => 'Daily like limit reached'], 400);
+            }
         } elseif ($direction === 'dislike') {
             return $this->handleDislike($slidedUser);
         } else {
@@ -55,14 +72,20 @@ class HomeController extends AbstractController
     #[Route('/forceDiscussion', name: 'forceDiscussion')]
     public function forceDiscussion(Request $request): Response
     {
+        $session = $request->getSession();
         $data = json_decode($request->getContent(), true);
         $slidedUserId = $data['slidedUserId'] ?? null;
         $slidedUser = $this->entityManager->getRepository(User::class)->find($slidedUserId);
 
-        $this->createLike($this->getUser(), $slidedUser);
-        $discussion = $this->createDiscussion($this->getUser(), $slidedUser, false);
+        if ($session->get('directMessageNumber') != 0) {
+            $session->set('directMessageNumber', $session->get('directMessageNumber') - 1);
+            $this->createLike($this->getUser(), $slidedUser);
+            $discussion = $this->createDiscussion($this->getUser(), $slidedUser, false);
 
-        return $this->json(['status' => 'success', 'discussionId' => $discussion->getId()]);
+            return $this->json(['status' => 'success', 'discussionId' => $discussion->getId()]);
+        } else {
+            return $this->json(['status' => 'error', 'message' => 'Daily direct message limit reached'], 400);
+        }
     }
 
     #[Route('/suggestion', name: 'suggestion')]
