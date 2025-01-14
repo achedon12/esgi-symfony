@@ -9,7 +9,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 #[AsEventListener(event: KernelEvents::CONTROLLER, method: 'onKernelRequest', priority: -10)]
-readonly class LocaleListener
+class LocaleListener
 {
     public function __construct(private TranslatorInterface $translator)
     {

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Event\UserCreatedEvent;
 use App\Form\RegistrationFormType;
 use App\Repository\OfferRepository;
 use DateTimeImmutable;
@@ -10,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -26,7 +28,8 @@ class RegistrationController extends AbstractController
                                 private readonly UserPasswordHasherInterface $userPasswordHasher,
                                 private readonly MailerInterface $mailer,
                                 private readonly OfferRepository $offerRepository,
-                                private readonly LoggerInterface $logger
+                                private readonly LoggerInterface $logger,
+                                private readonly EventDispatcherInterface $eventDispatcher
                 )
     {
     }
@@ -61,20 +64,8 @@ class RegistrationController extends AbstractController
             $this->entityManager->persist($user);
             $this->entityManager->flush();
 
-            try {
-
-                $email = (new Email())
-                    ->from('no-reply@tindoo.com')
-                    ->to($user->getEmail())
-                    ->subject('Welcome to Tindoo!')
-                    ->html($this->renderView('emails/registration.html.twig', ['user' => $user]));
-
-                $this->mailer->send($email);
-                $this->logger->info('----------------------- [ Email sent to ' . $user->getEmail() . ' ] -----------------------');
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'An error occurred while sending the confirmation email.');
-                $this->logger->error('----------------------- [ Email not sent to ' . $user->getEmail() . ' ] -----------------------');
-            }
+            $event = new UserCreatedEvent($user);
+            $this->eventDispatcher->dispatch($event, UserCreatedEvent::NAME);
 
             return $this->security->login($user, 'form_login', 'main');
         }
