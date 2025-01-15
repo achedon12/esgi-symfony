@@ -39,6 +39,11 @@
     </div>
 
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
 
         let stripe = Stripe("{{ stripe_key }}");
@@ -49,7 +54,6 @@
         function createToken() {
             document.getElementById("pay-btn").disabled = true;
             stripe.createToken(cardElement).then(function (result) {
-                console.log(result);
                 if (typeof result.token != 'undefined') {
                     document.getElementById("stripe-token-id").value = result.token.id;
                     document.getElementById('checkout-form').submit();
@@ -57,9 +61,4 @@
             });
         }
     </script>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script src="https://js.stripe.com/v3/"></script>
 {% endblock %}
