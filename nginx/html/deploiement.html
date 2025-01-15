@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tindoo Deployment</title>
+    <link rel="icon" href="/favicon.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff6b6b, #ffcc70);
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            animation: backgroundShift 5s infinite;
+        }
+        @keyframes backgroundShift {
+            0% { background: linear-gradient(to right, #ff6b6b, #ffcc70); }
+            50% { background: linear-gradient(to right, #ffcc70, #6b83ff); }
+            100% { background: linear-gradient(to right, #ff6b6b, #ffcc70); }
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            animation: slideIn 1.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #FFFFFF;
+            background-image: linear-gradient(to right, #ff6b6b, #ffcc70);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+            animation: pulse 2s infinite;
+        }
+        .btn:hover {
+            background: #e0e0e0;
+            transform: scale(1.1);
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #FFFFFF;
+            animation: fadeIn 2s ease-in-out 1s;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <img src="./favicon.png" alt="Tindoo Logo" class="logo">
+    <h1>Welcome to Tindoo</h1>
+    <p>Application is currently in deployment. 🚀<br>
+        Please check back later.</p>
+    <a href="/" class="btn">Go to Application</a>
+    <footer>
+        &copy; 2025 Tindoo. All rights reserved.
+    </footer>
+</div>
+</body>
+</html>

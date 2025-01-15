@@ -10,9 +10,10 @@ services:
       - "1081:80"
       - "444:443"
     volumes:
-      - ./:/var/www/html
-      - ./nginx/nginx.prod.conf:/etc/nginx/conf.d/default.conf
-      - ../vps-config/certbot/conf:/etc/letsencrypt
+      - .:/var/www/html
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/errors.conf:/etc/nginx/errors.conf:ro
+      - ./nginx/html:/usr/share/nginx/html:ro
     links:
       - tindoo_php
     networks:

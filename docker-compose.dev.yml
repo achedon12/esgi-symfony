@@ -5,12 +5,14 @@ services:
   tindoo_nginx:
     container_name: tindoo_dev_nginx
     image: nginx:1.27
-    restart: unless-stopped
+    restart: always
     ports:
       - "1081:80"
     volumes:
-      - "./:/var/www/html"
-      - "./nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf"
+      - .:/var/www/html
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/errors.conf:/etc/nginx/errors.conf:ro
+      - ./nginx/html:/usr/share/nginx/html
     links:
       - tindoo_php
     networks:
@@ -21,7 +23,7 @@ services:
     restart: unless-stopped
     build: .
     volumes:
-      - "./:/var/www/html"
+      - ./:/var/www/html
     environment:
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -29,6 +31,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       APP_ENV: dev
       DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "9001:9000"
     networks:
       - cours_sql
 
