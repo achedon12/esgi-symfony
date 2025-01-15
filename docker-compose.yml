@@ -32,7 +32,7 @@ services:
       APP_ENV: ${APP_ENV}
       DATABASE_URL: ${DATABASE_URL}
     ports:
-      - "9000:9000"
+      - "9001:9000"
     networks:
       - nginx-proxy
 
