@@ -41,13 +41,11 @@ class OfferController extends AbstractController
     #[Route('/pay_offer/{offerId}', name: 'pay')]
     public function payOffer(Request $request, int $offerId): Response
     {
-        $this->logger->info('------------------[OfferController] payOffer: sdf ------------------');
         $offer = $this->offerRepository->find($offerId);
 
         if (!$offer) {
             throw $this->createNotFoundException($this->translator->trans('exception.offer.not_found'));
         }
-        $this->logger->info('------------------[OfferController] payOffer: ' . $offerId . '------------------');
         return $this->render('profile/userOffer/pay_offer.html.twig', [
             'offer' => $offer,
             'stripe_key' => $_ENV["STRIPE_KEY"],
