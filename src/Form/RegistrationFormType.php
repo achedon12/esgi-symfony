@@ -44,8 +44,8 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Birthdate',
                 'required' => true,
             ])
-            ->add('image', FileType::class, [
-                'label' => 'Image',
+            ->add('profile_picture', FileType::class, [
+                'label' => 'profilePicture',
                 'required' => true,
                 'mapped' => false,
                 'constraints' => [

@@ -14,9 +14,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
@@ -27,7 +27,8 @@ class RegistrationController extends AbstractController
                                 private readonly UserPasswordHasherInterface $userPasswordHasher,
                                 private readonly OfferRepository $offerRepository,
                                 private readonly EventDispatcherInterface $eventDispatcher,
-                                private readonly TranslatorInterface $translator
+                                private readonly TranslatorInterface $translator,
+                                private readonly SluggerInterface $slugger
                 )
     {
     }
@@ -48,6 +49,15 @@ class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
+            $imageFile = $form->get('profile_picture')->getData();
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $this->slugger->slug($originalFilename);
+            $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+            $imageFile->move(
+                $this->getParameter('profile_images_directory'),
+                $newFilename
+            );
+
             $user->setPassword($this->userPasswordHasher->hashPassword($user, $plainPassword))
                 ->setOffer($this->offerRepository->findOneBy(['name' => 'Basic']))
                 ->setRoles(['ROLE_USER'])
@@ -56,6 +66,7 @@ class RegistrationController extends AbstractController
                 ->setVerifiedAccount(false)
                 ->setCreationDate(new DateTimeImmutable())
                 ->setLanguage('en')
+                ->setProfilePicture($newFilename)
                 ->setVerificationToken(bin2hex(random_bytes(32)));
 
             $this->entityManager->persist($user);
