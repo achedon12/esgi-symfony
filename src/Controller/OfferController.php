@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Offer;
+use App\Repository\OfferRepository;
 use Psr\Log\LoggerInterface;
 use Stripe;
 use App\Event\UserOfferChangedEvent;
@@ -22,7 +23,8 @@ class OfferController extends AbstractController
         private readonly EntityManagerInterface   $entityManager,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly TranslatorInterface      $translator,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly OfferRepository $offerRepository
     )
     {
     }
@@ -36,11 +38,15 @@ class OfferController extends AbstractController
         ]);
     }
 
-    #[Route('/pay_offer', name: 'pay')]
-    public function payOffer(Request $request): Response
+    #[Route('/pay_offer/{offerId}', name: 'pay')]
+    public function payOffer(Request $request, int $offerId): Response
     {
-        $offerId = (int)$request->request->get('offer_id');
-        $offer = $this->entityManager->getRepository(Offer::class)->find($offerId);
+        $this->logger->info('------------------[OfferController] payOffer: sdf ------------------');
+        $offer = $this->offerRepository->find($offerId);
+
+        if (!$offer) {
+            throw $this->createNotFoundException($this->translator->trans('exception.offer.not_found'));
+        }
         $this->logger->info('------------------[OfferController] payOffer: ' . $offerId . '------------------');
         return $this->render('profile/userOffer/pay_offer.html.twig', [
             'offer' => $offer,

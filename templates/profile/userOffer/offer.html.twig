@@ -30,10 +30,11 @@
                 {% elseif app.user.offer.name != offer.name and offer.name != 'Basic' and app.user.offer.name != 'Pro' %}
                     <div class="d-flex justify-content-center mt-5">
                         <div class="check-succes">
-                            <form action="{{ path('app_offer_pay') }}" method="POST" class="d-inline">
+                            <a href="{{ path('app_offer_pay', {'offerId': offer.id}) }}" class="btn btn-outline-info fs-4">{{ 'offers.actions.choose'|trans }}</a>
+                            {#<form action="{{ path('app_offer_pay') }}" method="POST" class="d-inline">
                                 <input type="hidden" name="offer_id" value="{{ loop.index }}">
                                 <button type="submit" class="btn btn-outline-info fs-4">{{ 'offers.actions.choose'|trans }}</button>
-                            </form>
+                            </form>#}
                         </div>
                     </div>
                 {% endif %}
