@@ -5,7 +5,7 @@ services:
   tindoo_nginx:
     container_name: tindoo_nginx
     image: nginx:1.27
-    restart: unless-stopped
+    restart: always
     ports:
       - "1081:80"
     volumes:
@@ -17,7 +17,7 @@ services:
       - nginx-proxy
 
   tindoo_php:
-    restart: unless-stopped
+    restart: always
     container_name: tindoo_php
     build: .
     volumes:
@@ -27,7 +27,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      APP_ENV: prod
+      APP_ENV: ${APP_ENV}
       DATABASE_URL: ${DATABASE_URL}
     ports:
       - "9000:9000"
