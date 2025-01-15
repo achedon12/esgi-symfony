@@ -60,9 +60,8 @@ Lien : http://leoderoin.fr:1081
 - Mise en place d'un environnement de production avec Docker.
 
 ### **11. Tests unitaires** 🧪
-- Mise en place d'une base de test pour exécuter les tests unitaires.
+- Mise en place d'une base de test sqlite (différente de la base initiale) pour exécuter les tests unitaires.
 - Mise en place de tests unitaires pour les entités et les services.
-- Mise en place de tests fonctionnels pour les contrôleurs.
 
 ---
 
@@ -77,6 +76,15 @@ Lien : http://leoderoin.fr:1081
 
 - **Léo Deroin** - [achedon12](https://github.com/achedon12)
 - **Mathys Farineau** - [IPandragonI](https://github.com/IPandragonI)
+
+## Stripe
+
+Initialiser les variables d'environnement suivantes :
+
+```bash
+STRIPE_KEY
+STRIPE_SECRET
+```
 
 ## Lancer le projet avec Docker
 
