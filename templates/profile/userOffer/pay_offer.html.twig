@@ -40,7 +40,6 @@
 
 
     <script>
-
         let stripe = Stripe("{{ stripe_key }}");
         let elements = stripe.elements();
         let cardElement = elements.create('card');
@@ -49,7 +48,6 @@
         function createToken() {
             document.getElementById("pay-btn").disabled = true;
             stripe.createToken(cardElement).then(function (result) {
-                console.log(result);
                 if (typeof result.token != 'undefined') {
                     document.getElementById("stripe-token-id").value = result.token.id;
                     document.getElementById('checkout-form').submit();

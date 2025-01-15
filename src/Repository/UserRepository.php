@@ -111,4 +111,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
+
+    public function findImages(): array
+    {
+        $users = $this->createQueryBuilder('u')
+            ->select('u.profilePicture', 'u.additiveImages')
+            ->getQuery()
+            ->getResult();
+
+        $images = [];
+        foreach ($users as $user) {
+            if (!empty($user['profilePicture'])) {
+                $images[] = $user['profilePicture'];
+            }
+            if (!empty($user['additiveImages']) && is_string($user['additiveImages'])) {
+                $additiveImages = json_decode($user['additiveImages'], true);
+                if (is_array($additiveImages)) {
+                    $images = array_merge($images, array_values($additiveImages));
+                }
+            }
+        }
+
+        return $images;
+    }
+
 }

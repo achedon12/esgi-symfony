@@ -22,12 +22,12 @@ Lien : http://leoderoin.fr:1081
 - Téléchargement et gestion des photos de profil.
 
 ### **3. Système de "swipe"** 👈👉
-- Découverte aléatoire des profils d'autres utilisateurs.
+- Affichage de profils en fonction de notre orientation et de notre score
 - Fonctionnalités "Like" et "Dislike" pour exprimer son intérêt ou non (gestion de score).
 - Fonctionnalité "Super Like" pour lancer directement une conversation en mode "non approuvé"
 
 ### **4. Matching et messagerie** 💬
-- Création d'un "match" lorsque deux utilisateurs se "likent".
+- Création d'un "match" lorsque deux utilisateurs se "like".
 - Système de messagerie simple pour échanger entre utilisateurs.
 - Historique des conversations.
 - Gestion de discussions approuvées et non approuvées pour pouvoir décliner des super likes
@@ -48,6 +48,7 @@ Lien : http://leoderoin.fr:1081
 
 ### **8. Gestion de tâches planifiées** ⏰
 - Cron permettant de supprimer les utilisateurs inactifs après un certain délai.
+- Cron permettant de clear sa session après un certain délai.
 
 ### **9. Gestion de son offre** 💳
 - Possibilité de souscrire à un abonnement pour bénéficier de fonctionnalités supplémentaires.
