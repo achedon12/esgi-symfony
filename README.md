@@ -5,7 +5,7 @@
 Tindoo est une réinterprétation de l'application Tinder, adaptée pour une utilisation sur desktop. 
 Ce projet vise à recréer les principales fonctionnalités de Tinder tout en mettant l'accent sur le backend via Symfony, et une interface utilisateur basée sur Twig et Bootstrap. 🚀
 
-Lien : http://89.234.182.224:1081
+Lien : http://leoderoin.fr:1081
 
 ---
 
