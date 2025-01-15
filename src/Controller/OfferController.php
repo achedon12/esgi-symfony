@@ -3,16 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Offer;
-use App\Entity\User;
+use Stripe;
 use App\Event\UserOfferChangedEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Stripe\Exception\ApiErrorException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -40,29 +38,61 @@ class OfferController extends AbstractController
     public function payOffer(Request $request): Response
     {
         $offerId = (int)$request->request->get('offer_id');
+        $offer = $this->entityManager->getRepository(Offer::class)->find($offerId);
         return $this->render('profile/userOffer/pay_offer.html.twig', [
-            'offer_id' => $offerId
+            'offer' => $offer,
+            'stripe_key' => $_ENV["STRIPE_KEY"],
         ]);
+    }
+
+    /**
+     * @throws ApiErrorException
+     */
+    #[Route('/create-charge', name: 'charge', methods: ['POST'])]
+    public function createCharge(Request $request): Response
+    {
+        $offer = $this->entityManager->getRepository(Offer::class)->find($request->request->get('offer_id'));
+
+        Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
+        Stripe\Charge::create([
+            "amount" => $offer->getPrice() * 100,
+            "currency" => "usd",
+            "source" => $request->request->get('stripeToken'),
+            "description" => "Payment Test"
+        ]);
+
+        $this->changeOfferForUser($offer, $this->getUser());
+
+        $this->addFlash(
+            'success',
+            'Payment Successful!'
+        );
+        return $this->redirectToRoute('app_offer_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/change_offer', name: 'change')]
     public function changeOffer(Request $request): Response
     {
         $offerId = (int)$request->request->get('offer_id');
+        $offer = $this->entityManager->getRepository(Offer::class)->find($offerId);
         $user = $this->getUser();
 
         if ($offerId !== 0) {
-            $offer = $this->entityManager->getRepository(Offer::class)->find($offerId);
-            $user->setOffer($offer);
-            $offer->addUser($user);
-
-            $event = new UserOfferChangedEvent($user, $offer);
-            $this->eventDispatcher->dispatch($event, UserOfferChangedEvent::NAME);
-
-            $this->entityManager->flush();
+            $this->changeOfferForUser($offer, $user);
             $this->addFlash('success', $this->translator->trans('flash.offer.changed'));
         }
 
         return $this->redirectToRoute('app_offer_index');
+    }
+
+    private function changeOfferForUser($offer, $user): void
+    {
+        $user->setOffer($offer);
+        $offer->addUser($user);
+
+        $event = new UserOfferChangedEvent($user, $offer);
+        $this->eventDispatcher->dispatch($event, UserOfferChangedEvent::NAME);
+
+        $this->entityManager->flush();
     }
 }

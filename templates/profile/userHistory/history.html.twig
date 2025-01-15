@@ -1,0 +1,29 @@
+{% extends 'profile/profileBase.html.twig' %}
+
+{% block title %}Tindoo - {{ 'pages.history'|trans }}{% endblock %}
+
+{% block section %}
+    <h1 class="text-primary text-center profileTitle">{{ 'pages.history'|trans }}</h1>
+    <div class="mx-5 historyGrid">
+        <a href="{{ path('app_profile_history_detail', {type:'likes'}) }}" class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-heart"></i>Likes</h5>
+                <p class="card-text">{{ 'history.likeHistory'|trans }}</p>
+            </div>
+        </a>
+        <a href="{{ path('app_profile_history_detail', {type:'matches'}) }}" class="card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-star"></i>{{ 'history.matches'|trans }}</h5>
+                <p class="card-text">{{ 'history.matchHistory'|trans }}</p>
+            </div>
+        </a>
+        <a href="{{ path('app_profile_history_detail', {type:'likedBy'}) }}"
+           class="card {{ app.user.offer.id == 3 ? '' : 'disabled' }}">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-kiss-wink-heart"></i>{{ 'history.likedBy'|trans }}</h5>
+                <p class="card-text">{{ 'history.likedByHistory'|trans }}</p>
+            </div>
+        </a>
+    </div>
+
+{% endblock %}

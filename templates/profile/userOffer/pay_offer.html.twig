@@ -4,26 +4,57 @@
 
 {% block section %}
     <h1 class="text-primary text-center mb-4 mt-3">Paiement</h1>
-    <div class="cb-card">
-        <div class="cb-card-front z-index">
-            <form id="payment-form" action="{{ path('app_offer_change') }}" method="POST" class="d-inline">
-                <input type="hidden" name="offer_id" value="{{ offer_id }}">
-                <div class="input-card-number">
-                    <input id="card-number" class="card-input" type="text" maxlength="26" placeholder="4587 XXXX XXXX XXXX" size="19" required>
-                    <input id="card-cvc" type="text" class="card-input" size="4" placeholder="2XX" required>
-                </div>
-                <div class="input-card-info">
-                    <input id="card-name" type="text" class="card-input" placeholder="John Smith" size="20" required>
-                    <input id="card-expiry" type="text" class="card-input" placeholder="12/2023" size="7" required>
-                </div>
+
+    <section class="d-flex mx-5">
+        <div class="w-50 mx-4 p-4 border">
+            <h2 class="text-center">{{ offer.name }}</h2>
+            <div class="info text-center mt-5">
+                <p>{{ offer.likeNumber == -1 ? '✅ ' ~ 'offers.unlimitedLike'|trans : '➕ ' ~ offer.likeNumber ~ ' ' ~ 'offers.likePerDay'|trans }} </p>
+                {% if offer.directMessageNumber != 0 %}
+                <p>{{ offer.directMessageNumber == -1 ? '✅ Messages direct illimité' : '➕ ' ~ offer.directMessageNumber ~ ' ' ~ 'offers.directMessage'|trans }} </p>
+                {% endif %}
+                <p>💰 {{ offer.price == 0 ? 'offers.free'|trans : offer.price ~ 'offers.amount'|trans }} </p>
+            </div>
+        </div>
+
+        <div class="cardStripe d-flex w-50 align-items-center">
+            <form id='checkout-form' method='post' action="{{ path('app_offer_charge') }}">
+                <input type='hidden' name='stripeToken' id='stripe-token-id'>
+                <div id="card-element" class="form-control"></div>
+                <input type="hidden" name="offer_id" value="{{ offer.id }}">
+                <button id='pay-btn' class="btn btn-success fs-4 mx-5" type="button"
+                        onclick="createToken()">{{ 'pay'|trans }}</button>
             </form>
         </div>
-    </div>
+    </section>
+
+
+
     <div class="d-flex justify-content-center mt-5">
-        <a href="{{ path('app_offer_index') }}" class="btn btn-outline-info fs-4 mx-5">{{ 'goBack'|trans }}</a>
+        <a href="{{ path('app_offer_index') }}" class="btn btn-outline-info mx-5">{{ 'goBack'|trans }}</a>
         <form action="{{ path('app_offer_change') }}" method="POST" class="d-inline">
-            <input type="hidden" name="offer_id" value="{{ offer_id }}">
-            <button type="submit" class="btn btn-warning fs-4 mx-5">{{ 'pay'|trans }}</button>
+            <input type="hidden" name="offer_id" value="{{ offer.id }}">
+            <button type="submit" class="btn btn-warning mx-5">{{ 'pay'|trans }} FAKE</button>
         </form>
     </div>
+
+
+    <script>
+
+        let stripe = Stripe("{{ stripe_key }}");
+        let elements = stripe.elements();
+        let cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+
+        function createToken() {
+            document.getElementById("pay-btn").disabled = true;
+            stripe.createToken(cardElement).then(function (result) {
+                console.log(result);
+                if (typeof result.token != 'undefined') {
+                    document.getElementById("stripe-token-id").value = result.token.id;
+                    document.getElementById('checkout-form').submit();
+                }
+            });
+        }
+    </script>
 {% endblock %}

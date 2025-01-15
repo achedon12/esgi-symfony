@@ -36,6 +36,7 @@ profile:
     edit: Edit
     add: Add media
     admin: Admin
+    history: History
 verifiedAccount: Congratulations! Your account has been successfully verified. You can now log in and enjoy all the features.
 errors:
   actions:
@@ -135,6 +136,7 @@ pages:
   profile: Profile
   profile_settings: Profile settings
   update_password: Update password
+  history: History
 flash:
   offer:
     changed: The offer has been successfully changed
@@ -152,3 +154,12 @@ target:
   bio: Bio
   birthdate: Birthdate
   interests: Centers of interest
+
+history:
+  matches: Matches
+  likedBy: Users who liked you
+  likeHistory: Show the like history
+  matchHistory: Show the match history
+  likedByHistory: Show the users who liked you
+  user: User
+

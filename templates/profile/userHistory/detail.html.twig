@@ -1,0 +1,27 @@
+{% extends 'profile/profileBase.html.twig' %}
+
+{% block title %}Tindoo - {{ 'pages.history'|trans }}{% endblock %}
+
+{% block section %}
+    <h1 class="text-primary text-center profileTitle">{{ 'pages.history'|trans }} - {{ type }}</h1>
+    <div class="mx-5 historyDetailTable">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">{{ 'history.user'|trans }}</th>
+                <th scope="col">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in attribute(app.user, type) %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ type == 'likedBy' ? item.userLiker.name : item.userLiked.name }}</td>
+                    <td>{{ item.creationDate|date('d.m.Y H:i') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

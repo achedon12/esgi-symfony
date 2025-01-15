@@ -291,8 +291,7 @@ a {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        width: 20%;
-
+        width: fit-content;
         .action {
             position: relative;
             display: flex;
@@ -300,6 +299,7 @@ a {
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            margin: 0 1rem;
 
             &:hover {
                 > div,
@@ -375,8 +375,8 @@ a {
     transition: .2s ease-in-out;
 }
 
-h1.offer-title {
-    margin: 2rem 0 6rem 0;
+h1.profileTitle {
+    margin: 2rem 0 4rem 0;
 }
 
 .offer-grid {
@@ -1051,4 +1051,59 @@ input:focus {
 
 .profile-image-container input[type="file"] {
     font-size: 1rem;
+}
+
+.historyGrid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .card {
+        width: 30rem;
+        margin: 1rem;
+        padding: 1rem;
+        border-radius: .5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background: #fff;
+        transition: .3s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        i {
+            margin-right: 1rem;
+        }
+
+        &.disabled {
+            opacity: .5;
+            pointer-events: none;
+        }
+    }
+
+    .card .card-title i {
+        color: var(--primary-color);
+    }
+    .card:nth-child(2) .card-title i {
+         color: var(--secondary-color);
+     }
+    .card:nth-child(3) .card-title i {
+        color: purple;
+    }
+}
+
+.cardStripe form {
+    display: flex;
+    width: 40rem;
+    height: 3rem;
+}
+
+.flashPayment {
+    color: green;
+    background-color: #e5f3e5;
+    text-align: center;
+    padding: .5rem;
+    margin: 1rem;
 }

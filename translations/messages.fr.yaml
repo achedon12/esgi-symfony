@@ -34,8 +34,8 @@ profile:
   actions:
     settings: Paramètres
     edit: Modifier
-    add: Ajouter un média
     admin: Admin
+    history: Historique
 verifiedAccount: Félicitations! Votre compte a été vérifié avec succès. Vous pouvez maintenant vous connecter et profiter de toutes les fonctionnalités.
 errors:
   actions:
@@ -135,6 +135,7 @@ pages:
   profile: Profil
   profile_settings: Paramètres du profil
   update_password: Mettre à jour le mot de passe
+  history: Historique
 flash:
   offer:
     changed: L'offre a été modifiée avec succès
@@ -152,3 +153,12 @@ target:
   bio: Bio
   birthdate: Date de naissance
   interests: Centres d'intérêt
+
+
+history:
+  matches: Matchs
+  likedBy: Utilisateurs qui vous ont liké
+  likeHistory: Afficher l'historique des likes
+  matchHistory: Afficher l'historique des matchs
+  likedByHistory: Afficher les utilisateurs qui vous ont liké
+  user: Utilisateur

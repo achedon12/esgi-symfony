@@ -542,4 +542,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getName(): string
+    {
+        return $this->getFirstname() . ' ' . $this->getLastname();
+    }
+
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getMatches(): Collection
+    {
+        return $this->likes->filter(function (Like $like) {
+            return $this->liked_by->contains($like);
+        });
+    }
 }

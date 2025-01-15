@@ -51,6 +51,7 @@ Lien : http://leoderoin.fr:1081
 
 ### **9. Gestion de son offre** 💳
 - Possibilité de souscrire à un abonnement pour bénéficier de fonctionnalités supplémentaires.
+- Gestion du paiement via Stripe.
 - Envoi d'un email lors de la souscription à un abonnement.
 
 ### **10. Dockerisation** 🐳

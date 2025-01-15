@@ -58,11 +58,17 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/media', name: 'media')]
-    public function media(): Response
+    #[Route('/history', name: 'history')]
+    public function history(): Response
     {
-        return $this->render('profile/userMedia/media.html.twig', [
-            'availableLanguages' => LanguageEnum::getAvailableLanguages(),
+        return $this->render('profile/userHistory/history.html.twig');
+    }
+
+    #[Route('/history/detail', name: 'history_detail')]
+    public function historyDetail(Request $request): Response
+    {
+        return $this->render('profile/userHistory/detail.html.twig', [
+            'type' => $request->query->get('type'),
         ]);
     }
 

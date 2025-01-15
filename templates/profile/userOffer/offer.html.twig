@@ -3,7 +3,13 @@
 {% block title %}Tindoo - {{ 'pages.offers'|trans }}{% endblock %}
 
 {% block section %}
-    <h1 class="text-primary text-center offer-title">{{ 'offers.choose'|trans }} !</h1>
+    {% for message in app.flashes('success') %}
+        <div class="flashPayment">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <h1 class="text-primary text-center profileTitle">{{ 'offers.choose'|trans }} !</h1>
     <div class="row mt-5 mx-auto offer-grid w-100">
         {% for offer in offers %}
             <div class="col">
