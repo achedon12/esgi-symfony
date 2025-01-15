@@ -16,11 +16,11 @@
         </a>
     </header>
     <div class="discussions">
-        <h5 class="text-white px-2 pt-2">{{ 'discussion.title'|trans }}</h5>
+        <h5 class="text-white px-2 pt-4">{{ 'discussion.title'|trans }}</h5>
         {% for d in app.user.discussions %}
             {% set lastMessage = d.messages.last %}
             <a href="{{ path('app_discussion_index', {id: d.id}) }}"
-               class="d-flex align-items-center flex-row m-4 d-flex flex-column text-decoration-none {% if discussion is defined and discussion == d %}active{% endif %} {% if d.isApproved == false %}toApprove{% endif %}">
+               class="d-flex align-items-center flex-row p-4 d-flex flex-column text-decoration-none {% if discussion is defined and discussion == d %}active{% endif %} {% if d.isApproved == false %}toApprove{% endif %} {% if not loop.last %}border-bottom{% endif %}">
                 <div class="d-flex flex-row w-100 align-items-center">
                     {% if d.userTwo.profilePicture and d.userTwo.profilePicture %}
                         {% if d.userTwo.profilePicture starts with 'people_images/' %}
@@ -39,7 +39,6 @@
                         </p>
                     </div>
                 </div>
-                <hr class="w-100"/>
             </a>
         {% endfor %}
     </div>

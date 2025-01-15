@@ -1039,7 +1039,7 @@ input:focus {
     }
 
     header a:first-child:hover, .discussions > a:not(.active):hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
     }
 
     header img::before {
