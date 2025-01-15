@@ -223,7 +223,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setProfilePicture(string $image): static
     {
-        unlink($this->profilePicture);
+        if ($this->profilePicture) {
+            unlink($this->profilePicture);
+        }
         $this->profilePicture = $image;
         return $this;
     }

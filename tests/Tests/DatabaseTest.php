@@ -8,7 +8,6 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Doctrine\ORM\EntityManagerInterface;
 
 class DatabaseTest extends KernelTestCase
 {
@@ -47,17 +46,16 @@ class DatabaseTest extends KernelTestCase
         }
     }
 
-    public function seedDatabaseTest(): void
+    public function testSeedDatabaseTest(): void
     {
         $this->loadFixtures();
     }
 
     private function loadFixtures(): void
     {
-        $hasher = self::$kernel->getContainer()->get('security.password_hasher');
-
+        $passwordHasher = static::getContainer()->get('security.password_hasher');
         $loader = new Loader();
-        $loader->addFixture(new AppFixtures($hasher));
+        $loader->addFixture(new AppFixtures($passwordHasher));
         $purger = new ORMPurger();
         $executor = new ORMExecutor($this->entityManager, $purger);
         $executor->execute($loader->getFixtures());
