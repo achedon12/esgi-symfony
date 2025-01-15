@@ -58,6 +58,10 @@ Lien : http://leoderoin.fr:1081
 - Mise en place d'un environnement de développement avec Docker.
 - Mise en place d'un environnement de production avec Docker.
 
+### **11. Tests unitaires** 🧪
+- Mise en place d'une base de test pour exécuter les tests unitaires.
+- Mise en place de tests unitaires pour les entités et les services.
+- Mise en place de tests fonctionnels pour les contrôleurs.
 
 ---
 
