@@ -8,14 +8,54 @@
             {% include 'home/sidebar.html.twig' %}
         </div>
         <div class="w-75 swipe-wrapper overflow-auto">
-            <header class="d-flex row align-content-end w-100">
+            <header class="d-flex row align-content-end w-100 p-3 border-bottom">
                 <div class="col-12 d-flex justify-content-between align-items-center profile-header">
-                    <a href="{{ redirect_url starts with '/' ? redirect_url : path('app_profile_index') }}"><i class="fas fa-arrow-left fa-xl"></i></a>
-                    <i class="fas fa-user fa-xl text-primary text-center"></i>
-                    <a href="{{ path('app_offer_index') }}"><i class="fas fa-fire fa-xl"></i></a>
+                    <a href="{{ redirect_url }}"><i class="fas fa-xl fa-arrow-left"></i></a>
                 </div>
             </header>
-            {% include 'profile/userMedia/user.html.twig' with {user: target, canUpdate: false} %}
+            <div class="user">
+                <div class="user--card">
+                    {% if target.profilePicture and target.profilePicture %}
+                        {% if target.profilePicture starts with 'people_images/' %}
+                            <img src="{{ asset(target.profilePicture) }}" alt="user_image_{{ target.id }}"/>
+                        {% else %}
+                            <img src="{{ asset('uploads/profile_images/' ~ target.profilePicture) }}"
+                                 alt="user_image_{{ target.id }}">
+                        {% endif %}
+                    {% endif %}
+                    <div class="d-flex flex-column p-4">
+                        <h3 class="mb-5">{{ target.firstname }}, {{ target.age }} {{ 'profile.years'|trans }}</h3>
+                        <p class="mb-1"><strong>{{ 'target.bio'|trans }} : </strong>{{ target.bio }}</p>
+                        <p class="mb-1"><strong>{{ 'target.birthdate'|trans }}
+                                : </strong>{{ target.birthdate|date('d m Y') }}</p>
+                        <p class="mb-1"><strong>{{ 'target.interests'|trans }}: </strong>
+                            {% for interest in target.interests %}
+                                <span class="badge bg-primary">{{ interest }}</span>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+
+                {% if target.additiveImages|length > 0 %}
+                    <div class="p-5 d-flex flex-column w-100">
+                        <div class="d-flex mb-4 ">
+                            <h2 class="">Images</h2>
+                        </div>
+                        <div class="user-images d-flex w-100 flex-row">
+                            {% for image in target.additiveImages %}
+                                {% if image starts with 'people_images/' %}
+                                    <img src="{{ asset(image) }}" alt="{{ target.firstname }}"/>
+                                {% elseif image starts with 'https' or image starts with 'http' %}
+                                    <img src="{{ image }}" alt="{{ target.firstname }}"/>
+                                {% else %}
+                                    <img src="{{ asset('uploads/profile_images/' ~ image) }}" alt="Profile Picture">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
         </div>
     </section>
 {% endblock %}

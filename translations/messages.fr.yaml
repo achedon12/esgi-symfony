@@ -147,3 +147,8 @@ flash:
     image:
       errorEmpty: L'image ne peut pas être vide
       errorUpload: Une erreur s'est produite lors du téléchargement de l'image
+
+target:
+  bio: Bio
+  birthdate: Date de naissance
+  interests: Centres d'intérêt

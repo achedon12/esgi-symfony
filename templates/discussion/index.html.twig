@@ -15,25 +15,29 @@
                         {{ 'discussion.goBack'|trans }}
                     </a>
 
-                    <div class="profile-info">
-                        {% if discussion.userTwo.profilePicture %}
-                            <a href="{{ path('app_user_show', {id: discussion.userTwo.id, redirect_url: path('app_discussion_index', {id: discussion.id})}) }}">
+                    <a href="{{ path('app_user_show', {id: discussion.userTwo.id, redirect_url: path('app_discussion_index', {id: discussion.id})}) }}">
+                        <div class="profile-info">
+                            {% if discussion.userTwo.profilePicture %}
+
                                 {% if discussion.userTwo.profilePicture starts with 'people_images/' %}
-                                    <img src="{{ asset(discussion.userTwo.profilePicture) }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
+                                    <img src="{{ asset(discussion.userTwo.profilePicture) }}"
+                                         alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
                                 {% elseif discussion.userTwo.profilePicture starts with 'https' or discussion.userTwo.profilePicture starts with 'http' %}
-                                    <img src="{{ discussion.userTwo.profilePicture }}" alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
+                                    <img src="{{ discussion.userTwo.profilePicture }}"
+                                         alt="{{ discussion.userTwo.firstname }}" class="rounded-5"/>
                                 {% else %}
-                                    <img src="{{ asset('uploads/profile_images/' ~ discussion.userTwo.profilePicture) }}" alt="Profile Picture" class="rounded-5">
+                                    <img src="{{ asset('uploads/profile_images/' ~ discussion.userTwo.profilePicture) }}"
+                                         alt="Profile Picture" class="rounded-5">
                                 {% endif %}
-                            </a>
-                        {% endif %}
-                        <div>
-                            <div class="user-name">{{ discussion.userTwo.firstname }} {{ discussion.userTwo.lastname }}</div>
-                            <div class="status">
-                                <span class="online-indicator"></span>{{ 'discussion.online'|trans }}
+                            {% endif %}
+                            <div>
+                                <div class="user-name">{{ discussion.userTwo.firstname }} {{ discussion.userTwo.lastname }}</div>
+                                <div class="status">
+                                    <span class="online-indicator"></span>{{ 'discussion.online'|trans }}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </header>
 
@@ -44,7 +48,8 @@
                         <form action="{{ path('app_discussion_manage') }}" method="POST" class="d-inline">
                             <input type="hidden" name="action" value="{{ 1 }}">
                             <input type="hidden" name="discussion_id" value="{{ discussion.id }}">
-                            <button type="submit" class="btn btn-outline-warning">{{ 'discussion.approve'|trans }}</button>
+                            <button type="submit"
+                                    class="btn btn-outline-warning">{{ 'discussion.approve'|trans }}</button>
                         </form>
                         <form action="{{ path('app_discussion_manage') }}" method="POST" class="d-inline">
                             <input type="hidden" name="action" value="{{ 0 }}">
@@ -66,14 +71,16 @@
                             </div>
                             {% if message.author.profilePicture and message.author.profilePicture %}
                                 {% if message.author.profilePicture starts with 'people_images/' %}
-                                    <img src="{{ asset(message.author.profilePicture) }}" alt="{{ message.author.firstname }}" class="rounded-circle position-absolute"
+                                    <img src="{{ asset(message.author.profilePicture) }}"
+                                         alt="{{ message.author.firstname }}" class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;"/>
                                 {% elseif message.author.profilePicture starts with 'https' or message.author.profilePicture starts with 'http' %}
                                     <img src="{{ message.author.profilePicture }}" alt="Author's profile picture"
                                          class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;">
                                 {% else %}
-                                    <img src="{{ asset('uploads/profile_images/' ~ message.author.profilePicture) }}" alt="Profile Picture" class="rounded-circle position-absolute"
+                                    <img src="{{ asset('uploads/profile_images/' ~ message.author.profilePicture) }}"
+                                         alt="Profile Picture" class="rounded-circle position-absolute"
                                          style="width: 30px; height: 30px; top: -15px; right: -15px; border: 2px solid white;">
                                 {% endif %}
                             {% endif %}
@@ -86,7 +93,8 @@
             <div class="message-form {% if discussion.isApproved == false and isCurrentUserDemanding == false %}toApproveMessages{% endif %}">
                 <form action="{{ path('app_discussion_send') }}" method="post" class="d-flex gap-2">
                     <input type="hidden" name="discussion_id" value="{{ discussion.id }}">
-                    <input type="text" name="message" class="form-control" placeholder="Type a message" {% if discussion.isApproved == false and isCurrentUserDemanding == false %}disabled{% endif %}>
+                    <input type="text" name="message" class="form-control" placeholder="Type a message"
+                           {% if discussion.isApproved == false and isCurrentUserDemanding == false %}disabled{% endif %}>
                     <button type="submit" class="btn btn-primary">{{ 'discussion.send'|trans }}</button>
                 </form>
             </div>

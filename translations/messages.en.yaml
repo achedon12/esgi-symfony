@@ -147,3 +147,8 @@ flash:
     image:
       errorEmpty: The image cannot be empty
       errorUpload: An error occurred while uploading the image
+
+target:
+  bio: Bio
+  birthdate: Birthdate
+  interests: Centers of interest
