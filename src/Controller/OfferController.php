@@ -20,8 +20,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class OfferController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly MailerInterface        $mailer,
+        private readonly EntityManagerInterface   $entityManager,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly TranslatorInterface      $translator
     )
@@ -50,13 +49,14 @@ class OfferController extends AbstractController
     public function changeOffer(Request $request): Response
     {
         $offerId = (int)$request->request->get('offer_id');
+        $user = $this->getUser();
 
         if ($offerId !== 0) {
             $offer = $this->entityManager->getRepository(Offer::class)->find($offerId);
-            $this->getUser()->setOffer($offer);
-            $offer->addUser($this->getUser());
+            $user->setOffer($offer);
+            $offer->addUser($user);
 
-            $event = new UserOfferChangedEvent($this->getUser(), $offer);
+            $event = new UserOfferChangedEvent($user, $offer);
             $this->eventDispatcher->dispatch($event, UserOfferChangedEvent::NAME);
 
             $this->entityManager->flush();
@@ -64,22 +64,5 @@ class OfferController extends AbstractController
         }
 
         return $this->redirectToRoute('app_offer_index');
-    }
-
-    private function sendOfferChangeEmail(User $user, Offer $offer): void
-    {
-        $email = (new Email())
-            ->from('no-reply@tindoo.com')
-            ->to($user->getEmail())
-            ->subject('Offer changed')
-            ->html($this->renderView('emails/payment_confirmation.html.twig', [
-                'user' => $user,
-                'offer' => $offer,
-                'transaction_id' => uniqid(),
-                'amount' => $offer->getPrice(),
-                'currency' => 'EUR'
-            ]));
-
-        $this->mailer->send($email);
     }
 }

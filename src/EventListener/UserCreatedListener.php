@@ -13,12 +13,10 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
 #[AsEventListener(event: UserCreatedEvent::NAME, method: 'onUserCreated')]
-
-class UserCreatedListener
+readonly class UserCreatedListener
 {
-
-    public function __construct(private readonly MailerInterface $mailer,
-                                private readonly Environment $twig)
+    public function __construct(private MailerInterface $mailer,
+                                private Environment     $twig)
     {
     }
 
@@ -39,7 +37,7 @@ class UserCreatedListener
                 ->html($this->twig->render('emails/registration.html.twig', ['user' => $user]));
 
             $this->mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
+        } catch (TransportExceptionInterface) {
         }
     }
 }

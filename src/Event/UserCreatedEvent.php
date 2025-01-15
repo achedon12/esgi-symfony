@@ -8,7 +8,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserCreatedEvent extends Event
 {
-    public const  NAME = 'app.user.created';
+    public const string NAME = 'app.user.created';
 
     private User $user;
 

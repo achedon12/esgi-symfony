@@ -3,21 +3,18 @@
 namespace App\EventListener;
 
 use App\Event\UserOfferChangedEvent;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
 #[AsEventListener(event: UserOfferChangedEvent::NAME, method: 'onOfferChanged')]
-class UserOfferChangedListener
+readonly class UserOfferChangedListener
 {
-
-    public function __construct(private readonly EntityManagerInterface   $entityManager,
-                                private readonly MailerInterface $mailer,
-                                private readonly Environment $twig)
+    public function __construct(private MailerInterface $mailer,
+                                private Environment     $twig)
     {
     }
 
@@ -39,7 +36,7 @@ class UserOfferChangedListener
                 ]));
 
             $this->mailer->send($email);
-        } catch (Exception $e) {
+        } catch (Exception|TransportExceptionInterface) {
         }
 
     }

@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserOfferChangedEvent extends Event
 {
-    public const  NAME = 'app.user.offer.changed';
+    public const string NAME = 'app.user.offer.changed';
 
     private User $user;
     private Offer $offer;
