@@ -93,7 +93,7 @@
             <div class="message-form {% if discussion.isApproved == false and isCurrentUserDemanding == false %}toApproveMessages{% endif %}">
                 <form action="{{ path('app_discussion_send') }}" method="post" class="d-flex gap-2">
                     <input type="hidden" name="discussion_id" value="{{ discussion.id }}">
-                    <input type="text" name="message" class="form-control" placeholder="Type a message"
+                    <input type="text" name="message" class="form-control" placeholder="Type a message" autofocus
                            {% if discussion.isApproved == false and isCurrentUserDemanding == false %}disabled{% endif %}>
                     <button type="submit" class="btn btn-primary">{{ 'discussion.send'|trans }}</button>
                 </form>
