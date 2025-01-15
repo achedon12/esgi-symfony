@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Offer;
+use Psr\Log\LoggerInterface;
 use Stripe;
 use App\Event\UserOfferChangedEvent;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,7 +21,8 @@ class OfferController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface   $entityManager,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly TranslatorInterface      $translator
+        private readonly TranslatorInterface      $translator,
+        private readonly LoggerInterface $logger
     )
     {
     }
@@ -39,6 +41,7 @@ class OfferController extends AbstractController
     {
         $offerId = (int)$request->request->get('offer_id');
         $offer = $this->entityManager->getRepository(Offer::class)->find($offerId);
+        $this->logger->info('------------------[OfferController] payOffer: ' . $offerId . '------------------');
         return $this->render('profile/userOffer/pay_offer.html.twig', [
             'offer' => $offer,
             'stripe_key' => $_ENV["STRIPE_KEY"],
