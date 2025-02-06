@@ -32,6 +32,9 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       APP_ENV: ${APP_ENV}
       DATABASE_URL: ${DATABASE_URL}
+      MAILER_DSN: ${MAILER_DSN}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_KEY: ${STRIPE_KEY}
     ports:
       - "9001:9000"
     networks:
